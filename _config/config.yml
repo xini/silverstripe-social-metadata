@@ -16,7 +16,7 @@ SocialMetaPageExtension:
     ArticlePage: 'article'
 LeftAndMain:
   extra_requirements_javascript:
-    - silverstripe-social-metadata/javascript/cms-social-meta.js
+    - social-metadata/javascript/cms-social-meta.js
 SocialMetaConfigExtension:
   multisites_enable_global_settings: false
 ---
