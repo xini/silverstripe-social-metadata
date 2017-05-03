@@ -27,10 +27,10 @@
 <% if $GooglePlusProfile %><link rel="author" href="$GooglePlusProfile" /><% end_if %>
 <% if $FacebookProfile %><meta property="article:author" content="$FacebookProfile" /><% end_if %>
 <% if $TwitterHandle %><meta name="twitter:creator" content="$TwitterHandle"><% end_if %><% end_loop %>
-<meta name="author" content="<% loop $SocialAuthors %><% if $Pos > 1 %>, <% end_if %>$Name<% end_loop %>">
+<meta name="author" content="<% loop $SocialMetaAuthors %><% if $Pos > 1 %>, <% end_if %>$Name<% end_loop %>">
 <% end_if %>
 <%-- Images --%><% if $SocialMetaImage %><meta itemprop="image" content="$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL">
-<meta name="twitter:image" content="$SocialMateImage.CroppedFocusedImage(1200,630).AbsoluteURL">
+<meta name="twitter:image" content="$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL">
 <meta property="og:image" content="$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL" /><% end_if %>
 <script type="application/ld+json">
 {

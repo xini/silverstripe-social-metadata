@@ -9,7 +9,7 @@ Adds social metadata like OpenGraph, Twitter and JSON-LD to all pages.
 
 ## Requirements
 
-* SilverStripe CMS ~3.1
+* SilverStripe CMS ~3.2
 
 ## Installation
 

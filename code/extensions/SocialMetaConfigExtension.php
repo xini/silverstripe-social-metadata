@@ -61,7 +61,7 @@ class SocialMetaConfigExtension extends DataExtension {
 			$fields->addFieldsToTab(
 			    "Root.SocialMetadata",
 			    array(
-			        new HeaderField("facebookheader", _t("SocialMetaConfigExtension.MicroData", 'Micro Data'), 2),
+			        new HeaderField("microdataheader", _t("SocialMetaConfigExtension.MicroData", 'Micro Data'), 2),
 			        DropdownField::create(
 			            "MicroDataType",
 			            "Type",
