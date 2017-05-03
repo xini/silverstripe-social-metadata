@@ -1,0 +1,29 @@
+---
+Name: socialmetadata
+---
+Page:
+  extensions:
+    - SocialMetaPageExtension
+SiteConfig:
+  extensions:
+    - SocialMetaConfigExtension
+Member:
+  extensions:
+    - SocialMetaAuthorExtension
+SocialMetaPageExtension:
+  facebook_page_type:
+    BlogPost: 'article'
+    ArticlePage: 'article'
+LeftAndMain:
+  extra_requirements_javascript:
+    - share/javascript/cms-share.js
+SocialMetaConfigExtension:
+  multisites_enable_global_settings: false
+---
+Only:
+  classexists: 'Multisites'
+---
+Site:
+  extensions:
+    - SocialMetaConfigExtension
+    

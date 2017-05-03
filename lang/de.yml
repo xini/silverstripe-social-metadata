@@ -1,0 +1,32 @@
+de:
+  BaseShareLinks:
+    SHARE: 'Teilen:'
+  FacebookShareConfigExtras:
+    DEFAULTSHARINGDESCRIPTION: 'Standard Sharing-Beschreibung'
+    DEFAULTSHARINGTITLE: 'Standard Sharing-Titel'
+    SHARINGLOGO: 'Sharing-Logo (min 200x200px, max 3:1)'
+    TABFACEBOOK: 'Facebook Metadata'
+  Page:
+    SHOWCONTENTFOOTER: 'Inhalts-Footer anzeigen'
+  PageShareLinks:
+    SHARE: 'Teilen:'
+  SocialMediaProfiles:
+    CONNECTWITHUS: 'Bleiben Sie in Verbindung'
+  SocialMediaSiteConfigExtension:
+    FACEBOOKPAGE: 'Facebook Seite'
+    GOOGLEPAGE: 'Google Seite'
+    LINKEDINPAGE: 'LinkedIn Seite'
+    PINTERESTPAGE: 'Pinterest Seite'
+    PLUSONGOOGLE: 'Google+1'
+    PROFILES: 'Social Media Profile'
+    SHAREONFACEBOOK: 'Auf Facebook teilen'
+    SHAREONGOOGLE: 'Auf Google+ teilen'
+    SHAREONLINKEDIN: 'Auf LinkedIn teilen'
+    SHAREONPINTEREST: 'Auf Pinterest teilen'
+    SHAREONTWITTER: 'Auf Twitter teilen'
+    SHARING: Sharing
+    SHARINGNETWORKS: Neztwerke
+    SHOWBUTTONSNOTLINKS: 'Sharing Buttons statt Sharing Links anzeigen'
+    SOCIALMEDIATAB: 'Social Media'
+    TWITTERPAGE: 'Twitter Seite'
+    YOUTUBEPAGE: 'Youtube Seite'
