@@ -1,32 +1,15 @@
 en:
-  BaseShareLinks:
-    SHARE: 'Share:'
-  FacebookShareConfigExtras:
-    DEFAULTSHARINGDESCRIPTION: 'Default Sharing-Description'
-    DEFAULTSHARINGTITLE: 'Default Sharing-Title'
-    SHARINGLOGO: 'Sharing-Logo (min 200x200px, max 3:1)'
-    TABFACEBOOK: 'Facebook Metadata'
-  Page:
-    SHOWCONTENTFOOTER: 'Show Content Footer'
-  PageShareLinks:
-    SHARE: 'Share:'
-  SocialMediaProfiles:
-    CONNECTWITHUS: 'Connect with Us'
-  SocialMediaSiteConfigExtension:
-    FACEBOOKPAGE: 'Facebook Page'
-    GOOGLEPAGE: 'Google Page'
-    LINKEDINPAGE: 'LinkedIn Page'
-    PINTERESTPAGE: 'Pinterest Page'
-    PLUSONGOOGLE: Google+1
-    PROFILES: 'Social Media Profiles'
-    SHAREONFACEBOOK: 'Share on Facebook'
-    SHAREONGOOGLE: 'Share on Google+'
-    SHAREONLINKEDIN: 'Share on LinkedIn'
-    SHAREONPINTEREST: 'Share on Pinterest'
-    SHAREONTWITTER: 'Share on Twitter'
-    SHARING: Sharing
-    SHARINGNETWORKS: Networks
-    SHOWBUTTONSNOTLINKS: 'Show Sharing Buttons instead of Sharing Links'
-    SOCIALMEDIATAB: 'Social Media'
-    TWITTERPAGE: 'Twitter Page'
-    YOUTUBEPAGE: 'Youtube Page'
+  ArticleAuthorRole:
+    FACEBOOKPROFILE: 'Facebook Profile (full URL)'
+    GOOGLEPROFILE: 'Google+ Profile (full URL)'
+    TWITTERHANDLE: 'Twitter Handle (@xyz)'
+  SocialMetaConfigExtension:
+    AddGoogleMapsAPIKey: 'Please add a Google Maps API key and save the config in order to set the coordinates.'
+    FACEBOOK: Facebook
+    FACEBOOKADMINIDS: 'Facebook Admin IDs'
+    FACEBOOKAPPID: 'Facebook App ID'
+    FACEBOOKPAGE: 'Facebook Page (full URL)'
+    MetadataTab: 'Social Metadata'
+    MicroData: 'Micro Data'
+    TWITTER: Twitter
+    TWITTERHANDLE: 'Twitter Handle (@xyz)'
