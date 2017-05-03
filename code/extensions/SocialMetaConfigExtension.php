@@ -181,13 +181,6 @@ class SocialMetaConfigExtension extends DataExtension {
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
 		
-		$this->owner->FacebookPage = $this->updateLinkURL($this->owner->FacebookPage);
-		$this->owner->TwitterPage = $this->updateLinkURL($this->owner->TwitterPage);
-		$this->owner->GooglePage = $this->updateLinkURL($this->owner->GooglePage);
-		$this->owner->LinkedinPage = $this->updateLinkURL($this->owner->LinkedinPage);
-		$this->owner->PinterestPage = $this->updateLinkURL($this->owner->PinterestPage);
-		$this->owner->YoutubePage = $this->updateLinkURL($this->owner->YoutubePage);
-		
 		$this->owner->MicroDataEventLocationWebsite = $this->updateLinkURL($this->owner->MicroDataEventLocationWebsite);
 		
 		// clean up data
