@@ -20,8 +20,8 @@ class SocialMetaPageExtension extends SiteTreeExtension {
 			return $this->owner->MetaTitle;
 		} else if ($this->owner->Title) {
 			return $this->owner->Title;
-		} else if ($config && $config->exists() && $config->SharingTitle) {
-			return $config->SharingTitle;
+		} else if ($config && $config->exists() && $config->DefaultSharingTitle) {
+			return $config->DefaultSharingTitle;
 		} else if ($config && $config->exists() && $config->Title) {
 			return $config->Title;
 		}
@@ -52,8 +52,8 @@ class SocialMetaPageExtension extends SiteTreeExtension {
 		} else if ($this->owner->hasMethod('Excerpt') && $this->owner->Excerpt()) {
 			// blog module
 			return $this->owner->Excerpt();
-		} else if ($config && $config->exists() && $config->SharingDescription) {
-			return $config->SharingDescription;
+		} else if ($config && $config->exists() && $config->DefaultSharingDescription) {
+			return $config->DefaultSharingDescription;
 		}
 		return null;
 	}
@@ -140,8 +140,8 @@ class SocialMetaPageExtension extends SiteTreeExtension {
     		}
 		}
 		// fallback from innoweb/silverstripe-social-share
-		if ((!$image || !$image->exists()) && $config && $config->exists() && $config->has_one('SharingImage')) {
-		    $image = $config->SharingImage();
+		if ((!$image || !$image->exists()) && $config && $config->exists() && $config->has_one('DefaultSharingImage')) {
+		    $image = $config->DefaultSharingImage();
 		}
 		return $image;
 	}
