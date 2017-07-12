@@ -32,5 +32,5 @@
 <%-- Images --%><% if $SocialMetaImage %><meta itemprop="image" content="$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL">
 <meta name="twitter:image" content="$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL">
 <meta property="og:image" content="$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL" /><% end_if %>
-<% if $SchemaData %><script type="application/ld+json">$SchemaData</script><% end_if %>
+<% if $SchemaData %><% loop $SchemaData %><script type="application/ld+json">$DataSet</script><% end_loop %><% end_if %>
 <% end_cached %>

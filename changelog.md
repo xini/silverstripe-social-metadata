@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.0]
+
+* return array of ld+json data in order to give sub pages the ability to add more ld+json blocks
+
 ## [1.1.1]
 
 * fix absulte url for image in ld+json data

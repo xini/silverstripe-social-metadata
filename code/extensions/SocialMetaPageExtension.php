@@ -512,7 +512,12 @@ class SocialMetaPageExtension extends SiteTreeExtension {
             $data["paymentAccepted"] = $this->owner->getSocialMetaPaymentAccepted();
         }
         
-        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        // return array of json data in order to give sub pages the ability to add more ld+json blocks
+        $dataSets = new ArrayList();
+        $dataSets->push(new ArrayData(array(
+            "DataSet" => json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+        )));
+        return $dataSets;
     }
 
     /**
