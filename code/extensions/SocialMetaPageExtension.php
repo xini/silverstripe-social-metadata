@@ -173,10 +173,12 @@ class SocialMetaPageExtension extends SiteTreeExtension {
         if ($this->owner->hasMethod('getPageAuthors') && ($authors = $this->owner->getPageAuthors())) {
             // news module
             return $authors;
-        } else if ($this->owner->many_many('Authors') && $authors = $this->owner->Authors()) {
+        } else if ($this->owner->hasMethod('getCredits') && ($authors = $this->owner->getCredits())) {
             // blog module
-            return $authors;
+            $authors = $authors->column('Name');
+            return implode(', ', $authors);
         } else {
+            // standard page
             $version = $this->owner->allVersions()->last();
             if ($version) {
                 return new ArrayList(array($version->Author()));
@@ -512,7 +514,7 @@ class SocialMetaPageExtension extends SiteTreeExtension {
             $data["paymentAccepted"] = $this->owner->getSocialMetaPaymentAccepted();
         }
         
-        // return array of json data in order to give sub pages the ability to add more ld+json blocks
+        // return array of ld+json data in order to give sub pages the ability to add more ld+json blocks
         $dataSets = new ArrayList();
         $dataSets->push(new ArrayData(array(
             "DataSet" => json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
