@@ -32,53 +32,5 @@
 <%-- Images --%><% if $SocialMetaImage %><meta itemprop="image" content="$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL">
 <meta name="twitter:image" content="$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL">
 <meta property="og:image" content="$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL" /><% end_if %>
-<script type="application/ld+json">
-{
-	"@context": "http://schema.org",
-	"@type": "$SocialMetaSchemaType"
-	<% if $SocialMetaSiteName %>, "name": "$SocialMetaSiteName"<% end_if %>
-	<% if $SocialMetaDescription %>, "description": "$SocialMetaDescription"<% end_if %>
-	<% if $SocialMetaImage %>, "image": "$SocialMetaImage.CroppedFocusedImage(1200,630).AbsoluteURL"<% end_if %>
-	, "url": "$SocialMetaSiteURL"
-	<% if $SocialMetaEventStart %>, "startDate": "$SocialMetaEventStart.Rfc3339"<% end_if %>
-	<% if $SocialMetaEventEnd %>, "endDate": "$SocialMetaEventEnd.Rfc3339"<% end_if %>
-	<% if $SocialMetaSchemaType == "Event" %>
-		, "location": {
-			"@type": "Place"
-			<% if $SocialMetaEventLocationName %>, "name": "$SocialMetaEventLocationName"<% end_if %>
-			<% if $ SocialMetaEventLocationWebsite %>, "sameAs": "$SocialMetaEventLocationWebsite"<% end_if %>
-	<% end_if %>
-	<% if $SocialMetaStreetAddress || $SocialMetaPOBoxNumber || $SocialMetaCity || $SocialMetaPostCode %>
-		, "address": {
-			"@type": "PostalAddress"
-			<% if $SocialMetaCountry %>, "addressCountry": "$SocialMetaCountry"<% end_if %>
-			<% if $SocialMetaCity %>, "addressLocality": "$SocialMetaCity"<% end_if %>
-			<% if $SocialMetaRegion %>, "addressRegion": "$SocialMetaRegion"<% end_if %>
-			<% if $SocialMetaPostCode %>, "postalCode":"$SocialMetaPostCode"<% end_if %>
-			<% if $SocialMetaPOBoxNumber %>, "postOfficeBoxNumber": "$SocialMetaPOBoxNumber"<% end_if %>
-			<% if $SocialMetaStreetAddress %>, "streetAddress": "$SocialMetaStreetAddress"<% end_if %>
-		}
-	<% end_if %>
-	<% if $SocialMetaPhone %>, "telephone": "$SocialMetaPhone"<% end_if %>
-	<% if $SocialMetaFax %>, "faxNumber": "$SocialMetaFax"<% end_if %>
-	<% if $SocialMetaEmail %>, "email": "$SocialMetaEmail"<% end_if %>
-	<% if $SocialMetaEnableCoordinates && $SocialMetaLocationLatitude && $SocialMetaLocationLongitude %>
-		, "geo": {
-			"@type": "GeoCoordinates",
-			"latitude": "$SocialMetaLocationLatitude",
-			"longitude": "$SocialMetaLocationLongitude"
-		}
-	<% end_if %>
-	<% if $SocialMetaSchemaType == "Event" %>
-		}
-	<% end_if %>
-	<% if $SocialMetaOpeningHoursDays %>, "openingHours": "$SocialMetaOpeningHoursDays<% if $SocialMetaOpeningHoursTimeOpen && $SocialMetaOpeningHoursTimeClose %> $SocialMetaOpeningHoursTimeOpen-$SocialMetaOpeningHoursTimeClose<% end_if %>"<% end_if %>
-	<% if $SocialMetaPaymentAccepted %>, "paymentAccepted": "$SocialMetaPaymentAccepted"<% end_if %>
-	<% if $SocialMetaProfilePages %>
-		, "sameAs" : [
-			<% loop $SocialMetaProfilePages %>"$URL"<% if not $Last %>,<% end_if %><% end_loop %>
-		]
-	<% end_if %>
-}
-</script>
+<% if $SchemaData %><script type="application/ld+json">$SchemaData</script><% end_if %>
 <% end_cached %>

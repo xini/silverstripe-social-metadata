@@ -31,10 +31,6 @@ class SocialMetaConfigExtension extends DataExtension {
 	    "MicroDataEventEnd" => "SS_Datetime",
 	);
 	
-	private static $has_one = array(
-	    'SharingImage' => 'Image'
-	);
-
 	public function updateCMSFields(FieldList $fields) {
 		
 		if (
