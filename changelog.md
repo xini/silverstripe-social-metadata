@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.1.1]
+
+* fix absulte url for image in ld+json data
+
 ## [1.1.0]
 
 * move ld+json data creation from template to function

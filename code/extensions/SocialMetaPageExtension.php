@@ -387,7 +387,7 @@ class SocialMetaPageExtension extends SiteTreeExtension {
             $data["description"] = $this->owner->getSocialMetaDescription();
         }
         if ($this->owner->getSocialMetaImage()) {
-            $data["image"] = Director::absoluteURL($this->owner->getSocialMetaImage()->CroppedFocusedImage(1200,630)->AbsoluteLink());
+            $data["image"] = Director::absoluteURL($this->owner->getSocialMetaImage()->CroppedFocusedImage(1200,630));
         }
         if ($this->owner->getSocialMetaSiteURL()) {
             $data["url"] = $this->owner->getSocialMetaSiteURL();
