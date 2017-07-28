@@ -146,6 +146,15 @@ class SocialMetaPageExtension extends SiteTreeExtension {
         return $image;
     }
     
+    public function getSocialMetaLogo() {
+        $image = null;
+        $config = $this->getSocialMetaConfig();
+        if ($config && $config->exists() && $config->has_one('MicroDataLogo')) {
+            $image = $config->MicroDataLogo();
+        }
+        return $image;
+    }
+    
     public function getSocialMetaPublicationDate() {
         if ($this->owner->PublishDate) {
             // blog module
@@ -388,8 +397,13 @@ class SocialMetaPageExtension extends SiteTreeExtension {
         if ($this->owner->getSocialMetaDescription()) {
             $data["description"] = $this->owner->getSocialMetaDescription();
         }
-        if ($this->owner->getSocialMetaImage()) {
-            $data["image"] = Director::absoluteURL($this->owner->getSocialMetaImage()->CroppedFocusedImage(1200,630));
+        if ($this->owner->getSocialMetaLogo()) {
+            $data["logo"] = array(
+                "@type" => 'ImageObject',
+                "url" => $this->owner->getSocialMetaLogo()->AbsoluteLink(),
+	            "width" => $this->owner->getSocialMetaLogo()->getWidth().'px',
+	            "height" => $this->owner->getSocialMetaLogo()->getHeight().'px',
+            );
         }
         if ($this->owner->getSocialMetaSiteURL()) {
             $data["url"] = $this->owner->getSocialMetaSiteURL();

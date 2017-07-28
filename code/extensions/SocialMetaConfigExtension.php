@@ -31,6 +31,10 @@ class SocialMetaConfigExtension extends DataExtension {
 	    "MicroDataEventEnd" => "SS_Datetime",
 	);
 	
+	private static $has_one = array(
+	    'MicroDataLogo' => 'Image'
+	);
+	
 	public function updateCMSFields(FieldList $fields) {
 		
 		if (
@@ -80,6 +84,9 @@ class SocialMetaConfigExtension extends DataExtension {
 			        TextField::create('MicroDataEmail', 'Email'),
 			        DatetimeField::create('MicroDataEventStart', 'Event Start'),
 			        DatetimeField::create('MicroDataEventEnd', 'Event End'),
+			        UploadField::create("MicroDataLogo", _t("SocialMetaConfigExtension.Logo", 'Logo'))
+    			        ->setFolderName('social')
+    			        ->setAllowedExtensions(array('jpg', 'gif', 'png')),
 			        CheckboxSetField::create(
 			            "MicroDataOpeningHoursDays",
 			            "Days Open",
