@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.0]
+
+* add logo to site meta data, replace image with logo in json+ld data
+
 ## [1.2.1]
 
 * fix author meta data for blog posts
