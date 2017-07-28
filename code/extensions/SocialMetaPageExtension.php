@@ -397,12 +397,12 @@ class SocialMetaPageExtension extends SiteTreeExtension {
         if ($this->owner->getSocialMetaDescription()) {
             $data["description"] = $this->owner->getSocialMetaDescription();
         }
-        if ($this->owner->getSocialMetaLogo()) {
+        if (($logo = $this->getSocialMetaLogo()) && $logo->exists()) {
             $data["logo"] = array(
                 "@type" => 'ImageObject',
-                "url" => $this->owner->getSocialMetaLogo()->AbsoluteLink(),
-	            "width" => $this->owner->getSocialMetaLogo()->getWidth().'px',
-	            "height" => $this->owner->getSocialMetaLogo()->getHeight().'px',
+                "url" => $logo->AbsoluteLink(),
+	            "width" => $logo->getWidth().'px',
+	            "height" => $logo->getHeight().'px',
             );
         }
         if ($this->owner->getSocialMetaSiteURL()) {
