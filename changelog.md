@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.0]
+
+* add 'getKeyvisualImage' method call to social media image collector
+
 ## [1.3.2]
 
 * fix issue with meta titles and descriptions

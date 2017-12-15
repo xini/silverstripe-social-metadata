@@ -113,7 +113,10 @@ class SocialMetaPageExtension extends SiteTreeExtension {
         $config = $this->getSocialMetaConfig();
         $image = null;
         if (!is_a($this->owner, "HomePage")) {
-            if ($this->owner->has_one('FeaturedImage') && $this->owner->FeaturedImage()) {
+            if ($this->owner->hasMethod('getKeyvisualImage') && ($image = $this->owner->getKeyvisualImage()) && $image->exists()) {
+                // method that can be overriden on eny page type
+                $image = $image;
+            } else if ($this->owner->has_one('FeaturedImage') && $this->owner->FeaturedImage()) {
                 // blog module
                 $image = $this->owner->FeaturedImage();
             } else if ($this->owner->many_many('ContentImages') && $this->owner->ContentImages()) {
