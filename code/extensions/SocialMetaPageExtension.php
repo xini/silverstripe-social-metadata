@@ -16,7 +16,9 @@ class SocialMetaPageExtension extends SiteTreeExtension {
     
     public function getSocialMetaPageTitle() {
         $config = $this->getSocialMetaConfig();
-        if ($this->owner->MetaTitle) {
+        if ($this->owner->hasMethod('getTitleTag') && $this->owner->getTitleTag()) {
+            return $this->owner->getTitleTag();
+        } else if ($this->owner->MetaTitle) {
             return $this->owner->MetaTitle;
         } else if ($this->owner->Title) {
             return $this->owner->Title;
@@ -30,10 +32,20 @@ class SocialMetaPageExtension extends SiteTreeExtension {
     
     public function getSocialMetaSiteName() {
         $config = $this->getSocialMetaConfig();
-        if ($config && $config->exists() && $config->SharingTitle) {
-            return $config->SharingTitle;
+        if ($config && $config->exists() && $config->DefaultSharingTitle) {
+            return $config->DefaultSharingTitle;
         } else if ($config && $config->exists() && $config->Title) {
             return $config->Title;
+        }
+        return null;
+    }
+    
+    public function getSocialMetaSiteDescription() {
+        $config = $this->getSocialMetaConfig();
+        if ($config && $config->exists() && $config->DefaultSharingDescription) {
+            return $config->DefaultSharingDescription;
+        } else if (($homelink = RootURLController::get_homepage_link()) && $home = SiteTree::get_by_link($homelink)) {
+            return $home->getSocialMetaDescription();
         }
         return null;
     }
@@ -394,8 +406,8 @@ class SocialMetaPageExtension extends SiteTreeExtension {
         if ($this->owner->getSocialMetaSiteName()) {
             $data["name"] = $this->owner->getSocialMetaSiteName();
         }
-        if ($this->owner->getSocialMetaDescription()) {
-            $data["description"] = $this->owner->getSocialMetaDescription();
+        if ($this->owner->getSocialMetaSiteDescription()) {
+            $data["description"] = $this->owner->getSocialMetaSiteDescription();
         }
         if (($logo = $this->getSocialMetaLogo()) && $logo->exists()) {
             $data["logo"] = array(
