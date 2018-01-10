@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.1]
+
+* fix js in CMS to hide locations if disabled
+
 ## [2.0.0]
 
 * add possibility to add multiple location records for organisations and local businesses

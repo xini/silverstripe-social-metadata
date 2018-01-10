@@ -64,6 +64,24 @@
 		}
 	});
 	
+	$('input#Form_EditForm_MicroDataAdditionalLocations').entwine({
+		onmatch: function(e) {
+			this._super();
+			this.toggle();
+		},
+		onchange: function(e) {
+			this._super();
+			this.toggle();
+		},
+		toggle: function () {
+			if ($(this).is(':checked')) {
+				$('#Form_EditForm_AdditionalLocations').show();
+			} else {
+				$('#Form_EditForm_AdditionalLocations').hide();
+			}
+		}
+	});
+
 	$('input#Form_ItemEditForm_MicroDataEnableCoordinates').entwine({
 		onmatch: function(e) {
 			this._super();
