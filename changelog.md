@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0]
+
+* add possibility to add multiple location records for organisations and local businesses
+* add hasMap property for entered addresses
+* add possibility to add multiple opening hours records
+* add pre-configured schema types for sub types of organisation, local business and event
+* clean up code and CMS
+
 ## [1.4.0]
 
 * add 'getKeyvisualImage' method call to social media image collector

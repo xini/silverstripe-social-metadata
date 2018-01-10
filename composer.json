@@ -13,7 +13,8 @@
 		"silverstripe/framework": "~3.2",
 		"silverstripe/cms": "~3.2",
 		"symbiote/silverstripe-multivaluefield": "~3.0",
-		"betterbrief/silverstripe-googlemapfield": "~1.3"
+		"betterbrief/silverstripe-googlemapfield": "~1.3",
+		"exadium/extra-attributes-field": "dev-master"
 	},
 	"extra": {
 		"installer-name": "social-metadata"

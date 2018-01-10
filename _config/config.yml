@@ -19,6 +19,7 @@ LeftAndMain:
     - social-metadata/javascript/cms-social-meta.js
 SocialMetaConfigExtension:
   multisites_enable_global_settings: false
+
 ---
 Only:
   classexists: 'Multisites'
