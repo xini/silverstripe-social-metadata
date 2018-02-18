@@ -456,6 +456,14 @@ class SocialMetaPageExtension extends SiteTreeExtension {
                 "height" => $logo->getHeight().'px',
             );
         }
+        if (($image = $this->getSocialMetaImage()) && $image->exists()) {
+            $data["image"] = array(
+                "@type" => 'ImageObject',
+                "url" => $image->AbsoluteLink(),
+                "width" => $image->getWidth().'px',
+                "height" => $image->getHeight().'px',
+            );
+        }
         if ($this->owner->getSocialMetaSiteURL()) {
             $data["url"] = $this->owner->getSocialMetaSiteURL();
         }
