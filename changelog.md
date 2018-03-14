@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.0]
+
+* refactor module
+* use MetaTags() instead of template for rendering
+* show global schema data only on home page
+
 ## [2.1.0]
 
 * add SocialMetaImage to Schema data

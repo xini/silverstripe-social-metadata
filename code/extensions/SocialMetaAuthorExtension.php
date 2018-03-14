@@ -24,5 +24,24 @@ class SocialMetaAuthorExtension extends DataExtension {
             'DirectGroups'
         );
     }
+    public function onBeforeWrite() {
+        parent::onBeforeWrite();
+        
+        $this->owner->GooglePlusProfile = $this->updateLinkURL($this->owner->GooglePlusProfile);
+        $this->owner->FacebookProfile = $this->updateLinkURL($this->owner->FacebookProfile);
+    }
+    
+    private function updateLinkURL($url) {
+        if($url) {
+            if(
+                substr($url, 0, 8) != 'https://'
+                && substr($url, 0, 7) != 'http://'
+                && substr($url, 0, 6) != 'ftp://'
+                ) {
+                    $url = 'http://' . $url;
+                }
+        }
+        return $url;
+    }
     
 }

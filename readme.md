@@ -25,16 +25,6 @@ Then run dev/build.
 
 The module adds a new tab to the SiteConfig in the CMS where all the metadata can be configured. 
 
-Please add the following include in the head of the main `Page.ss` template:
-
-```
-<head>
-	...
-	<% include SocialMetaTags %>
-	...
-</head>
-```
-
 ### MultiSites support
 
 The module supports the [multisites module] (https://github.com/silverstripe-australia/silverstripe-multisites) and by default adds the config options to the Sites.

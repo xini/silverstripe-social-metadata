@@ -1,9 +1,9 @@
 ---
 Name: socialmetadata
 ---
-Page:
+SiteTree:
   extensions:
-    - SocialMetaPageExtension
+    - SocialMetaSiteTreeExtension
 SiteConfig:
   extensions:
     - SocialMetaConfigExtension

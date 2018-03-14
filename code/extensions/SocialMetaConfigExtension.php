@@ -312,4 +312,414 @@ class SocialMetaConfigExtension extends DataExtension {
         return $url;
     }
     
+    public function getSchemaData() {
+        $currentPage = Director::get_current_page();
+        // setup data array
+        $data = array(
+            "@context" => "http://schema.org",
+            "@type" => $this->owner->getSocialMetaSchemaType(),
+        );
+    
+        // generic properties
+        if ($this->owner->getSocialMetaSiteName()) {
+            $data["name"] = $this->owner->getSocialMetaSiteName();
+        }
+        if ($this->owner->getSocialMetaSiteDescription()) {
+            $data["description"] = $this->owner->getSocialMetaSiteDescription();
+        }
+        if (($logo = $this->owner->MicroDataLogo()) && $logo->exists()) {
+            $data["logo"] = array(
+                "@type" => 'ImageObject',
+                "url" => $logo->AbsoluteLink(),
+                "width" => $logo->getWidth().'px',
+                "height" => $logo->getHeight().'px',
+            );
+        }
+        if ($currentPage && $currentPage->hasMethod('getSocialMetaImage') && ($image = $currentPage->getSocialMetaImage()) && $image->exists()) {
+            $data["image"] = array(
+                "@type" => 'ImageObject',
+                "url" => $image->AbsoluteLink(),
+                "width" => $image->getWidth().'px',
+                "height" => $image->getHeight().'px',
+            );
+        }
+        if ($this->owner->getSocialMetaSiteURL()) {
+            $data["url"] = $this->owner->getSocialMetaSiteURL();
+        }
+        if ($this->owner->getSocialMetaProfilePages() && $this->owner->getSocialMetaProfilePages()->exists()) {
+            $sameAs = array();
+            foreach ($this->owner->getSocialMetaProfilePages() as $profile) {
+                $sameAs[] = $profile->URL;
+            }
+            if (count($sameAs)) {
+                $data["sameAs"] = $sameAs;
+            }
+        }
+        
+        // build main addresses
+        $addresses = array();
+        if ($this->owner->MicroDataStreetAddress || $this->owner->MicroDataPOBoxNumber || $this->owner->MicroDataCity || $this->owner->MicroDataPostCode) {
+            $address = array(
+                "@type" => "PostalAddress"
+            );
+            if ($this->owner->MicroDataCountry) {
+                $address["addressCountry"] = $this->owner->MicroDataCountry;
+            }
+            if ($this->owner->MicroDataCity) {
+                $address["addressLocality"] = $this->owner->MicroDataCity;
+            }
+            if ($this->owner->MicroDataRegion) {
+                $address["addressRegion"] = $this->owner->MicroDataRegion;
+            }
+            if ($this->owner->MicroDataPostCode) {
+                $address["postalCode"] = $this->owner->MicroDataPostCode;
+            }
+            if ($this->owner->MicroDataPOBoxNumber) {
+                $address["postOfficeBoxNumber"] = $this->owner->MicroDataPOBoxNumber;
+            }
+            if ($this->owner->MicroDataStreetAddress) {
+                $address["streetAddress"] = $this->owner->MicroDataStreetAddress;
+            }
+        }
+        if ($this->owner->MicroDataAdditionalLocations && ($locations = $this->owner->AdditionalLocations())) {
+    
+            // check if separate entities
+            if (!$this->owner->MicroDataAdditionalLocationsSeparateEntities) {
+    
+                // add title to main address and save
+                if (isset($address) && $this->owner->getSocialMetaSiteName()) {
+                    $address["name"] = $this->owner->getSocialMetaSiteName();
+                }
+                if (isset($address)) {
+                    $addresses[] = $address;
+                }
+    
+                // load additional addresses
+                foreach ($locations as $location) {
+                    if ($location->MicroDataStreetAddress || $location->MicroDataPOBoxNumber || $location->MicroDataCity || $location->MicroDataPostCode) {
+                        $address = array(
+                            "@type" => "PostalAddress"
+                        );
+                        if ($location->MicroDataTitle) {
+                            $address["name"] = $location->MicroDataTitle;
+                        }
+                        if ($location->MicroDataCountry) {
+                            $address["addressCountry"] = $location->MicroDataCountry;
+                        }
+                        if ($location->MicroDataCity) {
+                            $address["addressLocality"] = $location->MicroDataCity;
+                        }
+                        if ($location->MicroDataRegion) {
+                            $address["addressRegion"] = $location->MicroDataRegion;
+                        }
+                        if ($location->MicroDataPostCode) {
+                            $address["postalCode"] = $location->MicroDataPostCode;
+                        }
+                        if ($location->MicroDataPOBoxNumber) {
+                            $address["postOfficeBoxNumber"] = $location->MicroDataPOBoxNumber;
+                        }
+                        if ($location->MicroDataStreetAddress) {
+                            $address["streetAddress"] = $location->MicroDataStreetAddress;
+                        }
+                        $addresses[] = $address;
+                    }
+                }
+    
+            } else {
+    
+                // save main address
+                if (isset($address)) {
+                    $addresses = $address;
+                }
+    
+                // load additional locations
+                $subOrganisations = array();
+                foreach ($locations as $location) {
+                    // setup type
+                    $organisation = array(
+                        "@type" => $location->getSocialMetaSchemaType(),
+                        "parentOrganization" => array(
+                            "@type" => $this->owner->getSocialMetaSchemaType(),
+                            "name" => $this->owner->getSocialMetaSiteName(),
+                        )
+                    );
+                    // add name
+                    if ($location->MicroDataTitle) {
+                        $organisation["name"] = $location->MicroDataTitle;
+                    }
+                    // build address
+                    if ($location->MicroDataStreetAddress || $location->MicroDataPOBoxNumber || $location->MicroDataCity || $location->MicroDataPostCode) {
+                        $address = array(
+                            "@type" => "PostalAddress"
+                        );
+                        if ($location->MicroDataTitle) {
+                            $address["name"] = $location->MicroDataTitle;
+                        }
+                        if ($location->MicroDataCountry) {
+                            $address["addressCountry"] = $location->MicroDataCountry;
+                        }
+                        if ($location->MicroDataCity) {
+                            $address["addressLocality"] = $location->MicroDataCity;
+                        }
+                        if ($location->MicroDataRegion) {
+                            $address["addressRegion"] = $location->MicroDataRegion;
+                        }
+                        if ($location->MicroDataPostCode) {
+                            $address["postalCode"] = $location->MicroDataPostCode;
+                        }
+                        if ($location->MicroDataPOBoxNumber) {
+                            $address["postOfficeBoxNumber"] = $location->MicroDataPOBoxNumber;
+                        }
+                        if ($location->MicroDataStreetAddress) {
+                            $address["streetAddress"] = $location->MicroDataStreetAddress;
+                        }
+                        $organisation["address"] = $address;
+                    }
+                    // contact details
+                    if ($location->MicroDataPhone) {
+                        $organisation["telephone"] = $location->MicroDataPhone;
+                    }
+                    if ($location->MicroDataFax) {
+                        $organisation["faxNumber"] = $location->MicroDataFax;
+                    }
+                    if ($location->MicroDataEmail) {
+                        $organisation["email"] = $location->MicroDataEmail;
+                    }
+                    // map link
+                    if ($location->getSocialMetaSchemaType(true) == "LocalBusiness" && $location->getSocialMetaMapLink()) {
+                        $organisation["hasMap"] = $location->getSocialMetaMapLink();
+                    }
+                    // build coordinates
+                    if ($location->MicroDataEnableCoordinates && $location->MicroDataLocationLatitude && $location->MicroDataLocationLongitude) {
+                        $coordinates = array(
+                            "@type" => "GeoCoordinates",
+                            "latitude" => $location->MicroDataLocationLatitude,
+                            "longitude" => $location->MicroDataLocationLongitude,
+                        );
+                        $organisation["geo"] = $coordinates;
+                    }
+                    // business properties
+                    if (($objects = $location->OpeningHours()) && $objects->exists()) {
+                        $hours = array();
+                        foreach ($objects as $object) {
+                            $row = $object->Days;
+                            if ($object->TimeOpen && $object->TimeClose) {
+                                $row .= ' ' . $object->TimeOpen . '-' . $object->TimeClose;
+                            }
+                            $hours[] = $row;
+                        }
+                        if (count($hours)) {
+                            $organisation["openingHours"] = $hours;
+                        }
+                    }
+                    if ($location->MicroDataPaymentAccepted) {
+                        $organisation["paymentAccepted"] = $location->MicroDataPaymentAccepted;
+                    }
+                    // add location to sub organisations
+                    $subOrganisations[] = $organisation;
+                }
+                if (count($subOrganisations)) {
+                    $data["subOrganization"] = $subOrganisations;
+                }
+            }
+    
+        } else {
+            // save main address
+            if (isset($address)) {
+                $addresses[] = $address;
+            }
+        }
+    
+        // build coordinates
+        if ($this->owner->MicroDataEnableCoordinates && $this->owner->MicroDataLocationLongitude && $this->owner->MicroDataLocationLatitude) {
+            $coordinates = array(
+                "@type" => "GeoCoordinates",
+                "latitude" => $this->owner->MicroDataLocationLatitude,
+                "longitude" => $this->owner->MicroDataLocationLongitude,
+            );
+        }
+    
+        // event data
+        if ($this->owner->getSocialMetaSchemaType == "Event") {
+    
+            // add data to event and event location
+    
+            if ($this->owner->MicroDataEventStart) {
+                $data["startDate"] = $this->owner->dbObject('MicroDataEventStart')->Rfc3339();
+            }
+            if ($this->owner->MicroDataEventEnd) {
+                $data["endDate"] = $this->owner->dbObject('MicroDataEventEnd')->Rfc3339();
+            }
+            // event location
+            $location = array(
+                "@type" => "Place",
+            );
+            if ($this->owner->MicroDataEventLocationName) {
+                $location["name"] = $this->owner->MicroDataEventLocationName;
+            }
+            if ($this->owner->MicroDataEventLocationWebsite) {
+                $location["sameAs"] = $this->owner->MicroDataEventLocationWebsite;
+            }
+            // address
+            if (isset($addresses) && count($addresses)) {
+                $location["address"] = $addresses;
+            }
+            // contact details
+            if ($this->owner->MicroDataPhone) {
+                $location["telephone"] = $this->owner->MicroDataPhone;
+            }
+            if ($this->owner->MicroDataFax) {
+                $location["faxNumber"] = $this->owner->MicroDataFax;
+            }
+            if ($this->owner->MicroDataEmail) {
+                $location["email"] = $this->owner->MicroDataEmail;
+            }
+            // coordinates
+            if (isset($coordinates)) {
+                $location["geo"] = $coordinates;
+            }
+    
+            $data["location"] = $location;
+    
+        } else {
+    
+            // add address and contact data to main data if not an event
+    
+            // address
+            if (isset($addresses) && count($addresses)) {
+                $data["address"] = $addresses;
+            }
+            // contact details
+            if ($this->owner->MicroDataPhone) {
+                $data["telephone"] = $this->owner->MicroDataPhone;
+            }
+            if ($this->owner->MicroDataFax) {
+                $data["faxNumber"] = $this->owner->MicroDataFax;
+            }
+            if ($this->owner->MicroDataEmail) {
+                $data["email"] = $this->owner->MicroDataEmail;
+            }
+            // coordinates
+            if (isset($coordinates)) {
+                $data["geo"] = $coordinates;
+            }
+    
+        }
+    
+        if ($this->owner->getSocialMetaSchemaType(true) == "LocalBusiness") {
+    
+            // map link
+            if ($this->owner->getSocialMetaMapLink()) {
+                $data["hasMap"] = $this->owner->getSocialMetaMapLink();
+            }
+    
+        }
+    
+        // business properties
+        if ($objects = $this->owner->OpeningHours()) {
+            $hours = array();
+            foreach ($objects as $object) {
+                $row = $object->Days;
+                if ($object->TimeOpen && $object->TimeClose) {
+                    $row .= ' ' . $object->TimeOpen . '-' . $object->TimeClose;
+                }
+                $hours[] = $row;
+            }
+            if (count($hours)) {
+                $data["openingHours"] = $hours;
+            }
+        }
+        if ($this->owner->MicroDataPaymentAccepted) {
+            $data["paymentAccepted"] = $this->owner->MicroDataPaymentAccepted;
+        }
+    
+        // return ld+json string
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+    
+    public function getSocialMetaSchemaType($baseTypeOnly = false) {
+        if ($this->owner->MicroDataTypeSpecific && $baseTypeOnly == false) {
+            return $this->owner->MicroDataTypeSpecific;
+        } else {
+            return $this->owner->MicroDataType;
+        }
+    }
+    
+    /**
+     * using data added by innoweb/silverstripe-social-profiles if available
+     */
+    public function getSocialMetaProfilePages() {
+        $profiles = array();
+        if ($this->owner->ProfilesFacebookPage) {
+            $profiles[] = new ArrayData(array("URL" => $this->owner->ProfilesFacebookPage));
+        }
+        if ($this->owner->ProfilesTwitterPage) {
+            $profiles[] = new ArrayData(array("URL" => $this->owner->ProfilesTwitterPage));
+        }
+        if ($this->owner->ProfilesGooglePage) {
+            $profiles[] = new ArrayData(array("URL" => $this->owner->ProfilesGooglePage));
+        }
+        if ($this->owner->ProfilesLinkedinPage) {
+            $profiles[] = new ArrayData(array("URL" => $this->owner->ProfilesLinkedinPage));
+        }
+        if ($this->owner->ProfilesPinterestPage) {
+            $profiles[] = new ArrayData(array("URL" => $this->owner->ProfilesPinterestPage));
+        }
+        if ($this->owner->ProfilesInstagramPage) {
+            $profiles[] = new ArrayData(array("URL" => $this->owner->ProfilesInstagramPage));
+        }
+        if ($this->owner->ProfilesYoutubePage) {
+            $profiles[] = new ArrayData(array("URL" => $this->owner->ProfilesYoutubePage));
+        }
+        return new ArrayList($profiles);
+    }
+    
+    public function getSocialMetaSiteName() {
+        if ($this->owner->DefaultSharingTitle) {
+            return $this->owner->DefaultSharingTitle;
+        } else if ($this->owner->Title) {
+            return $this->owner->Title;
+        }
+        return null;
+    }
+    
+    public function getSocialMetaSiteDescription() {
+        if ($this->owner->DefaultSharingDescription) {
+            return $this->owner->DefaultSharingDescription;
+        } else if (($homelink = RootURLController::get_homepage_link()) && $home = SiteTree::get_by_link($homelink)) {
+            return $home->getSocialMetaDescription();
+        }
+        return null;
+    }
+    
+    public function getSocialMetaSiteURL() {
+        return Director::absoluteBaseURL();
+    }
+
+    public function getSocialMetaMapLink() {
+        if ($this->owner->MicroDataStreetAddress) {
+            $address = array();
+            $address[] = $this->owner->MicroDataStreetAddress . ',';
+            if ($this->owner->MicroDataCity) {
+                $address[] = $this->owner->MicroDataCity;
+            }
+            if ($this->owner->MicroDataRegion) {
+                $address[] = $this->owner->MicroDataRegion;
+            }
+            if ($this->owner->MicroDataPostCode) {
+                $address[] = $this->owner->MicroDataPostCode;
+            }
+            $address = implode(' ', $address);
+            return "https://www.google.com.au/maps/place/".urlencode($address);
+        }
+        return null;
+    }
+    
+    public function getSocialMetaAdditionalLocations() {
+        if (($locations = $this->owner->AdditionalLocations()) && $locations->exists()) {
+            return $locations;
+        }
+        return null;
+    }
+    
 }
