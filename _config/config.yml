@@ -14,7 +14,7 @@ SocialMetaPageExtension:
   facebook_page_type:
     BlogPost: 'article'
     ArticlePage: 'article'
-LeftAndMain:
+CMSMain:
   extra_requirements_javascript:
     - social-metadata/javascript/cms-social-meta.js
 SocialMetaConfigExtension:
