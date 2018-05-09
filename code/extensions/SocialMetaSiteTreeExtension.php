@@ -112,7 +112,7 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
             // schema data 
             if (($data = $config->getSchemaData()) && class_exists('Multisites') && trim($this->owner->Link(), "/") == MultisitesRootController::get_homepage_link()) {
                 $tags .= "<script type=\"application/ld+json\">" . $data . "</script>\n";
-            } else if (($data = $config->getSchemaData()) && trim($this->owner->Link(), "/") == RootURLController::get_homepage_link()) {
+            } else if (($data = $config->getSchemaData()) && (trim($this->owner->Link(), "/") == RootURLController::get_homepage_link() || trim($this->owner->Link(), "/") == '')) {
                 $tags .= "<script type=\"application/ld+json\">" . $data . "</script>\n";
             } else if ($this->owner->hasMethod('getSchemaData') && ($data = $this->owner->getSchemaData())) {
                 $tags .= "<script type=\"application/ld+json\">" . $data . "</script>\n";
