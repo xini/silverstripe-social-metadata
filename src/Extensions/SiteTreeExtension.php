@@ -1,12 +1,24 @@
 <?php
-class SocialMetaSiteTreeExtension extends SiteTreeExtension {
-    
+
+namespace Innoweb\SocialMeta\Extensions;
+
+use SilverStripe\Assets\File;
+use SilverStripe\CMS\Controllers\RootURLController;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBDate;
+use SilverStripe\SiteConfig\SiteConfig;
+
+class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension {
+
     public function MetaTags(&$tags) {
         // $tags .= "<meta name=\"name\" content=\"" . $content . "\" />\n";
-        
+
         $config = $this->owner->getSocialMetaConfig();
         if ($config && $config->exists()) {
-        
+
             // twitter
             if (($image = $this->owner->getSocialMetaImage()) && $image->getWidth() >= 280) {
                 $tags .= "<meta name=\"twitter:card\" content=\"summary_large_image\" />\n";
@@ -22,7 +34,7 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
             if ($content = $this->owner->getSocialMetaDescription()) {
                 $tags .= "<meta name=\"twitter:description\" content=\"" . $content . "\" />\n";
             }
-            
+
             // facebook / open graph
             if ($content = $config->MetaFacebookAppId) {
                 $tags .= "<meta property=\"fb:app_id\" content=\"" . $content . "\" />\n";
@@ -75,7 +87,7 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
                     $tags .= "<meta property=\"fb:admins\" content=\"" . $admin . "\" />\n";
                 }
             }
-            
+
             // authors
             if ($authors = $this->owner->getSocialMetaAuthors()) {
                 foreach ($authors as $author) {
@@ -91,7 +103,7 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
                 }
                 $tags .= "<meta name=\"author\" content=\"" . implode(', ', $authors->column('Name')) . "\" />\n";
             }
-            
+
             // images
             if ($image = $this->owner->getSocialMetaImage()) {
                 // two versions of focuspoint module
@@ -101,34 +113,34 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
                 } else if ($image->hasMethod('CroppedFocusedImage') && $cropped = $image->CroppedFocusedImage(1200,630)) {
                     $tags .= "<meta name=\"twitter:image\" content=\"" . $cropped->AbsoluteLink() . "\" />\n";
                     $tags .= "<meta property=\"og:image\" content=\"" . $cropped->AbsoluteLink() . "\" />\n";
-                    
+
                 // default SS fill
                 } else if ($cropped = $image->Fill(1200,630)) {
                     $tags .= "<meta name=\"twitter:image\" content=\"" . $cropped->AbsoluteLink() . "\" />\n";
                     $tags .= "<meta property=\"og:image\" content=\"" . $cropped->AbsoluteLink() . "\" />\n";
                 }
             }
-            
-            // schema data 
-            if (($data = $config->getSchemaData()) && class_exists('Multisites') && trim($this->owner->Link(), "/") == MultisitesRootController::get_homepage_link()) {
+
+            // schema data
+            if (($data = $config->getSchemaData()) && class_exists('Symbiote\Multisites\Multisites') && trim($this->owner->Link(), "/") == \Symbiote\Multisites\Control\MultisitesRootController::get_homepage_link()) {
                 $tags .= "<script type=\"application/ld+json\">" . $data . "</script>\n";
             } else if (($data = $config->getSchemaData()) && (trim($this->owner->Link(), "/") == RootURLController::get_homepage_link() || trim($this->owner->Link(), "/") == '')) {
                 $tags .= "<script type=\"application/ld+json\">" . $data . "</script>\n";
             } else if ($this->owner->hasMethod('getSchemaData') && ($data = $this->owner->getSchemaData())) {
                 $tags .= "<script type=\"application/ld+json\">" . $data . "</script>\n";
             }
-        }        
+        }
     }
-    
+
     public function getSocialMetaConfig() {
-        if (class_exists('Multisites') && !Config::inst()->get('SocialMetaConfigExtension', 'multisites_enable_global_settings')) {
-            return Multisites::inst()->getCurrentSite();
+        if (class_exists('Symbiote\Multisites\Multisites') && !Config::inst()->get('SocialMetaConfigExtension', 'multisites_enable_global_settings')) {
+            return \Symbiote\Multisites\Multisites::inst()->getCurrentSite();
         } else {
             return SiteConfig::current_site_config();
         }
         return null;
     }
-    
+
     public function getSocialMetaPageURL() {
         if ($this->owner->hasMethod('getCanonicalURL')) {
             return $this->owner->getCanonicalURL();
@@ -136,7 +148,7 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
             return preg_replace('/home\/$/i', '', $this->owner->AbsoluteLink());
         }
     }
-    
+
     public function getSocialMetaPageTitle() {
         $config = $this->getSocialMetaConfig();
         if ($this->owner->hasMethod('getTitleTag') && $this->owner->getTitleTag()) {
@@ -152,7 +164,7 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
         }
         return null;
     }
-    
+
     public function getSocialMetaDescription() {
         $config = $this->getSocialMetaConfig();
         if ($this->owner->MetaDescription) {
@@ -168,10 +180,10 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
         }
         return null;
     }
-    
+
     public function getSocialMetaFacebookType() {
-        $configs = Config::inst()->get('SocialMetaPageExtension', 'facebook_page_type');
-        $currentpage = Injector::inst()->get($this->owner->class);
+        $configs = Config::inst()->get(SiteTreeExtension::class, 'facebook_page_type');
+        $currentpage = Injector::inst()->get(get_class($this->owner));
         foreach ($configs as $classname => $type) {
             if ($currentpage instanceof $classname) {
                 return $type;
@@ -179,11 +191,11 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
         }
         return "website";
     }
-    
+
     public function getSocialMetaFacebookLocale() {
         return i18n::get_locale();
     }
-    
+
     public function getSocialMetaImage() {
         $config = $this->getSocialMetaConfig();
         $image = null;
@@ -191,22 +203,22 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
             if ($this->owner->hasMethod('getKeyvisualImage') && ($image = $this->owner->getKeyvisualImage()) && $image->exists()) {
                 // method that can be overriden on eny page type
                 $image = $image;
-            } else if ($this->owner->has_one('FeaturedImage') && $this->owner->FeaturedImage()) {
+            } else if ($this->owner->getRelationType('FeaturedImage') === 'has_one' && $this->owner->FeaturedImage()) {
                 // blog module
                 $image = $this->owner->FeaturedImage();
-            } else if ($this->owner->many_many('ContentImages') && $this->owner->ContentImages()) {
+            } else if ($this->owner->getRelationType('ContentImages') === 'many_many' && $this->owner->ContentImages()) {
                 // e.g. news module
                 $image = $this->owner->ContentImages()->First();
-            } else if ($this->owner->has_one('Icon') && $this->owner->Icon()) {
+            } else if ($this->owner->getRelationType('Icon') === 'has_one' && $this->owner->Icon()) {
                 // e.g. events module
                 $image = $this->owner->Icon();
-            } else if ($this->owner->has_one('Keyvisual') && $this->owner->Keyvisual()) {
+            } else if ($this->owner->getRelationType('Keyvisual') === 'has_one' && $this->owner->Keyvisual()) {
                 // keyvisual module
                 $image = $this->owner->Keyvisual();
-            } else if ($this->owner->many_many('Keyvisuals') && $this->owner->Keyvisuals()) {
+            } else if ($this->owner->getRelationType('Keyvisuals') === 'many_many' && $this->owner->Keyvisuals()) {
                 // keyvisual module (slider)
                 $image = $this->owner->Keyvisuals()->First();
-            } else if ($this->owner->has_many('PageSlides') && ($slides = $this->owner->PageSlides()) && $slides->exists()) {
+            } else if ($this->owner->getRelationType('PageSlides') === 'has_many' && ($slides = $this->owner->PageSlides()) && $slides->exists()) {
                 // keyvisual module (slider)
                 foreach ($slides as $slide) {
                     if ($slide && $slide->exists() && ($temp = $slide->Image()) && $temp->exists()) {
@@ -230,19 +242,19 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
             }
         }
         // fallback from innoweb/silverstripe-social-share
-        if ((!$image || !$image->exists()) && $config && $config->exists() && $config->has_one('DefaultSharingImage')) {
+        if ((!$image || !$image->exists()) && $config && $config->exists() && $config->getRelationType('DefaultSharingImage') === 'has_one') {
             $image = $config->DefaultSharingImage();
         }
         return $image;
     }
-    
+
     public function getSocialMetaPublicationDate() {
         if ($this->owner->PublishDate) {
             // blog module
             return $this->owner->obj('PublishDate')->Rfc3339();
         } else if ($this->owner->Date) {
             // news module
-            return $this->owner->obj('Date')->Rfc3339();
+            return $this->owner->obj(DBDate::class)->Rfc3339();
         } else {
             $version = $this->owner->allVersions()->filter("WasPublished", "1")->last();
             if ($version) {
@@ -251,14 +263,14 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
         }
         return null;
     }
-    
+
     public function getSocialMetaModificationDate() {
         if ($this->owner->LastEdited) {
             return $this->owner->obj('LastEdited')->Rfc3339();
         }
         return null;
     }
-    
+
     public function getSocialMetaAuthors() {
         if ($this->owner->hasMethod('getPageAuthors') && ($authors = $this->owner->getPageAuthors())) {
             // news module
@@ -276,25 +288,25 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
         }
         return null;
     }
-    
+
     public function getSocialMetaSections() {
-        if ($this->owner->many_many('Categories') && ($categories = $this->owner->Categories()) && $categories->exists()) {
+        if ($this->owner->getRelationType('Categories') === 'many_many' && ($categories = $this->owner->Categories()) && $categories->exists()) {
             // blog module
             return $categories->column('Title');
-        } else if ($this->owner->has_one('EventCategory') && ($category = $this->owner->EventCategory())) {
+        } else if ($this->owner->getRelationType('EventCategory') === 'has_one' && ($category = $this->owner->EventCategory())) {
             // events module
             return array($category->Title);
         }
         return null;
     }
-    
+
     public function getSocialMetaTags() {
-        if ($this->owner->many_many('Tags') && ($tags = $this->owner->Tags()) && $tags->exists()) {
+        if ($this->owner->getRelationType('Tags') === 'many_many' && ($tags = $this->owner->Tags()) && $tags->exists()) {
             // blog module
             return $tags->column('Title');
         }
         return null;
     }
-    
+
 }
 

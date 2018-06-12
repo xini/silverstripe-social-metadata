@@ -1,30 +1,27 @@
 ---
 Name: socialmetadata
 ---
-SiteTree:
+SilverStripe\CMS\Model\SiteTree:
   extensions:
-    - SocialMetaSiteTreeExtension
-SiteConfig:
+    - Innoweb\SocialMeta\Extensions\SiteTreeExtension
+SilverStripe\SiteConfig\SiteConfig:
   extensions:
-    - SocialMetaConfigExtension
-Member:
+    - Innoweb\SocialMeta\Extensions\ConfigExtension
+SilverStripe\Security\Member:
   extensions:
-    - SocialMetaAuthorExtension
-SocialMetaPageExtension:
+    - Innoweb\SocialMeta\Extensions\AuthorExtension
+Innoweb\SocialMeta\Extensions\SiteTreeExtension:
   facebook_page_type:
-    BlogPost: 'article'
-    ArticlePage: 'article'
-CMSMain:
-  extra_requirements_javascript:
-    - social-metadata/javascript/cms-social-meta.js
-SocialMetaConfigExtension:
+    Page: 'article'
+Innoweb\SocialMeta\Extensions\ConfigExtension:
   multisites_enable_global_settings: false
-
+SilverStripe\Forms\FormField:
+  extensions:
+    - Innoweb\SocialMeta\Forms\FormFieldAttributesExtension
 ---
 Only:
-  classexists: 'Multisites'
+  classexists: 'Symbiote\Multisites\Multisites'
 ---
-Site:
+Symbiote\Multisites\Model\Site:
   extensions:
-    - SocialMetaConfigExtension
-    
+    - Innoweb\SocialMeta\Extensions\ConfigExtension

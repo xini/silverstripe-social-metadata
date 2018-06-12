@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0]
+
+* upgraded for SilverStripe 4 compatibility
+* replaced extraattributesfield module with dependentdropdownfield
+* replaced local cms javascript with displaylogic functionality
+
 ## [3.0.2]
 
 * fix schema data for non-multisites sites

@@ -9,7 +9,9 @@ Adds social metadata like OpenGraph, Twitter and JSON-LD to all pages.
 
 ## Requirements
 
-* SilverStripe CMS ~3.2
+* SilverStripe CMS 4.x
+
+Note: this version is compatible with SilverStripe 4. For SilverStripe 3, please see the [3.0 release line](https://github.com/xini/silverstripe-social-metadata/tree/3.0).
 
 ## Installation
 
@@ -32,7 +34,7 @@ The module supports the [multisites module] (https://github.com/silverstripe-aus
 If you want to manage the metadata globally, please add the following settings in your `config.yml`:
 
 ```
-SocialMetaConfigExtension:
+Innoweb\SocialMeta\Extensions\ConfigExtension:
   multisites_enable_global_settings: true
 ``` 
 

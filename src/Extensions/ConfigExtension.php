@@ -1,15 +1,46 @@
 <?php
-class SocialMetaConfigExtension extends DataExtension {
- 
+
+namespace Innoweb\SocialMeta\Extensions;
+
+use BetterBrief\GoogleMapField;
+use Innoweb\SocialMeta\Model\BusinessLocation;
+use Innoweb\SocialMeta\Model\OpeningHours;
+use Sheadawson\DependentDropdown\Forms\DependentDropdownField;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Assets\Image;
+use SilverStripe\CMS\Controllers\RootURLController;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\DatetimeField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FieldGroup;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\View\ArrayData;
+use Symbiote\MultiValueField\Fields\MultiValueTextField;
+use UncleCheese\DisplayLogic\Forms\Wrapper;
+
+class ConfigExtension extends DataExtension {
+
     private static $db = array(
         'MetaFacebookPage' => 'Varchar(255)',
         'MetaFacebookAppId' => 'Varchar(255)',
         'MetaFacebookAdmins' => 'MultiValueField',
         'MetaTwitterHandle' => 'Varchar(50)',
-        
+
         'MicroDataType' => 'Varchar(255)',
         'MicroDataTypeSpecific' => 'Varchar(255)',
-        
+
         'MicroDataStreetAddress' => 'Varchar(255)',
         'MicroDataPOBoxNumber' => 'Varchar(255)',
         'MicroDataCity' => 'Varchar(255)',
@@ -19,40 +50,40 @@ class SocialMetaConfigExtension extends DataExtension {
         'MicroDataPhone' => 'Varchar(255)',
         'MicroDataFax' => 'Varchar(255)',
         'MicroDataEmail' => 'Varchar(255)',
-        
+
         'MicroDataPaymentAccepted' => 'Varchar(255)',
-         
+
         "MicroDataEnableCoordinates" => 'Boolean',
         "MicroDataGoogleMapsAPIKey" => 'Varchar(255)',
         "MicroDataLocationLongitude" => "Varchar",
         "MicroDataLocationLatitude" => "Varchar",
-         
+
         'MicroDataAdditionalLocations' => 'Boolean',
         'MicroDataAdditionalLocationsSeparateEntities' => 'Boolean',
-        
+
         "MicroDataEventLocationName" => "Varchar(255)",
         "MicroDataEventLocationWebsite" => "Varchar(255)",
-        "MicroDataEventStart" => "SS_Datetime",
-        "MicroDataEventEnd" => "SS_Datetime",
+        "MicroDataEventStart" => "Datetime",
+        "MicroDataEventEnd" => "Datetime",
     );
-    
+
     private static $has_one = array(
-        'MicroDataLogo' => 'Image',
+        'MicroDataLogo' => Image::class,
     );
 
     private static $has_many = array(
-        'OpeningHours' => 'SocialMetaOpeningHours',
-        'AdditionalLocations' => 'SocialMetaBusinessLocation',
+        'OpeningHours' => OpeningHours::class,
+        'AdditionalLocations' => BusinessLocation::class
     );
-    
+
     public function updateCMSFields(FieldList $fields) {
-        
+
         if (
-            !class_exists('Multisites')
-            || (Config::inst()->get('SocialMetaConfigExtension', 'multisites_enable_global_settings') && $this->owner instanceof SiteConfig)
-            || (!Config::inst()->get('SocialMetaConfigExtension', 'multisites_enable_global_settings') && $this->owner instanceof Site)
+            !class_exists('Symbiote\Multisites\Multisites')
+            || (Config::inst()->get(ConfigExtension::class, 'multisites_enable_global_settings') && $this->owner instanceof SiteConfig)
+            || (!Config::inst()->get(ConfigExtension::class, 'multisites_enable_global_settings') && $this->owner instanceof \Symbiote\Multisites\Model\Site)
         ) {
-        
+
             // facebook
             $fields->addFieldsToTab("Root.SocialMetadata", array(
                 new HeaderField("facebookheader", _t("SocialMetaConfigExtension.FACEBOOK", 'Facebook'), 2),
@@ -60,20 +91,33 @@ class SocialMetaConfigExtension extends DataExtension {
                 new MultiValueTextField('MetaFacebookAdmins',_t('SocialMetaConfigExtension.FACEBOOKADMINIDS','Facebook Admin IDs')),
                 new TextField("MetaFacebookPage", _t("SocialMetaConfigExtension.FACEBOOKPAGE", 'Facebook Page (full URL)')),
             ));
-            
+
             // twitter
             $fields->addFieldsToTab("Root.SocialMetadata", array(
                 new HeaderField("twitterheader", _t("SocialMetaConfigExtension.TWITTER", 'Twitter'), 2),
                 new TextField("MetaTwitterHandle", _t("SocialMetaConfigExtension.TWITTERHANDLE", 'Twitter Handle (@xyz)')),
             ));
-                
+
+            $typeSpecificSource = function($type) {
+                if ($type === 'Organization') {
+                    $key = 'organization_types';
+                } else if ($type === 'LocalBusiness') {
+                    $key = 'localbusiness_types';
+                } else if ($type === 'Event') {
+                    $key = 'event_types';
+                } else {
+                    return array();
+                }
+                return ['' => '- select -'] + Config::inst()->get(ConfigExtension::class, $key);
+            };
+
             // micro data
             $fields->addFieldsToTab(
                 "Root.SocialMetadata",
                 array(
                     new HeaderField("microdataheader", _t("SocialMetaConfigExtension.MicroData", 'Micro Data'), 2),
-                    
-                    DropdownField::create(
+
+                    $typeField = DropdownField::create(
                         "MicroDataType",
                         "Type",
                         array(
@@ -82,16 +126,22 @@ class SocialMetaConfigExtension extends DataExtension {
                             'Event' => 'Event',
                         )
                     ),
-                    
+
+                    DependentDropdownField::create(
+                        'MicroDataTypeSpecific',
+                        'More specific type',
+                        $typeSpecificSource
+                    )->setDepends($typeField),
+
                     UploadField::create("MicroDataLogo", _t("SocialMetaConfigExtension.Logo", 'Logo'))
                         ->setFolderName('social')
                         ->setAllowedExtensions(array('jpg', 'gif', 'png')),
-                    
-                    TextField::create('MicroDataEventLocationName', 'Event Location Name'),
-                    TextField::create('MicroDataEventLocationWebsite', 'Event Location Website'),
-                    DatetimeField::create('MicroDataEventStart', 'Event Start'),
-                    DatetimeField::create('MicroDataEventEnd', 'Event End'),
-                    
+
+                    $microEventLocationField = TextField::create('MicroDataEventLocationName', 'Event Location Name'),
+                    $microEventLocationWebsiteField = TextField::create('MicroDataEventLocationWebsite', 'Event Location Website'),
+                    $microEventStartField = DatetimeField::create('MicroDataEventStart', 'Event Start'),
+                    $microEventEndField = DatetimeField::create('MicroDataEventEnd', 'Event End'),
+
                     TextField::create('MicroDataStreetAddress', 'Street Address'),
                     TextField::create('MicroDataPOBoxNumber', 'PO Box Number'),
                     TextField::create('MicroDataCity', 'City'),
@@ -100,20 +150,15 @@ class SocialMetaConfigExtension extends DataExtension {
                     TextField::create('MicroDataCountry', 'Country'),
                     TextField::create('MicroDataPhone', 'Phone'),
                     TextField::create('MicroDataFax', 'Fax'),
-                    TextField::create('MicroDataEmail', 'Email'),
-                    
+                    $microEmailField = TextField::create('MicroDataEmail', 'Email'),
+
                     FieldGroup::create(
                         CheckboxField::create("MicroDataEnableCoordinates", "")
-                    )->setTitle("Enable Location Coordinates"),
-                         
-                    GridField::create(
-                        'OpeningHours',
-                        'Opening Hours',
-                        $this->owner->OpeningHours(),
-                        GridFieldConfig_RecordEditor::create()
-                    ),
-                    
-                    CheckboxSetField::create(
+                    )
+                        ->setTitle("Enable Location Coordinates")
+                        ->setName('EnableLocationCoordinatesGroup'),
+
+                    $microPaymentAcceptedField = CheckboxSetField::create(
                         "MicroDataPaymentAccepted",
                         "Payment Accepted",
                         array(
@@ -125,108 +170,109 @@ class SocialMetaConfigExtension extends DataExtension {
                             'paypal' => 'PayPal',
                         )
                     ),
-                    
+
+                    $openingHoursField = Wrapper::create(
+                        GridField::create(
+                            'OpeningHours',
+                            'Opening Hours',
+                            $this->owner->OpeningHours(),
+                            GridFieldConfig_RecordEditor::create()
+                        )
+                    ),
+
                     FieldGroup::create(
                         CheckboxField::create("MicroDataAdditionalLocations", "This organisation/business has additional locations"),
                         CheckboxField::create("MicroDataAdditionalLocationsSeparateEntities", "The additional locations are seperate businesses/departments<br />(e.g. they have separate contact numbers, opening hours, etc.)")
                     )->setTitle("Business structure")
                     ->addExtraClass(''),
-                    
-                    GridField::create(
-                        'AdditionalLocations',
-                        'Additional Locations',
-                        $this->owner->AdditionalLocations(),
-                        GridFieldConfig_RecordEditor::create()
-                    ),
 
+                    $additionalLocationsField = Wrapper::create(
+                        GridField::create(
+                            'AdditionalLocations',
+                            'Additional Locations',
+                            $this->owner->AdditionalLocations(),
+                            GridFieldConfig_RecordEditor::create()
+                        )
+                    )
                 )
             );
-            
-            // specific type
-            $typesSpecific = Config::inst()->get('SocialMetaConfigExtension', 'organization_types');
-            $typesSpecific += Config::inst()->get('SocialMetaConfigExtension', 'localbusiness_types');
-            $typesSpecific += Config::inst()->get('SocialMetaConfigExtension', 'event_types');
-            $typesSpecific = array('' => '- select -') + $typesSpecific;
-            $typesSpecificParent = array_combine(
-                array_keys(Config::inst()->get('SocialMetaConfigExtension', 'organization_types')), 
-                array_fill(0, count(Config::inst()->get('SocialMetaConfigExtension', 'organization_types')), 'Organization')
-            );
-            $typesSpecificParent += array_combine(
-                array_keys(Config::inst()->get('SocialMetaConfigExtension', 'localbusiness_types')), 
-                array_fill(0, count(Config::inst()->get('SocialMetaConfigExtension', 'localbusiness_types')), 'LocalBusiness')
-            );
-            $typesSpecificParent += array_combine(
-                array_keys(Config::inst()->get('SocialMetaConfigExtension', 'event_types')),
-                array_fill(0, count(Config::inst()->get('SocialMetaConfigExtension', 'event_types')), 'Event')
-            );
-            $typesSpecificParent = array('' => 'All') + $typesSpecificParent;
-             $fields->insertAfter(
-                 'MicroDataType', 
-                 DropdownAttributesField::create(
-                     "MicroDataTypeSpecific",
-                     "More specific type",
-                     $typesSpecific
-                )
-                ->addExtraClass('dropdown')
-                ->setOptionsAttributes('data-type', $typesSpecificParent)
-            );
-            
+
+            $microEmailField
+                ->displayIf('MicroDataType')->isEqualTo('Organization')
+                ->orIf('MicroDataType')->isEqualTo('LocalBusiness');
+            $openingHoursField->displayIf('MicroDataType')->isEqualTo('LocalBusiness');
+            $microPaymentAcceptedField->displayIf('MicroDataType')->isEqualTo('LocalBusiness');
+            $additionalLocationsField->displayIf('MicroDataAdditionalLocations')->isChecked();
+
+            $microEventLocationField->displayIf('MicroDataType')->isEqualTo('Event');
+            $microEventLocationWebsiteField->displayIf('MicroDataType')->isEqualTo('Event');
+            $microEventStartField->displayIf('MicroDataType')->isEqualTo('Event');
+            $microEventEndField->displayIf('MicroDataType')->isEqualTo('Event');
+
             // get maps api key from external sources
             $mapsApiKey = $this->owner->getGoogleMapsAPIKey(false);
             // add api key field if not already configured elsewhere
             if (!$mapsApiKey) {
-                $fields->addFieldToTab(
-                    "Root.SocialMetadata",
-                    TextField::create('MicroDataGoogleMapsAPIKey', 'Google Maps API key'),
-                    'OpeningHours'
+
+                $fields->insertAfter(
+                    'EnableLocationCoordinatesGroup',
+                    $mapsAPIKeyField = TextField::create('MicroDataGoogleMapsAPIKey', 'Google Maps API key')
                 );
+                $mapsAPIKeyField->displayIf('MicroDataEnableCoordinates')->isChecked();
             }
-            // get final api ke, including local one
+            // get final api key, including local one
             $mapsApiKey = $this->owner->getGoogleMapsAPIKey();
-            
+
             // add map field
             if ($mapsApiKey) {
-                $fields->addFieldToTab(
-                    "Root.SocialMetadata",
-                    GoogleMapField::create(
-                        $this->owner,
-                        'Coordinates',
-                        array(
-                            "field_names" => array(
-                                "Longitude" => "MicroDataLocationLongitude",
-                                "Latitude" => "MicroDataLocationLatitude",
-                            ),
-                            "api_key" => $mapsApiKey,
+
+                $fields->insertAfter(
+                    'EnableLocationCoordinatesGroup',
+                    $coordinatesField = Wrapper::create(
+                        GoogleMapField::create(
+                            $this->owner,
+                            'Coordinates',
+                            array(
+                                "field_names" => array(
+                                    "Longitude" => "MicroDataLocationLongitude",
+                                    "Latitude" => "MicroDataLocationLatitude",
+                                ),
+                                "api_key" => $mapsApiKey,
+                            )
                         )
-                    ),
-                    'OpeningHours'
+                    )
                 );
+                $coordinatesField->displayIf('MicroDataEnableCoordinates')->isChecked();
+
             } else {
-                $fields->addFieldToTab(
-                    "Root.SocialMetadata",
-                    LiteralField::create(
-                        'CoordinatesInfo',
-                        '<p id="Form_EditForm_MicroDataCoordinatesInfo">'._t('SocialMetaConfigExtension.AddGoogleMapsAPIKey', 'Please add a Google Maps API key and save the config in order to set the coordinates.').'</p>'
-                    ),
-                    'OpeningHours'
+
+                $fields->insertAfter(
+                    'EnableLocationCoordinatesGroup',
+                    $coordinatesInfoField = Wrapper::create(
+                        LiteralField::create(
+                            'CoordinatesInfo',
+                            '<p>'._t('SocialMetaConfigExtension.AddGoogleMapsAPIKey', 'Please add a Google Maps API key and save the config in order to set the coordinates.').'</p>'
+                        )
+                    )
                 );
+                $coordinatesInfoField->displayIf('MicroDataEnableCoordinates')->isChecked();
             }
-            
+
             // set tab titles
             $fields->fieldByName("Root.SocialMetadata")->setTitle(_t('SocialMetaConfigExtension.MetadataTab', 'Social Metadata'));
-        
+
         }
     }
-    
+
     public function getGoogleMapsAPIKey($includeLocal = true) {
         $mapsApiKey = null;
         // check if API key already exists somewhere else
         if (($siteConfig = SiteConfig::current_site_config()) && $siteConfig->APIKey) {
             // goggle maps module
             $mapsApiKey = $siteConfig->APIKey;
-        } else if (Config::inst()->get('GoogleMapField', 'default_options.api_key')) {
+        } else if (Config::inst()->get(GoogleMapField::class, 'default_options.api_key')) {
             // default config google maps field
-            $mapsApiKey = Config::inst()->get('GoogleMapField', 'default_options.api_key');
+            $mapsApiKey = Config::inst()->get(GoogleMapField::class, 'default_options.api_key');
         }
         // check if configured here
         if (!$mapsApiKey && $includeLocal) {
@@ -234,59 +280,59 @@ class SocialMetaConfigExtension extends DataExtension {
         }
         return $mapsApiKey;
     }
-    
+
     public function updateSiteCMSFields(FieldList $fields) {
         $this->updateCMSFields($fields);
     }
-    
+
     public function onBeforeWrite() {
         parent::onBeforeWrite();
-        
+
         $this->owner->MicroDataEventLocationWebsite = $this->updateLinkURL($this->owner->MicroDataEventLocationWebsite);
-        
+
         // clean up data
         if ($this->owner->MicroDataType == "Organization") {
-            
+
             $this->owner->MicroDataPaymentAccepted = "";
             $this->owner->MicroDataEventLocationName = "";
             $this->owner->MicroDataEventLocationWebsite = "";
             $this->owner->MicroDataEventStart = "";
             $this->owner->MicroDataEventEnd = "";
-            
+
             $items = $this->owner->OpeningHours();
             if ($items && $items->Count() > 0) {
                 foreach($items as $item) {
                     $item->delete();
                 }
             }
-            
+
         } else if ($this->owner->MicroDataType == "LocalBusiness") {
 
             $this->owner->MicroDataEventLocationName = "";
             $this->owner->MicroDataEventLocationWebsite = "";
             $this->owner->MicroDataEventStart = "";
             $this->owner->MicroDataEventEnd = "";
-            
+
         } else if ($this->owner->MicroDataType == "Event") {
-            
+
             $this->owner->MicroDataEmail = "";
             $this->owner->MicroDataPaymentAccepted = "";
-            
+
             $items = $this->owner->OpeningHours();
             if ($items && $items->Count() > 0) {
                 foreach($items as $item) {
                     $item->delete();
                 }
             }
-            
+
         }
-        
+
         // remove coordinates
         if (!$this->owner->MicroDataEnableCoordinates) {
             $this->owner->MicroDataLocationLongitude = "";
             $this->owner->MicroDataLocationLatitude = "";
         }
-        
+
         // remove locations
         if (!$this->owner->MicroDataAdditionalLocations || $this->owner->MicroDataType == "Event") {
             $items = $this->owner->AdditionalLocations();
@@ -296,9 +342,9 @@ class SocialMetaConfigExtension extends DataExtension {
                 }
             }
         }
-        
+
     }
-    
+
     private function updateLinkURL($url) {
         if($url) {
             if(
@@ -311,7 +357,7 @@ class SocialMetaConfigExtension extends DataExtension {
         }
         return $url;
     }
-    
+
     public function getSchemaData() {
         $currentPage = Director::get_current_page();
         // setup data array
@@ -319,7 +365,7 @@ class SocialMetaConfigExtension extends DataExtension {
             "@context" => "http://schema.org",
             "@type" => $this->owner->getSocialMetaSchemaType(),
         );
-    
+
         // generic properties
         if ($this->owner->getSocialMetaSiteName()) {
             $data["name"] = $this->owner->getSocialMetaSiteName();
@@ -355,7 +401,7 @@ class SocialMetaConfigExtension extends DataExtension {
                 $data["sameAs"] = $sameAs;
             }
         }
-        
+
         // build main addresses
         $addresses = array();
         if ($this->owner->MicroDataStreetAddress || $this->owner->MicroDataPOBoxNumber || $this->owner->MicroDataCity || $this->owner->MicroDataPostCode) {
@@ -382,10 +428,10 @@ class SocialMetaConfigExtension extends DataExtension {
             }
         }
         if ($this->owner->MicroDataAdditionalLocations && ($locations = $this->owner->AdditionalLocations())) {
-    
+
             // check if separate entities
             if (!$this->owner->MicroDataAdditionalLocationsSeparateEntities) {
-    
+
                 // add title to main address and save
                 if (isset($address) && $this->owner->getSocialMetaSiteName()) {
                     $address["name"] = $this->owner->getSocialMetaSiteName();
@@ -393,7 +439,7 @@ class SocialMetaConfigExtension extends DataExtension {
                 if (isset($address)) {
                     $addresses[] = $address;
                 }
-    
+
                 // load additional addresses
                 foreach ($locations as $location) {
                     if ($location->MicroDataStreetAddress || $location->MicroDataPOBoxNumber || $location->MicroDataCity || $location->MicroDataPostCode) {
@@ -424,14 +470,14 @@ class SocialMetaConfigExtension extends DataExtension {
                         $addresses[] = $address;
                     }
                 }
-    
+
             } else {
-    
+
                 // save main address
                 if (isset($address)) {
                     $addresses = $address;
                 }
-    
+
                 // load additional locations
                 $subOrganisations = array();
                 foreach ($locations as $location) {
@@ -522,14 +568,14 @@ class SocialMetaConfigExtension extends DataExtension {
                     $data["subOrganization"] = $subOrganisations;
                 }
             }
-    
+
         } else {
             // save main address
             if (isset($address)) {
                 $addresses[] = $address;
             }
         }
-    
+
         // build coordinates
         if ($this->owner->MicroDataEnableCoordinates && $this->owner->MicroDataLocationLongitude && $this->owner->MicroDataLocationLatitude) {
             $coordinates = array(
@@ -538,12 +584,12 @@ class SocialMetaConfigExtension extends DataExtension {
                 "longitude" => $this->owner->MicroDataLocationLongitude,
             );
         }
-    
+
         // event data
         if ($this->owner->getSocialMetaSchemaType == "Event") {
-    
+
             // add data to event and event location
-    
+
             if ($this->owner->MicroDataEventStart) {
                 $data["startDate"] = $this->owner->dbObject('MicroDataEventStart')->Rfc3339();
             }
@@ -578,13 +624,13 @@ class SocialMetaConfigExtension extends DataExtension {
             if (isset($coordinates)) {
                 $location["geo"] = $coordinates;
             }
-    
+
             $data["location"] = $location;
-    
+
         } else {
-    
+
             // add address and contact data to main data if not an event
-    
+
             // address
             if (isset($addresses) && count($addresses)) {
                 $data["address"] = $addresses;
@@ -603,18 +649,18 @@ class SocialMetaConfigExtension extends DataExtension {
             if (isset($coordinates)) {
                 $data["geo"] = $coordinates;
             }
-    
+
         }
-    
+
         if ($this->owner->getSocialMetaSchemaType(true) == "LocalBusiness") {
-    
+
             // map link
             if ($this->owner->getSocialMetaMapLink()) {
                 $data["hasMap"] = $this->owner->getSocialMetaMapLink();
             }
-    
+
         }
-    
+
         // business properties
         if ($objects = $this->owner->OpeningHours()) {
             $hours = array();
@@ -632,11 +678,11 @@ class SocialMetaConfigExtension extends DataExtension {
         if ($this->owner->MicroDataPaymentAccepted) {
             $data["paymentAccepted"] = $this->owner->MicroDataPaymentAccepted;
         }
-    
+
         // return ld+json string
         return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
-    
+
     public function getSocialMetaSchemaType($baseTypeOnly = false) {
         if ($this->owner->MicroDataTypeSpecific && $baseTypeOnly == false) {
             return $this->owner->MicroDataTypeSpecific;
@@ -644,7 +690,7 @@ class SocialMetaConfigExtension extends DataExtension {
             return $this->owner->MicroDataType;
         }
     }
-    
+
     /**
      * using data added by innoweb/silverstripe-social-profiles if available
      */
@@ -673,7 +719,7 @@ class SocialMetaConfigExtension extends DataExtension {
         }
         return new ArrayList($profiles);
     }
-    
+
     public function getSocialMetaSiteName() {
         if ($this->owner->DefaultSharingTitle) {
             return $this->owner->DefaultSharingTitle;
@@ -682,7 +728,7 @@ class SocialMetaConfigExtension extends DataExtension {
         }
         return null;
     }
-    
+
     public function getSocialMetaSiteDescription() {
         if ($this->owner->DefaultSharingDescription) {
             return $this->owner->DefaultSharingDescription;
@@ -691,7 +737,7 @@ class SocialMetaConfigExtension extends DataExtension {
         }
         return null;
     }
-    
+
     public function getSocialMetaSiteURL() {
         return Director::absoluteBaseURL();
     }
@@ -714,12 +760,12 @@ class SocialMetaConfigExtension extends DataExtension {
         }
         return null;
     }
-    
+
     public function getSocialMetaAdditionalLocations() {
         if (($locations = $this->owner->AdditionalLocations()) && $locations->exists()) {
             return $locations;
         }
         return null;
     }
-    
+
 }

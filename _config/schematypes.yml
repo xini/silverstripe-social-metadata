@@ -1,7 +1,7 @@
 ---
 Name: socialmetaschematypes
 ---
-SocialMetaConfigExtension:
+Innoweb\SocialMeta\Extensions\ConfigExtension:
   organization_types:
     'Airline': 'Airline'
     'Corporation': 'Corporation'

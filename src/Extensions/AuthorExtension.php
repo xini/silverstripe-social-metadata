@@ -1,12 +1,19 @@
 <?php
-class SocialMetaAuthorExtension extends DataExtension {
-    
+
+namespace Innoweb\SocialMeta\Extensions;
+
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataExtension;
+
+class AuthorExtension extends DataExtension {
+
     private static $db = array(
         'GooglePlusProfile' => 'Varchar(255)',
         'FacebookProfile' => 'Varchar(255)',
         'TwitterHandle' => 'Varchar(50)',
     );
-    
+
     public function updateCMSFields(FieldList $fields) {
         $fields->addFieldToTab(
             'Root.Main',
@@ -26,11 +33,11 @@ class SocialMetaAuthorExtension extends DataExtension {
     }
     public function onBeforeWrite() {
         parent::onBeforeWrite();
-        
+
         $this->owner->GooglePlusProfile = $this->updateLinkURL($this->owner->GooglePlusProfile);
         $this->owner->FacebookProfile = $this->updateLinkURL($this->owner->FacebookProfile);
     }
-    
+
     private function updateLinkURL($url) {
         if($url) {
             if(
@@ -43,5 +50,5 @@ class SocialMetaAuthorExtension extends DataExtension {
         }
         return $url;
     }
-    
+
 }

@@ -3,7 +3,7 @@ de:
     FACEBOOKPROFILE: 'Facebook Profil (komplette URL)'
     GOOGLEPROFILE: 'Google+ Profil (komplette URL)'
     TWITTERHANDLE: 'Twitter Account (@xyz)'
-  SocialMetaConfigExtension:
+  Innoweb\SocialMeta\Extensions\ConfigExtension:
     AddGoogleMapsAPIKey: 'Bitte Google Maps API key hinzufügen und Konfiguration speichern um Koordinaten setzen zu können.'
     FACEBOOK: Facebook
     FACEBOOKADMINIDS: 'Facebook Admin IDs'
