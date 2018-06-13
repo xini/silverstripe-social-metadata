@@ -171,7 +171,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension {
             return $this->owner->MetaDescription;
         } else if ($this->owner->Summary) {
             // blog module
-            return $this->owner->obj('Summary')->NoHTML();
+            return $this->owner->obj('Summary')->Plain();
         } else if ($this->owner->hasMethod('Excerpt') && $this->owner->Excerpt()) {
             // blog module
             return $this->owner->Excerpt();
