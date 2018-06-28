@@ -70,6 +70,10 @@ class ConfigExtension extends DataExtension {
     private static $has_one = array(
         'MicroDataLogo' => Image::class,
     );
+    
+    private static $owns = [
+        'MicroDataLogo'
+    ];
 
     private static $has_many = array(
         'OpeningHours' => OpeningHours::class,
@@ -108,7 +112,7 @@ class ConfigExtension extends DataExtension {
                 } else {
                     return array();
                 }
-                return ['' => '- select -'] + Config::inst()->get(ConfigExtension::class, $key);
+                return Config::inst()->get(ConfigExtension::class, $key);
             };
 
             // micro data
@@ -131,7 +135,7 @@ class ConfigExtension extends DataExtension {
                         'MicroDataTypeSpecific',
                         'More specific type',
                         $typeSpecificSource
-                    )->setDepends($typeField),
+                    )->setDepends($typeField)->setEmptyString('- select -'),
 
                     UploadField::create("MicroDataLogo", _t("SocialMetaConfigExtension.Logo", 'Logo'))
                         ->setFolderName('social')
@@ -182,7 +186,7 @@ class ConfigExtension extends DataExtension {
 
                     FieldGroup::create(
                         CheckboxField::create("MicroDataAdditionalLocations", "This organisation/business has additional locations"),
-                        CheckboxField::create("MicroDataAdditionalLocationsSeparateEntities", "The additional locations are seperate businesses/departments<br />(e.g. they have separate contact numbers, opening hours, etc.)")
+                        $locationsSeperateEntitiesField = CheckboxField::create("MicroDataAdditionalLocationsSeparateEntities", "The additional locations are separate businesses/departments (e.g. they have separate contact numbers, opening hours, etc.)")
                     )->setTitle("Business structure")
                     ->addExtraClass(''),
 
@@ -203,6 +207,7 @@ class ConfigExtension extends DataExtension {
             $openingHoursField->displayIf('MicroDataType')->isEqualTo('LocalBusiness');
             $microPaymentAcceptedField->displayIf('MicroDataType')->isEqualTo('LocalBusiness');
             $additionalLocationsField->displayIf('MicroDataAdditionalLocations')->isChecked();
+            $locationsSeperateEntitiesField->displayIf('MicroDataAdditionalLocations')->isChecked();
 
             $microEventLocationField->displayIf('MicroDataType')->isEqualTo('Event');
             $microEventLocationWebsiteField->displayIf('MicroDataType')->isEqualTo('Event');

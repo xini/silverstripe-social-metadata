@@ -15,9 +15,6 @@ Innoweb\SocialMeta\Extensions\SiteTreeExtension:
     Page: 'article'
 Innoweb\SocialMeta\Extensions\ConfigExtension:
   multisites_enable_global_settings: false
-SilverStripe\Forms\FormField:
-  extensions:
-    - Innoweb\SocialMeta\Forms\FormFieldAttributesExtension
 ---
 Only:
   classexists: 'Symbiote\Multisites\Multisites'

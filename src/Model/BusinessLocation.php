@@ -4,7 +4,6 @@ namespace Innoweb\SocialMeta\Model;
 
 use BetterBrief\GoogleMapField;
 use Innoweb\SocialMeta\Extensions\ConfigExtension;
-use Innoweb\SocialMeta\Forms\DropdownAttributesField;
 use Sheadawson\DependentDropdown\Forms\DependentDropdownField;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
@@ -93,7 +92,7 @@ class BusinessLocation extends DataObject {
                 } else {
                     return array();
                 }
-                return ['' => '- select -'] + Config::inst()->get(ConfigExtension::class, $key);
+                return Config::inst()->get(ConfigExtension::class, $key);
             };
 
             $fields->addFieldsToTab(
@@ -111,7 +110,7 @@ class BusinessLocation extends DataObject {
                         'MicroDataTypeSpecific',
                         'More specific type',
                         $typeSpecificSource
-                    )->setDepends($typeField)
+                    )->setDepends($typeField)->setEmptyString('- select -')
                 )
             );
         }
