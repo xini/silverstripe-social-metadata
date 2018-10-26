@@ -3,7 +3,7 @@
 	"description": "Adds social metadata like OpenGraph, Twitter and JSON-LD to all pages.",
 	"type": "silverstripe-vendormodule",
     "license": "BSD-3-Clause",
-	"keywords": ["silverstripe", "social", "metadata"],
+	"keywords": ["silverstripe", "social", "metadata", "metatitle", "canonical", "json-ld", "OpenGraph"],
 	"authors": [{
 		"name": "Florian Thoma",
 		"homepage": "http://www.innoweb.com.au"

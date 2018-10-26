@@ -7,6 +7,15 @@
 
 Adds social metadata like OpenGraph, Twitter and JSON-LD to all pages.
 
+The module adds the following functionality to a site:
+
+* adds meta title fields for all pages to override the default 'page title - site title' title structure
+* adds canonical url to the meta data of each page which can be overridden for each page, for example for blog posts re-published from external sources
+* adds type, locations, opening hours, address, location, logo and image for schema.org JSON-LD data of the site
+* supports the [multisites module] (https://github.com/silverstripe-australia/silverstripe-multisites) and adds the config options to the Sites instead of SiteConfig
+* supports the [blog module] (https://github.com/silverstripe/silverstripe-blog) and handles the canonical url as well as custom meta titles and descriptions for tags and categories. It also adds JSON-LD for blog posts
+* pages can extend the functionality and add their own data to the JSON-LD etc
+
 ## Requirements
 
 * SilverStripe CMS 4.x
@@ -19,26 +28,12 @@ Install the module using composer:
 ```
 composer require innoweb/silverstripe-social-metadata dev-master
 ```
-or download or git clone the module into a ‘social-metadata’ directory in your webroot.
 
 Then run dev/build.
 
 ## Configuration
 
 The module adds a new tab to the SiteConfig in the CMS where all the metadata can be configured. 
-
-### MultiSites support
-
-The module supports the [multisites module] (https://github.com/silverstripe-australia/silverstripe-multisites) and by default adds the config options to the Sites.
-
-If you want to manage the metadata globally, please add the following settings in your `config.yml`:
-
-```
-Innoweb\SocialMeta\Extensions\ConfigExtension:
-  multisites_enable_global_settings: true
-``` 
-
-This will add the fields to your SiteConfig instead of Site. 
 
 ## License
 

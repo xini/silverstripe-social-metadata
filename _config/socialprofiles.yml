@@ -1,0 +1,23 @@
+---
+Name: socialmetaprofiles
+---
+
+---
+Only:
+  moduleexists: 
+    - 'symbiote/silverstripe-multisites'
+    - 'innoweb/silverstripe-social-profiles'
+---
+Symbiote\Multisites\Model\Site:
+  extensions: 
+    - Innoweb\SocialMeta\Extensions\SocialProfilesConfigExtension
+
+---
+Only:
+  moduleexists: 'innoweb/silverstripe-social-profiles'
+Except:
+  moduleexists: 'symbiote/silverstripe-multisites'
+---
+SilverStripe\SiteConfig\SiteConfig:
+  extensions: 
+    - Innoweb\SocialMeta\Extensions\SocialProfilesConfigExtension

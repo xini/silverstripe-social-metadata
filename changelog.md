@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.0]
+
+Complete rewrite of the module. 
+
+The following SiteConfig field names have changed, please make sure you have a copy of all values before upgrading:
+
+* MetaFacebookPage
+* MetaFacebookAppId
+* MetaFacebookAdmins
+* MetaTwitterHandle
+* MicroDataEnableCoordinates
+* MicroDataAdditionalLocations flag
+* MicroDataAdditionalLocationsSeparateEntities
+* MicroDataLogo
+* OpeningHours (please make a backup of all opening hours)
+* AdditionalLocations (please make a backup of all additional locations)
+
 ## [4.0.2]
 
 * add owns API for linked image

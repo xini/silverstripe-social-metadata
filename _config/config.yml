@@ -1,24 +1,34 @@
 ---
-Name: socialmetadata
+Name: socialmeta
 ---
 SilverStripe\CMS\Model\SiteTree:
   extensions:
     - Innoweb\SocialMeta\Extensions\SiteTreeExtension
-SilverStripe\SiteConfig\SiteConfig:
-  extensions:
-    - Innoweb\SocialMeta\Extensions\ConfigExtension
+
 SilverStripe\Security\Member:
   extensions:
     - Innoweb\SocialMeta\Extensions\AuthorExtension
-Innoweb\SocialMeta\Extensions\SiteTreeExtension:
-  facebook_page_type:
-    Page: 'article'
-Innoweb\SocialMeta\Extensions\ConfigExtension:
-  multisites_enable_global_settings: false
+
+Page:
+  socialmeta_opengraph_type: 'article'
+
 ---
 Only:
-  classexists: 'Symbiote\Multisites\Multisites'
+  moduleexists: 'symbiote/silverstripe-multisites'
 ---
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - Innoweb\SocialMeta\Extensions\MultisiteCurrentConfigSiteConfigExtension
 Symbiote\Multisites\Model\Site:
   extensions:
+    - Innoweb\SocialMeta\Extensions\ConfigExtension
+    - Innoweb\SocialMeta\Extensions\MultisiteSiteExtension
+
+---
+Except:
+  moduleexists: 'symbiote/silverstripe-multisites'
+---
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - Innoweb\SocialMeta\Extensions\CurrentConfigSiteConfigExtension
     - Innoweb\SocialMeta\Extensions\ConfigExtension

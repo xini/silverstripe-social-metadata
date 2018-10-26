@@ -1,0 +1,17 @@
+---
+Name: socialmetablog
+Only:
+  moduleexists: 'silverstripe/blog'
+---
+SilverStripe\Blog\Model\Blog:
+  extensions:
+    - Innoweb\SocialMeta\Extensions\BlogExtension
+SilverStripe\Blog\Model\BlogPost:
+  extensions:
+    - Innoweb\SocialMeta\Extensions\BlogPostExtension
+SilverStripe\Blog\Model\BlogCategory:
+  extensions:
+    - Innoweb\SocialMeta\Extensions\MetaFieldsDataObjectExtension
+SilverStripe\Blog\Model\BlogTag:
+  extensions:
+    - Innoweb\SocialMeta\Extensions\MetaFieldsDataObjectExtension
