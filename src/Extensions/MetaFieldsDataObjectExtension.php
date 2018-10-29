@@ -2,7 +2,6 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
-use BurnBright\ExternalURLField\DBExternalURL;
 use BurnBright\ExternalURLField\ExternalURLField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
@@ -20,7 +19,7 @@ class MetaFieldsDataObjectExtension extends DataExtension
 
     private static $db = [
         'MetaTitle'         =>  'Varchar(255)',
-        'MetaCanonicalURL'  =>  DBExternalURL::class,
+        'MetaCanonicalURL'  =>  'ExternalURL',
         'MetaDescription'   =>  'Text',
         'ExtraMeta'         =>  "HTMLFragment(['whitelist' => ['meta', 'link']])"
     ];

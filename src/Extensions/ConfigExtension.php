@@ -3,7 +3,6 @@
 namespace Innoweb\SocialMeta\Extensions;
 
 use BetterBrief\GoogleMapField;
-use BurnBright\ExternalURLField\DBExternalURL;
 use BurnBright\ExternalURLField\ExternalURLField;
 use Innoweb\SocialMeta\Model\BusinessLocation;
 use Innoweb\SocialMeta\Model\OpeningHours;
@@ -38,7 +37,7 @@ class ConfigExtension extends DataExtension
         'SocialMetaSiteName'            =>  'Varchar(255)',
         'SocialMetaSiteDescription'     =>  'Text',
 
-        'SocialMetaFacebookPage'        =>  DBExternalURL::class,
+        'SocialMetaFacebookPage'        =>  'ExternalURL',
         'SocialMetaFacebookAppID'       =>  'Varchar(20)',
         'SocialMetaFacebookAdminIDs'    =>  'MultiValueField',
         'SocialMetaTwitterAccount'      =>  'Varchar(20)',
@@ -67,7 +66,7 @@ class ConfigExtension extends DataExtension
         'IsMicroDataAdditionalLocationsSeparateEntities'    =>  'Boolean',
 
         'MicroDataEventLocationName'    =>  'Varchar(255)',
-        'MicroDataEventLocationWebsite' =>  DBExternalURL::class,
+        'MicroDataEventLocationWebsite' =>  'ExternalURL',
         'MicroDataEventStart'           =>  'Datetime',
         'MicroDataEventEnd'             =>  'Datetime'
     ];

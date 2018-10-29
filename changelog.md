@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.1]
+
+* add dependency burnbright/silverstripe-externalurlfield
+* change ExternalURL db field references
+
 ## [5.0.0]
 
 Complete rewrite of the module. 

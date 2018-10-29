@@ -2,7 +2,6 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
-use BurnBright\ExternalURLField\DBExternalURL;
 use BurnBright\ExternalURLField\ExternalURLField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
@@ -29,7 +28,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     private static $db = [
         'MetaTitle'         =>  'Varchar(255)',
-        'MetaCanonicalURL'  =>  DBExternalURL::class
+        'MetaCanonicalURL'  =>  'ExternalURL'
     ];
 
     private static $has_one = [

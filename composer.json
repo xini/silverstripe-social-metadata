@@ -13,8 +13,15 @@
         "sheadawson/silverstripe-dependentdropdownfield": "^2.0.0",
         "betterbrief/silverstripe-googlemapfield": "^2.1.0",
         "symbiote/silverstripe-multivaluefield": "^5.0.1",
-        "unclecheese/display-logic": "^2.0.0"
+        "unclecheese/display-logic": "^2.0.0",
+        "burnbright/silverstripe-externalurlfield": "~1.0"
 	},
+	"repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/dizzystuff/silverstripe-externalurlfield"
+        }
+    ],	
     "autoload": {
         "psr-4": {
             "Innoweb\\SocialMeta\\": "src/"
