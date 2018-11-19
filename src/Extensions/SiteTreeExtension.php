@@ -285,9 +285,15 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         }
 
         $tagString .= "\n" . implode("\n", $socialMetaTags);
+        
+        $extraMeta = $this->owner->getSocialMetaValue('ExtraMeta');
+        if ($extraMeta) {
+            $tagString .= "\n" . $extraMeta;
+        }
+        
     }
 
-    public function getSocialMetaValue($value, $skipController = false)
+    public function getSocialMetaValue($key, $skipController = false)
     {
         if (!$skipController && $controller = Controller::curr()) {
 
@@ -295,25 +301,25 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
                 if ($object = $controller->getSocialMetaObject()) {
 
-                    if ($object->hasMethod('getSocialMeta' . $value)) {
-                        return $object->{'getSocialMeta' . $value}();
+                    if ($object->hasMethod('getSocialMeta' . $key) && ($value = $object->{'getSocialMeta' . $key}()) && $value !== false) {
+                        return $value;
                     }
-                    if ($object->hasMethod('getDefaultSocialMeta' . $value)) {
-                        return $object->{'getDefaultSocialMeta' . $value}();
+                    if ($object->hasMethod('getDefaultSocialMeta' . $key) && ($value = $object->{'getDefaultSocialMeta' . $key}()) && $value !== false) {
+                        return $value;
                     }
                 }
             }
-            if ($controller->hasMethod('getSocialMeta' . $value)) {
-                return $controller->{'getSocialMeta' . $value}();
+            if ($controller->hasMethod('getSocialMeta' . $key) && ($value = $controller->{'getSocialMeta' . $key}()) && $value !== false) {
+                return $value;
             }
         }
 
-        if ($this->owner->hasMethod('getSocialMeta' . $value)) {
-            return $this->owner->{'getSocialMeta' . $value}();
+        if ($this->owner->hasMethod('getSocialMeta' . $key) && ($this->owner->{'getSocialMeta' . $key}()) && $value !== false) {
+            return $value;
         }
 
-        if ($this->owner->hasMethod('getDefaultSocialMeta' . $value)) {
-            return $this->owner->{'getDefaultSocialMeta' . $value}();
+        if ($this->owner->hasMethod('getDefaultSocialMeta' . $key) && ($value = $this->owner->{'getDefaultSocialMeta' . $key}()) && $value !== false) {
+            return $value;
         }
 
         return null;
@@ -350,6 +356,11 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         return $this->owner->MetaCanonicalURL ?: preg_replace('/home\/$/i', '', $this->owner->AbsoluteLink());
     }
 
+    public function getDefaultSocialMetaExtraMeta()
+    {
+        return null;
+    }
+    
     public function getDefaultSocialMetaAuthors()
     {
         return null;
@@ -473,18 +484,21 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     {
         $image = $this->owner->getSocialMetaValue('Image');
         if ($image && $image->exists()) {
-            if ($image->hasMethod('FocusFill')) {
-                return $image->FocusFill(1200,630);
+            $config = Config::inst()->get(self::class, 'image_size_twitter');
+            if ($config && isset($config['width']) && isset($config['height'])) {
+                if ($image->hasMethod('FocusFill')) {
+                    return $image->FocusFill($config['width'], $config['height']);
+                }
+                return $image->Fill($config['width'], $config['height']);
             }
-            return $image->Fill(1200,630);
         }
-        return $image;
+        return null;
     }
 
     public function getDefaultSocialMetaTwitterImageURL()
     {
         $image = $this->owner->getSocialMetaValue('TwitterImage');
-        return ($image) ? $image->AbsoluteLink() : null;
+        return ($image) ? $image->getAbsoluteURL() : null;
     }
 
     public function getDefaultSocialMetaTwitterSite()
@@ -552,7 +566,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getDefaultSocialMetaOpenGraphURL()
     {
-        return $this->owner->getSocialMetaValue('CanonicalURL');
+        return preg_replace('/home\/$/i', '', $this->owner->AbsoluteLink());
     }
 
     public function getDefaultSocialMetaOpenGraphTitle()
@@ -580,18 +594,21 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     {
         $image = $this->owner->getSocialMetaValue('Image');
         if ($image && $image->exists()) {
-            if ($image->hasMethod('FocusFill')) {
-                return $image->FocusFill(1200,630);
+            $config = Config::inst()->get(self::class, 'image_size_opengraph');
+            if ($config && isset($config['width']) && isset($config['height'])) {
+                if ($image->hasMethod('FocusFill')) {
+                    return $image->FocusFill($config['width'], $config['height']);
+                }
+                return $image->Fill($config['width'], $config['height']);
             }
-            return $image->Fill(1200,630);
         }
-        return $image;
+        return null;
     }
 
     public function getDefaultSocialMetaOpenGraphImageURL()
     {
         $image = $this->owner->getSocialMetaValue('OpenGraphImage');
-        return ($image) ? $image->AbsoluteLink() : null;
+        return ($image) ? $image->getAbsoluteURL() : null;
     }
 
     public function getDefaultSocialMetaOpenGraphAuthors()

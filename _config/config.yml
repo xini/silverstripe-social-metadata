@@ -11,6 +11,14 @@ SilverStripe\Security\Member:
 
 Page:
   socialmeta_opengraph_type: 'article'
+  
+Innoweb\SocialMeta\Extensions\SiteTreeExtension:
+  image_size_twitter:
+    width: 1024
+    height: 512
+  image_size_opengraph:
+    width: 1200
+    height: 628
 
 ---
 Only:

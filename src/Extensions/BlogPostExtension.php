@@ -98,7 +98,7 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         if ($image && $image->exists()) {
             $data['image'] = [
                 '@type'     =>  'ImageObject',
-                'url'       =>  $image->AbsoluteLink(),
+                'url'       =>  $image->getAbsoluteURL(),
                 'width'     =>  $image->getWidth() . 'px',
                 'height'    =>  $image->getHeight() . 'px'
             ];

@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.2]
+
+* add configuration for twitter and opengraph image sizes
+* fix URLs for twitter and opengraph images
+* fix blog integration for categories and tags
+* add ExtraMeta support
+* fix checking for return values in fallback logic
+* fix opengraph URL to use current URL, not custom canonical
+
 ## [5.0.1]
 
 * add dependency burnbright/silverstripe-externalurlfield
