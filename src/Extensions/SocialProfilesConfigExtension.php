@@ -14,7 +14,7 @@ class SocialProfilesConfigExtension extends DataExtension
         if ($profilePages && $profilePages->exists()) {
             $sameAs = [];
             foreach ($profilePages as $profilePage) {
-                $sameAs = $profilePage->URL;
+                $sameAs[] = $profilePage->URL;
             }
             if (count($sameAs)) {
                 $data['sameAs'] = $sameAs;
