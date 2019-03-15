@@ -537,6 +537,11 @@ class ConfigExtension extends DataExtension
         return $this->owner->SocialMetaFacebookPage;
     }
 
+    public function getDefaultSocialMetaTwitterAccount()
+    {
+        return $this->owner->SocialMetaTwitterAccount;
+    }
+
     public function updateCMSFields(FieldList $fields)
     {
         $fields->addFieldsToTab(
