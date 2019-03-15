@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.5]
+
+* switch to fork fromholdio/silverstripe-externalurlfield
+* fix social profile integration to list all profiles
+* fix twitter:site meta tag
+
 ## [5.0.4]
 
 * fix social profile integration to list all profiles
