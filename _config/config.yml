@@ -21,6 +21,7 @@ Innoweb\SocialMeta\Extensions\SiteTreeExtension:
     height: 628
 
 ---
+Name: socialmeta-multisites
 Only:
   moduleexists: 'symbiote/silverstripe-multisites'
 ---
@@ -33,6 +34,7 @@ Symbiote\Multisites\Model\Site:
     - Innoweb\SocialMeta\Extensions\MultisiteSiteExtension
 
 ---
+Name: socialmeta-nomultisites
 Except:
   moduleexists: 'symbiote/silverstripe-multisites'
 ---

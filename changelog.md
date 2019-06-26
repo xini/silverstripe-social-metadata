@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.6]
+
+* add Name hooks to config.yml blocks allowing other modules to prioritise before/after them
+
 ## [5.0.5]
 
 * switch to fork fromholdio/silverstripe-externalurlfield
