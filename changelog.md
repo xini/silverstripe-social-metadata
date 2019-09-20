@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.0]
+
+* add og:see_also tags for social profiles
+* add og:image:[xyz] tags for more image details, fixes #4
+* make opening hours more flexible using time fields instead of fixed dropdown
+* fix json+ld for openingHours
+* fix json+ld for paymentAccepted
+
 ## [5.0.6]
 
 * add Name hooks to config.yml blocks allowing other modules to prioritise before/after them

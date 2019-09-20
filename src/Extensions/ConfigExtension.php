@@ -293,18 +293,36 @@ class ConfigExtension extends DataExtension
                     if ($openingHours && $openingHours->exists()) {
                         $hours = [];
                         foreach ($openingHours as $hour) {
-                            $row = $hour->Days;
-                            if ($hour->TimeOpen && $hour->TimeClose) {
-                                $row .= ' ' . $hour->TimeOpen . '-' . $hour->TimeClose;
+                            if (($days = json_decode($hour->Days)) && count($days)) {
+                                $dayIdentifiers = [
+                                    'Mo' => 'http://schema.org/Monday',
+                                    'Tu' => 'http://schema.org/Tuesday',
+                                    'We' => 'http://schema.org/Wednesday',
+                                    'Th' => 'http://schema.org/Thursday',
+                                    'Fr' => 'http://schema.org/Friday',
+                                    'Sa' => 'http://schema.org/Saturday',
+                                    'So' => 'http://schema.org/Sunday',
+                                ];
+                                foreach ($days as $day) {
+                                    $row = [];
+                                    $row['@type'] = 'OpeningHoursSpecification';
+                                    $row['DayOfWeek'] = $dayIdentifiers[$day];
+                                    if ($hour->TimeOpen) {
+                                        $row['opens'] = $hour->TimeOpen;
+                                    }
+                                    if ($hour->TimeClose) {
+                                        $row['closes'] = $hour->TimeClose;
+                                    }
+                                    $hours[] = $row;
+                                }
                             }
-                            $hours[] = $row;
                         }
                         if (count($hours)) {
-                            $organisation['openingHours'] = $hours;
+                            $organisation['openingHoursSpecification'] = $hours;
                         }
                     }
                     if ($location->MicroDataPaymentAccepted) {
-                        $organisation['paymentAccepted'] = $location->MicroDataPaymentAccepted;
+                        $organisation['paymentAccepted'] = json_decode($location->MicroDataPaymentAccepted);
                     }
 
                     $subOrganisations[] = $organisation;
@@ -398,20 +416,38 @@ class ConfigExtension extends DataExtension
 
         $openingHours = $this->owner->MicroDataOpeningHours();
         if ($openingHours && $openingHours->exists()) {
-            $hours = array();
+            $hours = [];
             foreach ($openingHours as $hour) {
-                $row = $hour->Days;
-                if ($hour->TimeOpen && $hour->TimeClose) {
-                    $row .= ' ' . $hour->TimeOpen . '-' . $hour->TimeClose;
+                if (($days = json_decode($hour->Days)) && count($days)) {
+                    $dayIdentifiers = [
+                        'Mo' => 'http://schema.org/Monday',
+                        'Tu' => 'http://schema.org/Tuesday',
+                        'We' => 'http://schema.org/Wednesday',
+                        'Th' => 'http://schema.org/Thursday',
+                        'Fr' => 'http://schema.org/Friday',
+                        'Sa' => 'http://schema.org/Saturday',
+                        'So' => 'http://schema.org/Sunday',
+                    ];
+                    foreach ($days as $day) {
+                        $row = [];
+                        $row['@type'] = 'OpeningHoursSpecification';
+                        $row['DayOfWeek'] = $dayIdentifiers[$day];
+                        if ($hour->TimeOpen) {
+                            $row['opens'] = $hour->TimeOpen;
+                        }
+                        if ($hour->TimeClose) {
+                            $row['closes'] = $hour->TimeClose;
+                        }
+                        $hours[] = $row;
+                    }
                 }
-                $hours[] = $row;
             }
             if (count($hours)) {
-                $data['openingHours'] = $hours;
+                $data['openingHoursSpecification'] = $hours;
             }
         }
         if ($this->owner->MicroDataPaymentAccepted) {
-            $data['paymentAccepted'] = $this->owner->MicroDataPaymentAccepted;
+            $data['paymentAccepted'] = json_decode($this->owner->MicroDataPaymentAccepted);
         }
 
         if ($this->owner->hasMethod('updateSchemaData', $data)) {

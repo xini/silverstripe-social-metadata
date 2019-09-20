@@ -147,7 +147,8 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         $openGraphDescription = $this->owner->getSocialMetaValue('OpenGraphDescription');
         $openGraphLocale = $this->owner->getSocialMetaValue('OpenGraphLocale');
         $openGraphSite = $this->owner->getSocialMetaValue('OpenGraphSite');
-        $openGraphImageURL = $this->owner->getSocialMetaValue('OpenGraphImageURL');
+        $openGraphImage = $this->owner->getSocialMetaValue('OpenGraphImage');
+        $openGraphSeeAlsoEntries = $this->owner->getSocialMetaValue('OpenGraphSeeAlsoEntries');
 
         if ($facebookAppID) {
             $socialMetaTags[] = HTML::createTag('meta', [
@@ -207,11 +208,42 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             ]);
         }
 
-        if ($openGraphImageURL) {
+        if ($openGraphImage) {
             $socialMetaTags[] = HTML::CreateTag('meta', [
                 'property'  =>  'og:image',
-                'content'   =>  $openGraphImageURL
+                'content'   =>  $openGraphImage->getAbsoluteURL()
             ]);
+            if (Director::is_https()) {
+                $socialMetaTags[] = HTML::CreateTag('meta', [
+                    'property'  =>  'og:image:secure_url',
+                    'content'   =>  $openGraphImage->getAbsoluteURL()
+                ]);
+            }
+            $socialMetaTags[] = HTML::CreateTag('meta', [
+                'property'  =>  'og:image:type',
+                'content'   =>  $openGraphImage->getMimeType()
+            ]);
+            $socialMetaTags[] = HTML::CreateTag('meta', [
+                'property'  =>  'og:image:width',
+                'content'   =>  $openGraphImage->getWidth()
+            ]);
+            $socialMetaTags[] = HTML::CreateTag('meta', [
+                'property'  =>  'og:image:height',
+                'content'   =>  $openGraphImage->getHeight()
+            ]);
+            $socialMetaTags[] = HTML::CreateTag('meta', [
+                'property'  =>  'og:image:alt',
+                'content'   =>  $openGraphImage->Title
+            ]);
+        }
+        
+        if ($openGraphSeeAlsoEntries && $openGraphSeeAlsoEntries->exists()) {
+            foreach ($openGraphSeeAlsoEntries as $openGraphSeeAlsoEntry) {
+                $socialMetaTags[] = HTML::createTag('meta', [
+                    'property'  =>  'og:see_also',
+                    'content'   =>  $openGraphSeeAlsoEntry->URL
+                ]);
+            }
         }
 
         // Articles
@@ -655,7 +687,13 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     {
         return $this->owner->getSocialMetaValue('Tags');
     }
-
+    
+    public function getDefaultSocialMetaOpenGraphSeeAlsoEntries()
+    {
+        $config = $this->owner->getSocialMetaConfig();
+        return $config->getSocialMetaValue('ProfilePages');
+    }
+    
     public function getDefaultSocialMetaSchemaData()
     {
         $link = trim($this->owner->Link(), '/');
