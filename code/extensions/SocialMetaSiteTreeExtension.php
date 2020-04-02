@@ -159,7 +159,7 @@ class SocialMetaSiteTreeExtension extends SiteTreeExtension {
             return $this->owner->MetaDescription;
         } else if ($this->owner->Summary) {
             // blog module
-            return $this->owner->obj('Summary')->NoHTML();
+            return strip_tags($this->owner->obj('Summary'));
         } else if ($this->owner->hasMethod('Excerpt') && $this->owner->Excerpt()) {
             // blog module
             return $this->owner->Excerpt();
