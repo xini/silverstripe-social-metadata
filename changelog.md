@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.1]
+
+* fix meta description replacement if description is at the end of the metadata string
+
 ## [5.1.0]
 
 * add og:see_also tags for social profiles

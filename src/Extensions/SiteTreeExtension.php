@@ -62,7 +62,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         }
 
         // update meta description
-        $tagString = preg_replace('/<meta name="description"[^>]+>\\n/', '', $tagString);
+        $tagString = preg_replace('/<meta name="description"[^>]+>\\n?/', '', $tagString);
         if ($this->owner->getSocialMetaValue('Description')) {
             $socialMetaTags[] = HTML::createTag('meta', [
                 'name'      =>  'description',
