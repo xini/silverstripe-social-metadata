@@ -837,6 +837,11 @@ class ConfigExtension extends DataExtension
             ->displayIf('HasMicroDataAdditionalLocations')->isChecked();
     }
 
+    public function updateSiteCMSFields(FieldList $fields)
+    {
+        $this->updateCMSFields($fields);
+    }
+
     public function getSocialMetaTabName($tabPath = null)
     {
         $tabName = $this->owner->config()->get('socialmeta_root_tab_name');
