@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.1.3]
+
+* remove articleBody from blog post jsnon+ld to fix [edge case](https://github.com/silverstripe/silverstripe-framework/issues/9662) and remove duplication of content. Not required according to [Google guidelines](https://developers.google.com/search/docs/data-types/article).
+
 ## [5.1.2]
 
 * fix cms fields for multisites site

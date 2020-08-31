@@ -92,8 +92,6 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             $data['description'] = $this->owner->getSocialMetaValue('Description');
         }
 
-        $data['articleBody'] = $this->owner->obj('Content')->Plain();
-
         $image = $this->owner->getSocialMetaValue('Image');
         if ($image && $image->exists()) {
             $data['image'] = [
