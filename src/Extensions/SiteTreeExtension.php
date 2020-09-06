@@ -13,18 +13,24 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\i18n\i18n;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\FieldType\DBHTMLVarchar;
+use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\Security\Member;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\HTML;
+use SilverStripe\i18n\i18n;
 
 class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 {
     private static $title_divider = ' - ';
     private static $metadata_tab_enabled = true;
+    private static $meta_description_fallback_fields = [];
+    private static $meta_description_fallback_to_site = true;
 
     private static $db = [
         'MetaTitle'         =>  'Varchar(255)',
@@ -236,7 +242,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 'content'   =>  $openGraphImage->Title
             ]);
         }
-        
+
         if ($openGraphSeeAlsoEntries && $openGraphSeeAlsoEntries->exists()) {
             foreach ($openGraphSeeAlsoEntries as $openGraphSeeAlsoEntry) {
                 $socialMetaTags[] = HTML::createTag('meta', [
@@ -317,12 +323,12 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         }
 
         $tagString .= "\n" . implode("\n", $socialMetaTags);
-        
+
         $extraMeta = $this->owner->getSocialMetaValue('ExtraMeta');
         if ($extraMeta) {
             $tagString .= "\n" . $extraMeta;
         }
-        
+
     }
 
     public function getSocialMetaValue($key, $skipController = false)
@@ -379,8 +385,29 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             return $this->owner->MetaDescription;
         }
 
-        $config = $this->owner->getSocialMetaConfig();
-        return $config->getSocialMetaValue('SiteDescription');
+        if ($fallbackFields = $this->owner->config()->get('meta_description_fallback_fields')) {
+            foreach ($fallbackFields as $fieldName) {
+                if ($this->owner->hasDatabaseField($fieldName) && $this->owner->getField($fieldName)) {
+                    $field = $this->owner->dbObject($fieldName);
+                    if (is_a($field, DBHTMLVarchar::class)) {
+                        return $field->Plain();
+                    } else if (is_a($field, DBHTMLText::class)) {
+                        return $field->Summary();
+                    } else if (is_a($field, DBText::class)) {
+                        return $field->Summary();
+                    } else if (is_a($field, DBVarchar::class)) {
+                        return $field->Plain();
+                    }
+                }
+            }
+        }
+
+        if ($this->owner->config()->get('meta_description_fallback_to_site')) {
+            $config = $this->owner->getSocialMetaConfig();
+            return $config->getSocialMetaValue('SiteDescription');
+        }
+
+        return null;
     }
 
     public function getDefaultSocialMetaCanonicalURL()
@@ -392,7 +419,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     {
         return null;
     }
-    
+
     public function getDefaultSocialMetaAuthors()
     {
         return null;
@@ -488,7 +515,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         ? $this->owner->dbObject('Created')->Rfc3339()
         : null;
     }
-    
+
     public function getDefaultSocialMetaCategory()
     {
         return null;
@@ -687,13 +714,13 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     {
         return $this->owner->getSocialMetaValue('Tags');
     }
-    
+
     public function getDefaultSocialMetaOpenGraphSeeAlsoEntries()
     {
         $config = $this->owner->getSocialMetaConfig();
         return $config->getSocialMetaValue('ProfilePages');
     }
-    
+
     public function getDefaultSocialMetaSchemaData()
     {
         $link = trim($this->owner->Link(), '/');

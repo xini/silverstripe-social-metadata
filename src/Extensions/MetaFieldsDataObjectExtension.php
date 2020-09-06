@@ -7,10 +7,14 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\FieldType\DBHTMLVarchar;
+use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\SiteConfig\SiteConfig;
 
 class MetaFieldsDataObjectExtension extends DataExtension
@@ -34,6 +38,8 @@ class MetaFieldsDataObjectExtension extends DataExtension
 
     private static $title_divider = ' - ';
     private static $metadata_tab_enabled = true;
+    private static $meta_description_fallback_fields = [];
+    private static $meta_description_fallback_to_site = true;
 
     public function getSocialMetaParent()
     {
@@ -60,13 +66,8 @@ class MetaFieldsDataObjectExtension extends DataExtension
             return $this->owner->Title . $divider . $siteName;
         }
 
-        if ($parent = $this->getSocialMetaParent()) {
-            if ($parent->hasMethod('getSocialMetaTitle')) {
-                return $parent->getSocialMetaTitle();
-            }
-            if ($parent->hasMethod('getDefaultSocialMetaTitle')) {
-                return $parent->getDefaultSocialMetaTitle();
-            }
+        if ($parent = $this->owner->getSocialMetaParent()) {
+            return $parent->getSocialMetaValue('Title', true);
         }
         return $siteName;
     }
@@ -76,16 +77,34 @@ class MetaFieldsDataObjectExtension extends DataExtension
         if ($this->owner->MetaDescription) {
             return $this->owner->MetaDescription;
         }
-        if ($parent = $this->owner->getSocialMetaParent()) {
-            if ($parent->hasMethod('getSocialMetaDescription')) {
-                return $parent->getSocialMetaDescription();
-            }
-            if ($parent->hasMethod('getDefaultSocialMetaDescription')) {
-                return $parent->getDefaultSocialMetaDescription();
+
+        if ($fallbackFields = $this->owner->config()->get('meta_description_fallback_fields')) {
+            foreach ($fallbackFields as $fieldName) {
+                if ($this->owner->hasDatabaseField($fieldName) && $this->owner->getField($fieldName)) {
+                    $field = $this->owner->dbObject($fieldName);
+                    if (is_a($field, DBHTMLVarchar::class)) {
+                        return $field->Plain();
+                    } else if (is_a($field, DBHTMLText::class)) {
+                        return $field->Summary();
+                    } else if (is_a($field, DBText::class)) {
+                        return $field->Summary();
+                    } else if (is_a($field, DBVarchar::class)) {
+                        return $field->Plain();
+                    }
+                }
             }
         }
-        $config = $this->owner->getSocialMetaConfig();
-        return $config->getSocialMetaValue('SiteDescription');
+
+        if ($parent = $this->owner->getSocialMetaParent()) {
+            return $parent->getSocialMetaValue('Description', true);
+        }
+
+        if ($this->owner->config()->get('meta_description_fallback_to_site')) {
+            $config = $this->owner->getSocialMetaConfig();
+            return $config->getSocialMetaValue('SiteDescription');
+        }
+
+        return null;
     }
 
     public function getDefaultSocialMetaCanonicalURL()
@@ -106,12 +125,7 @@ class MetaFieldsDataObjectExtension extends DataExtension
         }
 
         if ($parent = $this->owner->getSocialMetaParent()) {
-            if ($parent->hasMethod('getSocialMetaImage')) {
-                return $parent->getSocialMetaImage();
-            }
-            if ($parent->hasMethod('getDefaultSocialMetaImage')) {
-                return $parent->getDefaultSocialMetaImage();
-            }
+            return $parent->getSocialMetaValue('Image', true);
         }
 
         $config = $this->owner->getSocialMetaConfig();
