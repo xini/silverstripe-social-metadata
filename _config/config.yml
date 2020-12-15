@@ -19,6 +19,7 @@ Innoweb\SocialMeta\Extensions\SiteTreeExtension:
   image_size_opengraph:
     width: 1200
     height: 628
+  minify_jsonld: true
 
 ---
 Name: socialmeta-multisites

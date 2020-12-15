@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.3.0]
+
+* minify json+ld output by default (configurable)
+
 ## [5.2.0]
 
 * fix retrieval of MetaTitle in DataObjects using the MetaFields extension

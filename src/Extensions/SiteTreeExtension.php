@@ -311,10 +311,14 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
         $schemaData = $this->owner->getSocialMetaValue('SchemaData');
         if ($schemaData) {
+            $options = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
+            if (Config::inst()->get(self::class, 'minify_jsonld') == true) {
+                $options = JSON_UNESCAPED_SLASHES;
+            }
             $socialMetaTags[] = HTML::createTag(
                 'script',
                 ['type' =>  'application/ld+json'],
-                json_encode($schemaData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+                json_encode($schemaData, $options)
             );
         }
 
