@@ -8,7 +8,7 @@ use SilverStripe\View\ArrayData;
 
 class SocialProfilesConfigExtension extends DataExtension
 {
-    public function updateSchemaData($data)
+    public function updateSchemaData(&$data)
     {
         $profilePages = $this->owner->getSocialMetaValue('ProfilePages');
         if ($profilePages && $profilePages->exists()) {
@@ -20,7 +20,6 @@ class SocialProfilesConfigExtension extends DataExtension
                 $data['sameAs'] = $sameAs;
             }
         }
-        return $data;
     }
 
     public function getSocialMetaProfilePages()

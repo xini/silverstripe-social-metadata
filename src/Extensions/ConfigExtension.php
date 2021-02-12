@@ -450,9 +450,7 @@ class ConfigExtension extends DataExtension
             $data['paymentAccepted'] = json_decode($this->owner->MicroDataPaymentAccepted);
         }
 
-        if ($this->owner->hasMethod('updateSchemaData', $data)) {
-            $data = $this->owner->updateSchemaData($data);
-        }
+        $this->getOwner()->invokeWithExtensions('updateSchemaData', $data);
 
         return $data;
     }
