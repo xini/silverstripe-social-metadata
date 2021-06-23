@@ -356,7 +356,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             }
         }
 
-        if ($this->owner->hasMethod('getSocialMeta' . $key) && ($this->owner->{'getSocialMeta' . $key}()) && $value !== false) {
+        if ($this->owner->hasMethod('getSocialMeta' . $key) && ($value = $this->owner->{'getSocialMeta' . $key}()) && $value !== false) {
             return $value;
         }
 
