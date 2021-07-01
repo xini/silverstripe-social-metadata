@@ -31,6 +31,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     private static $metadata_tab_enabled = true;
     private static $meta_description_fallback_fields = [];
     private static $meta_description_fallback_to_site = true;
+    private static $minify_jsonld = true;
 
     private static $db = [
         'MetaTitle'         =>  'Varchar(255)',
@@ -311,9 +312,9 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
         $schemaData = $this->owner->getSocialMetaValue('SchemaData');
         if ($schemaData) {
-            $options = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
-            if (Config::inst()->get(self::class, 'minify_jsonld') == true) {
-                $options = JSON_UNESCAPED_SLASHES;
+            $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+            if (Config::inst()->get(self::class, 'minify_jsonld') === false) {
+                $options = $options | JSON_PRETTY_PRINT;
             }
             $socialMetaTags[] = HTML::createTag(
                 'script',

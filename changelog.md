@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.0.2]
+
+* fix UTF-8 encoding of schema data
+
 ## [6.0.1]
 
 * fix retrieval of social meta value on page object
