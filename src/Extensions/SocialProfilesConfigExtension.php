@@ -2,21 +2,39 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\View\ArrayData;
 
 class SocialProfilesConfigExtension extends DataExtension
 {
+    public function updateCMSFields(FieldList $fields)
+    {
+        $fields->insertBefore(
+            'SocialMetaSameAsLinks',
+            LiteralField::create(
+                'SocialMetaSameAsSocialInfoField',
+                '<p>Social media profiles added on the Social Media Profiles tab are added automatically.</p>'
+            )
+        );
+    }
+
     public function updateSchemaData(&$data)
     {
         $profilePages = $this->owner->getSocialMetaValue('ProfilePages');
         if ($profilePages && $profilePages->exists()) {
-            $sameAs = [];
+            if (isset($data['sameAs'])) {
+                $sameAs = $data['sameAs'];
+            } else {
+                $sameAs = [];
+            }
             foreach ($profilePages as $profilePage) {
                 $sameAs[] = $profilePage->URL;
             }
             if (count($sameAs)) {
+                $sameAs = array_unique($sameAs);
                 $data['sameAs'] = $sameAs;
             }
         }

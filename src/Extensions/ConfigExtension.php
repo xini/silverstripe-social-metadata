@@ -9,6 +9,7 @@ use Innoweb\SocialMeta\Model\OpeningHours;
 use Sheadawson\DependentDropdown\Forms\DependentDropdownField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
@@ -18,12 +19,12 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\ORM\DataExtension;
 use Symbiote\MultiValueField\Fields\MultiValueTextField;
 use UncleCheese\DisplayLogic\Forms\Wrapper;
@@ -68,7 +69,9 @@ class ConfigExtension extends DataExtension
         'MicroDataEventLocationName'    =>  'Varchar(255)',
         'MicroDataEventLocationWebsite' =>  'ExternalURL',
         'MicroDataEventStart'           =>  'Datetime',
-        'MicroDataEventEnd'             =>  'Datetime'
+        'MicroDataEventEnd'             =>  'Datetime',
+
+        'SocialMetaSameAsLinks'         =>  'MultiValueField',
     ];
 
     private static $has_one = [
@@ -99,7 +102,8 @@ class ConfigExtension extends DataExtension
 
         $data = [
             '@context'  =>  'http://schema.org',
-            '@type'     =>  $this->owner->getMicroDataSchemaType()
+            '@type'     =>  $this->owner->getMicroDataSchemaType(),
+            '@id'       =>  $this->owner->getSocialMetaValue('SchemaSiteID'),
         ];
 
         if ($this->owner->getSocialMetaValue('SiteName')) {
@@ -450,6 +454,16 @@ class ConfigExtension extends DataExtension
             $data['paymentAccepted'] = json_decode($this->owner->MicroDataPaymentAccepted);
         }
 
+        $sameAsLinksField = $this->owner->obj('SocialMetaSameAsLinks');
+        $sameAsLinks = $sameAsLinksField->getValues();
+        if ($sameAsLinks && count($sameAsLinks) > 0) {
+            $sameAs = [];
+            foreach ($sameAsLinks as $sameAsLink) {
+                $sameAs[] = $sameAsLink;
+            }
+            $data['sameAs'] = $sameAs;
+        }
+
         $this->getOwner()->invokeWithExtensions('updateSchemaData', $data);
 
         return $data;
@@ -576,6 +590,14 @@ class ConfigExtension extends DataExtension
         return $this->owner->SocialMetaTwitterAccount;
     }
 
+    public function getDefaultSocialMetaSchemaSiteID()
+    {
+        return Controller::join_links(
+            $this->owner->getSocialMetaValue('SiteURL'),
+            '#schema-site'
+        );
+    }
+
     public function updateCMSFields(FieldList $fields)
     {
         $fields->addFieldsToTab(
@@ -648,11 +670,6 @@ class ConfigExtension extends DataExtension
         $fields->addFieldsToTab(
             $this->owner->getSocialMetaTabName('MicroData.Main'),
             [
-                HeaderField::create(
-                    'MicroDataHeader',
-                    _t("SocialMetaConfigExtension.MicroData", 'Micro Data'),
-                    2
-                ),
                 $typeField = DropdownField::create(
                     'MicroDataType',
                     'Type',
@@ -833,6 +850,20 @@ class ConfigExtension extends DataExtension
 
         $additionalLocationsFields
             ->displayIf('HasMicroDataAdditionalLocations')->isChecked();
+
+        $fields->addFieldsToTab(
+            $this->owner->getSocialMetaTabName('MicroData.SameAs'),
+            [
+                LiteralField::create(
+                    'SocialMetaSameAsLinksInfoField',
+                    '<p>Add links to be used as <em>SameAs</em> links in the schema data. For example your business profiles on social media, review sites or business registration.</p>'
+                ),
+                MultiValueTextField::create(
+                    'SocialMetaSameAsLinks',
+                    _t('SocialMetaConfigExtension.SocialMetaSameAsLinks','Same As Links')
+                ),
+            ]
+        );
     }
 
     public function updateSiteCMSFields(FieldList $fields)

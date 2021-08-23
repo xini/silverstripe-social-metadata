@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.1.0]
+
+* add @id to site schema data
+* add config and override to include site schema data on a page
+* add logic to merge/combine site and page schema data
+* add additional SameAs links to site
+
 ## [6.0.2]
 
 * fix UTF-8 encoding of schema data

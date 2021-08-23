@@ -27,11 +27,15 @@ use SilverStripe\i18n\i18n;
 
 class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 {
+    public const INCLUDE_SITE_JSONLD_HOME = 'home';
+    public const INCLUDE_SITE_JSONLD_ALL = 'all';
+
     private static $title_divider = ' - ';
     private static $metadata_tab_enabled = true;
     private static $meta_description_fallback_fields = [];
     private static $meta_description_fallback_to_site = true;
     private static $minify_jsonld = true;
+    private static $include_site_jsonld = self::INCLUDE_SITE_JSONLD_HOME;
 
     private static $db = [
         'MetaTitle'         =>  'Varchar(255)',
@@ -310,7 +314,30 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             }
         }
 
-        $schemaData = $this->owner->getSocialMetaValue('SchemaData');
+        $schemaData = null;
+        $pageSchemaData = $this->owner->getSocialMetaValue('SchemaData');
+        $includeSiteSchemaData = $this->owner->getIncludeSiteSchemaData();
+        if ($pageSchemaData && $includeSiteSchemaData) {
+            $config = $this->owner->getSocialMetaConfig();
+            if (isset($pageSchemaData['@type']) || isset($pageSchemaData['@context'])) {
+                // page array directly defines a type. create an array and place both blocks in it
+                $schemaData = [];
+                $schemaData[] = $config->getMicroDataSchemaData();
+                $schemaData[] = $pageSchemaData;
+            } else if (count($pageSchemaData) > 1) {
+                // page data define more than one type. add site data to top of page array
+                array_unshift($pageSchemaData, $config->getMicroDataSchemaData());
+                $schemaData = $pageSchemaData;
+            } else if (count($pageSchemaData) == 1) {
+                // page data defines on type, wrapped in an array.
+                $schemaData = array_merge($config->getMicroDataSchemaData(), $pageSchemaData[0]);
+            }
+        } else if ($pageSchemaData) {
+            $schemaData = $pageSchemaData;
+        } else if ($includeSiteSchemaData) {
+            $config = $this->owner->getSocialMetaConfig();
+            $schemaData = $config->getMicroDataSchemaData();
+        }
         if ($schemaData) {
             $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
             if (Config::inst()->get(self::class, 'minify_jsonld') === false) {
@@ -728,11 +755,37 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getDefaultSocialMetaSchemaData()
     {
-        $link = trim($this->owner->Link(), '/');
-        if ($link === '' || $link === RootURLController::get_homepage_link()) {
-            return $this->owner->getSocialMetaConfig()->getMicroDataSchemaData();
-        }
         return null;
+    }
+
+    /**
+     * Mark the page to include site jsonld data on this page
+     *
+     * @param bool $include
+     */
+    public function setIncludeSiteSchemaData(bool $include)
+    {
+        $this->owner->include_site_jsonld_override = $include;
+    }
+
+    public function getIncludeSiteSchemaData()
+    {
+        $currentLink = trim($this->owner->Link(), '/');
+        if (
+            isset($this->owner->include_site_jsonld_override)
+        ) {
+            return $this->owner->include_site_jsonld_override;
+        } else if (
+            $this->owner->config()->include_site_jsonld == self::INCLUDE_SITE_JSONLD_HOME
+            && ($currentLink == '' || $currentLink === RootURLController::get_homepage_link())
+        ) {
+            return true;
+        } else if (
+            $this->owner->config()->include_site_jsonld == self::INCLUDE_SITE_JSONLD_ALL
+        ) {
+            return true;
+        }
+        return false;
     }
 
     public function updateCMSFields(FieldList $fields)
