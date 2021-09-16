@@ -374,18 +374,6 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 }
             }
         }
-
-
-        if ($this->owner->hasMethod('updateSocialMetaTags')) {
-            $socialMetaTags = $this->owner->updateSocialMetaTags($socialMetaTags);
-        }
-
-        // todo figure out
-        //$extraMeta = $this->owner->getSocialMetaValue('ExtraMeta');
-        //if ($extraMeta) {
-        //$tagString .= "\n" . $extraMeta;
-        //}
-
     }
 
     public function MetaTags(&$tagString)
@@ -433,6 +421,11 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
         if (isset($socialMetaTags)) {
             $tagString .= "\n" . implode("\n", $socialMetaTags);
+        }
+
+        $extraMeta = $this->owner->getSocialMetaValue('ExtraMeta');
+        if ($extraMeta) {
+            $tagString .= "\n" . $extraMeta;
         }
     }
 
