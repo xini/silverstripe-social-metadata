@@ -24,6 +24,7 @@ use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\HTML;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\ArrayList;
 
 class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 {
@@ -62,25 +63,24 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     public function MetaComponents(array &$tags)
     {
         // update title tag
-        if ($this->owner->getSocialMetaValue('Title')) {
+        if ($title = $this->owner->getSocialMetaValue('Title')) {
             $tags['title'] = [
                 'tag' => 'title',
-                'content' => $this->owner->getSocialMetaValue('Title'),
+                'content' => $title,
             ];
         }
 
         // update meta description
-        if ($this->owner->getSocialMetaValue('Description')) {
+        if ($description = $this->owner->getSocialMetaValue('Description')) {
             $tags['description'] = [
                 'attributes' => [
                     'name' => 'description',
-                    'content' => $this->owner->getSocialMetaValue('Description'),
+                    'content' => $description,
                 ],
             ];
         }
 
-        $metaAuthor = $this->owner->getSocialMetaValue('Author');
-        if ($metaAuthor) {
+        if ($metaAuthor = $this->owner->getSocialMetaValue('Author')) {
             $tags['author'] = [
                 'attributes' => [
                     'name' => 'author',
@@ -89,9 +89,9 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             ];
         }
 
-        $canonicalURL = $this->owner->getSocialMetaValue('CanonicalURL');
-        if ($canonicalURL) {
+        if ($canonicalURL = $this->owner->getSocialMetaValue('CanonicalURL')) {
             $tags['canonical'] = [
+                'tag' => 'link',
                 'attributes' => [
                     'rel' => 'canonical',
                     'href' => $canonicalURL,
@@ -374,10 +374,8 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 }
             }
         }
-    }
 
-    public function MetaTags(&$tagString)
-    {
+        // schema data
         $schemaData = null;
         $pageSchemaData = $this->owner->getSocialMetaValue('SchemaData');
         $includeSiteSchemaData = $this->owner->getIncludeSiteSchemaData();
@@ -408,21 +406,19 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 $options = $options | JSON_PRETTY_PRINT;
             }
 
-            $socialMetaTags[] = HTML::createTag(
-                'script',
-                ['type' => 'application/ld+json'],
-                json_encode($schemaData, $options)
-            );
+            $tags['ld+json'] = [
+                'tag' => 'script',
+                'attributes' => [
+                    'type' => 'application/ld+json',
+                ],
+                'content' => json_encode($schemaData, $options)
+            ];
         }
 
-        if ($this->owner->hasMethod('updateSocialMetaTags')) {
-            $socialMetaTags = $this->owner->updateSocialMetaTags($socialMetaTags);
-        }
+    }
 
-        if (isset($socialMetaTags)) {
-            $tagString .= "\n" . implode("\n", $socialMetaTags);
-        }
-
+    public function MetaTags(&$tagString)
+    {
         $extraMeta = $this->owner->getSocialMetaValue('ExtraMeta');
         if ($extraMeta) {
             $tagString .= "\n" . $extraMeta;
@@ -610,8 +606,8 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     public function getDefaultSocialMetaCreationTime()
     {
         return ($this->owner->Created)
-        ? $this->owner->dbObject('Created')->Rfc3339()
-        : null;
+            ? $this->owner->dbObject('Created')->Rfc3339()
+            : null;
     }
 
     public function getDefaultSocialMetaCategory()
