@@ -56,45 +56,47 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         return $siteConfig->getCurrentSocialMetaConfig();
     }
 
-    public function MetaTags(&$tagString)
+    /**
+     * @param array $tags
+     */
+    public function MetaComponents(array &$tags)
     {
-        $socialMetaTags = [];
-
-        // update title tag if set
-        if (preg_match('/<title>.*<\/title>/', $tagString)) {
-            if ($this->owner->getSocialMetaValue('Title')) {
-                $formattedTitleTag = HTML::createTag(
-                    'title',
-                    [],
-                    $this->owner->getSocialMetaValue('Title')
-                );
-                $tagString = preg_replace('/<title>.*<\/title>/', $formattedTitleTag, $tagString);
-            }
+        // update title tag
+        if ($this->owner->getSocialMetaValue('Title')) {
+            $tags['title'] = [
+                'tag' => 'title',
+                'content' => $this->owner->getSocialMetaValue('Title'),
+            ];
         }
 
         // update meta description
-        $tagString = preg_replace('/<meta name="description"[^>]+>\\n?/', '', $tagString);
         if ($this->owner->getSocialMetaValue('Description')) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'name'      =>  'description',
-                'content'   =>  $this->owner->getSocialMetaValue('Description')
-            ]);
+            $tags['description'] = [
+                'attributes' => [
+                    'name' => 'description',
+                    'content' => $this->owner->getSocialMetaValue('Description'),
+                ],
+            ];
         }
 
         $metaAuthor = $this->owner->getSocialMetaValue('Author');
         if ($metaAuthor) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'name'      =>  'author',
-                'content'   =>  $metaAuthor
-            ]);
+            $tags['author'] = [
+                'attributes' => [
+                    'name' => 'author',
+                    'content' => $metaAuthor,
+                ],
+            ];
         }
 
         $canonicalURL = $this->owner->getSocialMetaValue('CanonicalURL');
         if ($canonicalURL) {
-            $socialMetaTags[] = HTML::createTag('link', [
-                'rel'   =>  'canonical',
-                'href'  =>  $canonicalURL
-            ]);
+            $tags['canonical'] = [
+                'attributes' => [
+                    'rel' => 'canonical',
+                    'href' => $canonicalURL,
+                ],
+            ];
         }
 
         // Twitter
@@ -106,46 +108,58 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         $twitterCreators = $this->owner->getSocialMetaValue('TwitterCreators');
 
         if ($twitterCardType) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'name'      =>  'twitter:card',
-                'content'   =>  $twitterCardType
-            ]);
+            $tags['twitter:card'] = [
+                'attributes' => [
+                    'name' => 'twitter:card',
+                    'content' => $twitterCardType,
+                ],
+            ];
         }
 
         if ($twitterSite) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'name'      =>  'twitter:site',
-                'content'   =>  $twitterSite
-            ]);
+            $tags['twitter:site'] = [
+                'attributes' => [
+                    'name' => 'twitter:site',
+                    'content' => $twitterSite,
+                ],
+            ];
         }
 
         if ($twitterTitle) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'name'      =>  'twitter:title',
-                'content'   =>  $twitterTitle
-            ]);
+            $tags['twitter:title'] = [
+                'attributes' => [
+                    'name' => 'twitter:title',
+                    'content' => $twitterTitle,
+                ],
+            ];
         }
 
         if ($twitterDescription) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'name'      =>  'twitter:description',
-                'content'   =>  $twitterDescription
-            ]);
+            $tags['twitter:description'] = [
+                'attributes' => [
+                    'name' => 'twitter:description',
+                    'content' => $twitterDescription,
+                ],
+            ];
         }
 
         if ($twitterImageURL) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'name'      =>  'twitter:image',
-                'content'   =>  $twitterImageURL
-            ]);
+            $tags['twitter:image'] = [
+                'attributes' => [
+                    'name' => 'twitter:image',
+                    'content' => $twitterImageURL,
+                ],
+            ];
         }
 
         if ($twitterCreators && is_array($twitterCreators)) {
-            foreach ($twitterCreators as $twitterCreator) {
-                $socialMetaTags[] = HTML::createTag('meta', [
-                    'name'      =>  'twitter:creator',
-                    'content'   =>  $twitterCreator
-                ]);
+            foreach ($twitterCreators as $key => $twitterCreator) {
+                $tags['twitter:creator_' . $key] = [
+                    'attributes' => [
+                        'name' => 'twitter:creator',
+                        'content' => $twitterCreator,
+                    ],
+                ];
             }
         }
 
@@ -162,98 +176,133 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         $openGraphSeeAlsoEntries = $this->owner->getSocialMetaValue('OpenGraphSeeAlsoEntries');
 
         if ($facebookAppID) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'property'  =>  'fb:app_id',
-                'content'   =>  $facebookAppID
-            ]);
+            $tags['fb:app_id'] = [
+                'attributes' => [
+                    'name' => 'fb:app_id',
+                    'content' => $facebookAppID,
+                ],
+            ];
         }
 
         if ($facebookAdminIDs && is_array($facebookAdminIDs)) {
-            foreach ($facebookAdminIDs as $facebookAdminID) {
-                $socialMetaTags[] = HTML::createTag('meta', [
-                    'property'  =>  'fb:admins',
-                    'content'   =>  $facebookAdminID
-                ]);
+            foreach ($facebookAdminIDs as $key => $facebookAdminID) {
+                $tags['fb:admins_' . $key] = [
+                    'attributes' => [
+                        'property' => 'fb:admins',
+                        'content' => $facebookAdminID,
+                    ],
+                ];
             }
         }
 
         if ($openGraphType) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'property'  =>  'og:type',
-                'content'   =>  $openGraphType
-            ]);
+            $tags['og:type'] = [
+                'attributes' => [
+                    'property' => 'og:type',
+                    'content' => $openGraphType,
+                ],
+            ];
         }
 
         if ($openGraphURL) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'property'  =>  'og:url',
-                'content'   =>  $openGraphURL
-            ]);
+            $tags['og:url'] = [
+                'attributes' => [
+                    'property' => 'og:url',
+                    'content' => $openGraphURL,
+                ],
+            ];
         }
 
         if ($openGraphTitle) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'property'  =>  'og:title',
-                'content'   =>  $openGraphTitle
-            ]);
+            $tags['og:title'] = [
+                'attributes' => [
+                    'property' => 'og:title',
+                    'content' => $openGraphTitle,
+                ],
+            ];
         }
 
         if ($openGraphDescription) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'property'  =>  'og:description',
-                'content'   =>  $openGraphDescription
-            ]);
+            $tags['og:description'] = [
+                'attributes' => [
+                    'property' => 'og:description',
+                    'content' => $openGraphDescription,
+                ],
+            ];
         }
 
         if ($openGraphLocale) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'property'  =>  'og:locale',
-                'content'   =>  $openGraphLocale
-            ]);
+            $tags['og:locale'] = [
+                'attributes' => [
+                    'property' => 'og:locale',
+                    'content' => $openGraphLocale,
+                ],
+            ];
         }
 
         if ($openGraphSite) {
-            $socialMetaTags[] = HTML::createTag('meta', [
-                'property'  =>  'og:site_name',
-                'content'   =>  $openGraphSite
-            ]);
+            $tags['og:site_name'] = [
+                'attributes' => [
+                    'property' => 'og:site_name',
+                    'content' => $openGraphSite,
+                ],
+            ];
         }
 
         if ($openGraphImage) {
-            $socialMetaTags[] = HTML::CreateTag('meta', [
-                'property'  =>  'og:image',
-                'content'   =>  $openGraphImage->getAbsoluteURL()
-            ]);
+            $tags['og:image'] = [
+                'attributes' => [
+                    'property' => 'og:image',
+                    'content' => $openGraphImage->getAbsoluteURL(),
+                ],
+            ];
+
             if (Director::is_https()) {
-                $socialMetaTags[] = HTML::CreateTag('meta', [
-                    'property'  =>  'og:image:secure_url',
-                    'content'   =>  $openGraphImage->getAbsoluteURL()
-                ]);
+                $tags['og:image:secure_url'] = [
+                    'attributes' => [
+                        'property' => 'og:image:secure_url',
+                        'content' => $openGraphImage->getAbsoluteURL(),
+                    ],
+                ];
             }
-            $socialMetaTags[] = HTML::CreateTag('meta', [
-                'property'  =>  'og:image:type',
-                'content'   =>  $openGraphImage->getMimeType()
-            ]);
-            $socialMetaTags[] = HTML::CreateTag('meta', [
-                'property'  =>  'og:image:width',
-                'content'   =>  $openGraphImage->getWidth()
-            ]);
-            $socialMetaTags[] = HTML::CreateTag('meta', [
-                'property'  =>  'og:image:height',
-                'content'   =>  $openGraphImage->getHeight()
-            ]);
-            $socialMetaTags[] = HTML::CreateTag('meta', [
-                'property'  =>  'og:image:alt',
-                'content'   =>  $openGraphImage->Title
-            ]);
+
+            $tags['og:image:type'] = [
+                'attributes' => [
+                    'property' => 'og:image:type',
+                    'content' => $openGraphImage->getMimeType(),
+                ],
+            ];
+
+            $tags['og:image:width'] = [
+                'attributes' => [
+                    'property' => 'og:image:width',
+                    'content' => $openGraphImage->getWidth(),
+                ],
+            ];
+
+            $tags['og:image:height'] = [
+                'attributes' => [
+                    'property' => 'og:image:height',
+                    'content' => $openGraphImage->getHeight(),
+                ],
+            ];
+
+            $tags['og:image:alt'] = [
+                'attributes' => [
+                    'property' => 'og:image:alt',
+                    'content' => $openGraphImage->Title,
+                ],
+            ];
         }
 
         if ($openGraphSeeAlsoEntries && $openGraphSeeAlsoEntries->exists()) {
-            foreach ($openGraphSeeAlsoEntries as $openGraphSeeAlsoEntry) {
-                $socialMetaTags[] = HTML::createTag('meta', [
-                    'property'  =>  'og:see_also',
-                    'content'   =>  $openGraphSeeAlsoEntry->URL
-                ]);
+            foreach ($openGraphSeeAlsoEntries as $key => $openGraphSeeAlsoEntry) {
+                $tags['og:see_also_' . $key] = [
+                    'attributes' => [
+                        'property' => 'og:see_also',
+                        'content' => $openGraphSeeAlsoEntry->URL,
+                    ],
+                ];
             }
         }
 
@@ -268,52 +317,67 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             $openGraphTags = $this->owner->getSocialMetaValue('OpenGraphTags');
 
             if ($facebookPublisher) {
-                $socialMetaTags[] = HTML::createTag('meta', [
-                    'property'  =>  'article:publisher',
-                    'content'   =>  $facebookPublisher
-                ]);
+                $tags['article:publisher'] = [
+                    'attributes' => [
+                        'property' => 'article:publisher',
+                        'content' => $facebookPublisher,
+                    ],
+                ];
             }
 
             if ($openGraphAuthors && is_array($openGraphAuthors)) {
-                foreach ($openGraphAuthors as $openGraphAuthor) {
-                    $socialMetaTags[] = HTML::createTag('meta', [
-                        'property'  =>  'article:author',
-                        'content'   =>  $openGraphAuthor
-                    ]);
+                foreach ($openGraphAuthors as $key => $openGraphAuthor) {
+                    $tags['article:author_' . $key] = [
+                        'attributes' => [
+                            'property' => 'article:author_' . $key,
+                            'content' => $openGraphAuthor,
+                        ],
+                    ];
                 }
             }
 
             if ($openGraphPublicationTime) {
-                $socialMetaTags[] = HTML::createTag('meta', [
-                    'property'  =>  'article:published_time',
-                    'content'   =>  $openGraphPublicationTime
-                ]);
+                $tags['article:published_time'] = [
+                    'attributes' => [
+                        'property' => 'article:published_time',
+                        'content' => $openGraphPublicationTime,
+                    ],
+                ];
             }
 
             if ($openGraphModificationTime) {
-                $socialMetaTags[] = HTML::createTag('meta', [
-                    'property'  =>  'article:modification_time',
-                    'content'   =>  $openGraphModificationTime
-                ]);
+                $tags['article:modification_time'] = [
+                    'attributes' => [
+                        'property' => 'article:modification_time',
+                        'content' => $openGraphModificationTime,
+                    ],
+                ];
             }
 
             if ($openGraphSection) {
-                $socialMetaTags[] = HTML::createTag('meta', [
-                    'property'  =>  'article:section',
-                    'content'   =>  $openGraphSection
-                ]);
+                $tags['article:section'] = [
+                    'attributes' => [
+                        'property' => 'article:section',
+                        'content' => $openGraphSection,
+                    ],
+                ];
             }
 
             if ($openGraphTags && is_array($openGraphTags)) {
-                foreach ($openGraphTags as $openGraphTag) {
-                    $socialMetaTags[] = HTML::createTag('meta', [
-                        'property'  =>  'article:tag',
-                        'content'  =>  $openGraphTag
-                    ]);
+                foreach ($openGraphTags as $key => $openGraphTag) {
+                    $tags['article:tag_' . $key] = [
+                        'attributes' => [
+                            'property' => 'article:tag',
+                            'content' => $openGraphTag,
+                        ],
+                    ];
                 }
             }
         }
+    }
 
+    public function MetaTags(&$tagString)
+    {
         $schemaData = null;
         $pageSchemaData = $this->owner->getSocialMetaValue('SchemaData');
         $includeSiteSchemaData = $this->owner->getIncludeSiteSchemaData();
@@ -343,9 +407,10 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             if (Config::inst()->get(self::class, 'minify_jsonld') === false) {
                 $options = $options | JSON_PRETTY_PRINT;
             }
+
             $socialMetaTags[] = HTML::createTag(
                 'script',
-                ['type' =>  'application/ld+json'],
+                ['type' => 'application/ld+json'],
                 json_encode($schemaData, $options)
             );
         }
@@ -354,13 +419,14 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             $socialMetaTags = $this->owner->updateSocialMetaTags($socialMetaTags);
         }
 
-        $tagString .= "\n" . implode("\n", $socialMetaTags);
+        if (isset($socialMetaTags)) {
+            $tagString .= "\n" . implode("\n", $socialMetaTags);
+        }
 
         $extraMeta = $this->owner->getSocialMetaValue('ExtraMeta');
         if ($extraMeta) {
             $tagString .= "\n" . $extraMeta;
         }
-
     }
 
     public function getSocialMetaValue($key, $skipController = false)
