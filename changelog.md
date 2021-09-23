@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.0]
+
+* refactor to use SiteTree::MetaComponents() to add tags, removing updateSocialMetaTags hook
+* include SameAsLinks in og:same_as
+* add mainEntityOfPage to site ld+json data using SiteURL
+
 ## [6.1.0]
 
 * add @id to site schema data
