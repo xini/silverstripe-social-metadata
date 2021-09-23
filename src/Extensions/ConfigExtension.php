@@ -101,9 +101,10 @@ class ConfigExtension extends DataExtension
         $currentPage = Director::get_current_page();
 
         $data = [
-            '@context'  =>  'http://schema.org',
-            '@type'     =>  $this->owner->getMicroDataSchemaType(),
-            '@id'       =>  $this->owner->getSocialMetaValue('SchemaSiteID'),
+            '@context'          =>  'http://schema.org',
+            '@type'             =>  $this->owner->getMicroDataSchemaType(),
+            '@id'               =>  $this->owner->getSocialMetaValue('SchemaSiteID'),
+            'mainEntityOfPage'  =>  $this->owner->getSocialMetaValue('SiteURL'),
         ];
 
         if ($this->owner->getSocialMetaValue('SiteName')) {
