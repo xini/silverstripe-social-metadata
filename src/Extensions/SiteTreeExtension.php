@@ -811,8 +811,22 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getDefaultSocialMetaOpenGraphSeeAlsoEntries()
     {
+        $links = new ArrayList();
         $config = $this->owner->getSocialMetaConfig();
-        return $config->getSocialMetaValue('ProfilePages');
+
+        $sameAsLinksField = $config->obj('SocialMetaSameAsLinks');
+        $sameAsLinks = $sameAsLinksField->getValues();
+        if ($sameAsLinks && count($sameAsLinks) > 0) {
+            foreach ($sameAsLinks as $sameAsLink) {
+                $links->push(ArrayData::create(['URL' => $sameAsLink]));
+            }
+        }
+
+        if ($profiles = $config->getSocialMetaValue('ProfilePages')) {
+            $links->merge($profiles);
+        }
+
+        return $links;
     }
 
     public function getDefaultSocialMetaSchemaData()
