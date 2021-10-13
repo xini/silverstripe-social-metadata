@@ -16,8 +16,8 @@ class MultisiteSiteExtension extends DataExtension
 
     public function getSocialMetaSiteDescription()
     {
-        if ($this->owner->SocialMetaSiteDescription) {
-            return $this->owner->SocialMetaSiteDescription;
+        if (!empty($this->getOwner()->SocialMetaSiteDescription)) {
+            return $this->getOwner()->SocialMetaSiteDescription;
         }
 
         $homeLink = MultisitesRootController::get_homepage_link();
