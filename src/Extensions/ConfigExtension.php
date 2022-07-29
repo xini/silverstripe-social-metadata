@@ -4,6 +4,7 @@ namespace Innoweb\SocialMeta\Extensions;
 
 use BetterBrief\GoogleMapField;
 use BurnBright\ExternalURLField\ExternalURLField;
+use Innoweb\InternationalPhoneNumberField\Forms\InternationalPhoneNumberField;
 use Innoweb\SocialMeta\Model\BusinessLocation;
 use Innoweb\SocialMeta\Model\OpeningHours;
 use Sheadawson\DependentDropdown\Forms\DependentDropdownField;
@@ -52,8 +53,8 @@ class ConfigExtension extends DataExtension
         'MicroDataPostCode'             =>  'Varchar(255)',
         'MicroDataRegion'               =>  'Varchar(255)',
         'MicroDataCountry'              =>  'Varchar(255)',
-        'MicroDataPhone'                =>  'Varchar(255)',
-        'MicroDataFax'                  =>  'Varchar(255)',
+        'MicroDataPhone'                =>  'Phone',
+        'MicroDataFax'                  =>  'Phone',
         'MicroDataEmail'                =>  'Varchar(255)',
 
         'MicroDataPaymentAccepted'      =>  'Varchar(255)',
@@ -704,8 +705,8 @@ class ConfigExtension extends DataExtension
                 TextField::create('MicroDataPostCode', 'Post Code'),
                 TextField::create('MicroDataRegion', 'State/Region'),
                 TextField::create('MicroDataCountry', 'Country'),
-                TextField::create('MicroDataPhone', 'Phone'),
-                TextField::create('MicroDataFax', 'Fax'),
+                InternationalPhoneNumberField::create('MicroDataPhone', 'Phone'),
+                InternationalPhoneNumberField::create('MicroDataFax', 'Fax'),
                 $microDataEmailField = Wrapper::create(
                     EmailField::create('MicroDataEmail', 'Email')
                 ),

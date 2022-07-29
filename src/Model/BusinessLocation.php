@@ -38,8 +38,8 @@ class BusinessLocation extends DataObject
         'MicroDataPostCode'             =>  'Varchar(255)',
         'MicroDataRegion'               =>  'Varchar(255)',
         'MicroDataCountry'              =>  'Varchar(255)',
-        'MicroDataPhone'                =>  'Varchar(255)',
-        'MicroDataFax'                  =>  'Varchar(255)',
+        'MicroDataPhone'                =>  'Phone',
+        'MicroDataFax'                  =>  'Phone',
         'MicroDataEmail'                =>  'Varchar(255)',
 
         'MicroDataPaymentAccepted'      =>  'Varchar(255)',
