@@ -34,7 +34,7 @@ class SocialProfilesConfigExtension extends DataExtension
                 $sameAs[] = $profilePage->URL;
             }
             if (count($sameAs)) {
-                $sameAs = array_unique($sameAs);
+                $sameAs = array_values(array_unique($sameAs));
                 $data['sameAs'] = $sameAs;
             }
         }
