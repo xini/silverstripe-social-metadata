@@ -7,8 +7,8 @@ use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\ToggleCompositeField;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -111,8 +111,8 @@ class MetaFieldsDataObjectExtension extends DataExtension
     {
         return $this->owner->MetaCanonicalURL
             ?: preg_replace(
-                '/home\/$/i',
-                '',
+                '/\/home\/$/i',
+                '/',
                 $this->owner->AbsoluteLink()
             );
     }

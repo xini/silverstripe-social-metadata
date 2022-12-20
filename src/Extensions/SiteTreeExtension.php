@@ -13,8 +13,10 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBHTMLVarchar;
 use SilverStripe\ORM\FieldType\DBText;
@@ -23,8 +25,6 @@ use SilverStripe\Security\Member;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\HTML;
-use SilverStripe\i18n\i18n;
-use SilverStripe\ORM\ArrayList;
 
 class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 {
@@ -506,7 +506,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getDefaultSocialMetaCanonicalURL()
     {
-        return $this->owner->MetaCanonicalURL ?: preg_replace('/home\/$/i', '', $this->owner->AbsoluteLink());
+        return $this->owner->MetaCanonicalURL ?: preg_replace('/\/home\/$/i', '/', $this->owner->AbsoluteLink());
     }
 
     public function getDefaultSocialMetaExtraMeta()
