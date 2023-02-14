@@ -21,6 +21,10 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getSocialMetaImage()
     {
+        if (($image = $this->owner->MetaImage()) && $image->exists()) {
+            return $image;
+        }
+        
         if ($this->owner->FeaturedImageID && $this->owner->FeaturedImage()) {
             return $this->owner->FeaturedImage();
         }
