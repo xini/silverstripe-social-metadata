@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.1.3]
+
+* Fix MetaImage is secondary to FeaturedImage on BlogPost
+
 ## [7.1.2]
 
 * fix issue where URL ends with 'home' breaking canonical links
