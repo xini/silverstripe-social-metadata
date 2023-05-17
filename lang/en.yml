@@ -1,15 +1,119 @@
 en:
   ArticleAuthorRole:
     FACEBOOKPROFILE: 'Facebook Profile (full URL)'
-    GOOGLEPROFILE: 'Google+ Profile (full URL)'
     TWITTERHANDLE: 'Twitter Handle (@xyz)'
-  Innoweb\SocialMeta\Extensions\ConfigExtension:
-    AddGoogleMapsAPIKey: 'Please add a Google Maps API key and save the config in order to set the coordinates.'
+  BusinessLocation:
+    AddGoogleMapsAPIKey: 'Please add a Google Maps API key to the main config in order to enable coordinates.'
+    Cash: Cash
+    Cheque: Cheque
+    Coordinates: Coordinates
+    CreditCard: 'Credit Card'
+    EFTPos: EFTPos
+    EnableLocationCoordinates: 'Enable Location Coordinates'
+    Invoice: Invoice
+    LocalBusiness: 'Local Business'
+    LocationCoordinates: 'Location Coordinates'
+    MoreSpecificType: 'More specific type'
+    OpeningHours: 'Opening Hours'
+    OpeningHoursLocalBusinessOnly: 'Opening hours are only applicable to locations of type <em>Local Business</em>'
+    Organisation: Organisation
+    PayPal: PayPal
+    PaymentAccepted: 'Payment Accepted'
+    Select: '- select -'
+    Type: Type
+  Innoweb\SocialMeta\Model\BusinessLocation:
+    PLURALNAME: 'Business Locations'
+    PLURALS:
+      one: 'A Business Location'
+      other: '{count} Business Locations'
+    SINGULARNAME: 'Business Location'
+  Innoweb\SocialMeta\Model\OpeningHours:
+    PLURALNAME: 'Opening Hours'
+    PLURALS:
+      one: 'An Opening Hours'
+      other: '{count} Opening Hours'
+    SINGULARNAME: 'Opening Hours'
+  MetaFieldsDataObjectExtension:
+    CanonicalURL: 'Canonical URL'
+    ExtraMeta: 'Extra Meta Tags'
+    ExtraMetaHelp: 'HTML tags for additional meta information. For example <meta name="customName" content="your custom content here" />'
+    Image: Image
+    MetaCanonicalURLHelp: 'This defaults to the absolute URL of the page. Only set this if search engines should count another URL as the original (e.g. if re-posting a blog post from another source).'
+    MetaDescription: 'Meta Description'
+    MetaDescriptionHelp: 'Search engines use this content for displaying search results (although it will not influence their ranking).'
+    MetaTitle: 'Meta Title'
+    MetaTitleHelp: 'Shown at the top of the browser window and used as the "linked text" by search engines.'
+    MetadataToggle: Metadata
+  OpeningHours:
+    ClosingTime: 'Closing Time'
+    DaysOpen: 'Days Open'
+    Friday: Friday
+    Monday: Monday
+    OpeningTime: 'Opening Time'
+    Saturday: Saturday
+    Sunday: Sunday
+    Thursday: Thursday
+    Tuesday: Tuesday
+    Wednesday: Wednesday
+  SiteTreeExtension:
+    ExtraMeta: 'Extra Meta Tags'
+    ExtraMetaHelp: 'HTML tags for additional meta information. For example <meta name="customName" content="your custom content here" />'
+    Image: Image
+    MetaCanonicalURL: 'Canonical URL'
+    MetaCanonicalURLHelp: 'This defaults to the absolute URL of the page. Only set this if search engines should count another URL as the original (e.g. if re-posting a blog post from another source).'
+    MetaDescription: 'Meta Description'
+    MetaDescriptionHelp: 'Search engines use this content for displaying search results (although it will not influence their ranking).'
+    MetaTitle: 'Meta Title'
+    MetaTitleHelp: 'Shown at the top of the browser window and used as the "linked text" by search engines.'
+  SocialMetaBusinessLocation:
+    AddGoogleMapsAPIKey: 'Please add a Google Maps API key in order to enable coordinates.'
+  SocialMetaConfigExtension:
+    AddLinksSameAs: 'Add links to be used as <em>SameAs</em> links in the schema data. For example your business profiles on social media, review sites or business registration.'
+    AdditionalLocations: 'Additional Locations'
+    BusinessStructure: 'Business structure'
+    Cash: Cash
+    Cheque: Cheque
+    City: City
+    Coordinates: Coordinates
+    Country: Country
+    CreaditCard: 'Credit Card'
+    EFTPos: EFTPos
+    Email: Email
+    EnableLocationCoordinates: 'Enable Location Coordinates'
+    Event: Event
+    EventEnd: 'Event End'
+    EventLocationName: 'Event Location Name'
+    EventLocationWebsite: 'Event Location Website'
+    EventStart: 'Event Start'
     FACEBOOK: Facebook
     FACEBOOKADMINIDS: 'Facebook Admin IDs'
     FACEBOOKAPPID: 'Facebook App ID'
     FACEBOOKPAGE: 'Facebook Page (full URL)'
-    MetadataTab: 'Social Metadata'
-    MicroData: 'Micro Data'
+    Fax: Fax
+    GoogleMapsAPIKey: 'Google Maps API key'
+    Invoice: Invoice
+    LocalBusiness: 'Local Business'
+    LocationCoordinates: 'Location Coordinates'
+    LocationsAreSeparate: 'The additional locations are separate businesses/departments (e.g. they have separate contact numbers, opening hours, etc.)'
+    Logo: Logo
+    MoreSpecificType: 'More specific type'
+    OpeningHours: 'Opening Hours'
+    OpeningHoursOnlyApplicableLocalBusiness: 'Opening hours are only applicable to locations of type <em>Local Business</em>'
+    Organisation: Organisation
+    OrganisationHasLocations: 'This organisation/business has additional locations'
+    POBoxNumber: 'PO Box Number'
+    PayPal: PayPal
+    PaymentAccepted: 'Payment Accepted'
+    Phone: Phone
+    PostCode: 'Post Code'
+    Select: '- select -'
+    SiteDescription: 'Site Description'
+    SiteImage: 'Default Image'
+    SiteName: 'Site Name'
+    SocialMetaSameAsLinks: 'Same As Links'
+    StateRegion: State/Region
+    StreetAddress: 'Street Address'
     TWITTER: Twitter
     TWITTERHANDLE: 'Twitter Handle (@xyz)'
+  SocialProfilesConfigExtension:
+    ProfilesAddedAutomatically: 'Social media profiles added on the Social Media Profiles tab are added automatically.'

@@ -54,19 +54,19 @@ class MetaFieldsDataObjectExtension extends DataExtension
 
     public function getDefaultSocialMetaTitle()
     {
-        if ($this->owner->MetaTitle) {
-            return $this->owner->MetaTitle;
+        if ($this->getOwner()->MetaTitle) {
+            return $this->getOwner()->MetaTitle;
         }
 
-        $config = $this->owner->getSocialMetaConfig();
+        $config = $this->getOwner()->getSocialMetaConfig();
         $siteName = $config->getSocialMetaValue('SiteName');
-        $divider = $this->owner->config()->get('title_divider');
+        $divider = $this->getOwner()->config()->get('title_divider');
 
-        if ($this->owner->Title) {
-            return $this->owner->Title . $divider . $siteName;
+        if ($this->getOwner()->Title) {
+            return $this->getOwner()->Title . $divider . $siteName;
         }
 
-        if ($parent = $this->owner->getSocialMetaParent()) {
+        if ($parent = $this->getOwner()->getSocialMetaParent()) {
             return $parent->getSocialMetaValue('Title', true);
         }
         return $siteName;
@@ -74,14 +74,14 @@ class MetaFieldsDataObjectExtension extends DataExtension
 
     public function getDefaultSocialMetaDescription()
     {
-        if ($this->owner->MetaDescription) {
-            return $this->owner->MetaDescription;
+        if ($this->getOwner()->MetaDescription) {
+            return $this->getOwner()->MetaDescription;
         }
 
-        if ($fallbackFields = $this->owner->config()->get('meta_description_fallback_fields')) {
+        if ($fallbackFields = $this->getOwner()->config()->get('meta_description_fallback_fields')) {
             foreach ($fallbackFields as $fieldName) {
-                if ($this->owner->hasDatabaseField($fieldName) && $this->owner->getField($fieldName)) {
-                    $field = $this->owner->dbObject($fieldName);
+                if ($this->getOwner()->hasDatabaseField($fieldName) && $this->getOwner()->getField($fieldName)) {
+                    $field = $this->getOwner()->dbObject($fieldName);
                     if (is_a($field, DBHTMLVarchar::class)) {
                         return $field->Plain();
                     } else if (is_a($field, DBHTMLText::class)) {
@@ -95,12 +95,12 @@ class MetaFieldsDataObjectExtension extends DataExtension
             }
         }
 
-        if ($parent = $this->owner->getSocialMetaParent()) {
+        if ($parent = $this->getOwner()->getSocialMetaParent()) {
             return $parent->getSocialMetaValue('Description', true);
         }
 
-        if ($this->owner->config()->get('meta_description_fallback_to_site')) {
-            $config = $this->owner->getSocialMetaConfig();
+        if ($this->getOwner()->config()->get('meta_description_fallback_to_site')) {
+            $config = $this->getOwner()->getSocialMetaConfig();
             return $config->getSocialMetaValue('SiteDescription');
         }
 
@@ -109,47 +109,47 @@ class MetaFieldsDataObjectExtension extends DataExtension
 
     public function getDefaultSocialMetaCanonicalURL()
     {
-        return $this->owner->MetaCanonicalURL
+        return $this->getOwner()->MetaCanonicalURL
             ?: preg_replace(
                 '/\/home\/$/i',
                 '/',
-                $this->owner->AbsoluteLink()
+                $this->getOwner()->AbsoluteLink()
             );
     }
 
     public function getDefaultSocialMetaImage()
     {
-        $image = $this->owner->MetaImage();
+        $image = $this->getOwner()->MetaImage();
         if ($image && $image->exists()) {
             return $image;
         }
 
-        if ($parent = $this->owner->getSocialMetaParent()) {
+        if ($parent = $this->getOwner()->getSocialMetaParent()) {
             return $parent->getSocialMetaValue('Image', true);
         }
 
-        $config = $this->owner->getSocialMetaConfig();
+        $config = $this->getOwner()->getSocialMetaConfig();
         return $config->getSocialMetaValue('SiteImage');
     }
 
     public function getDefaultSocialMetaPublicationTime()
     {
-        if ($this->owner->hasMethod('allVersions')) {
-            $version = $this->owner->allVersions()->filter('WasPublished', 1)->last();
+        if ($this->getOwner()->hasMethod('allVersions')) {
+            $version = $this->getOwner()->allVersions()->filter('WasPublished', 1)->last();
             if ($version) {
                 $created = $version->relField('Created');
                 return date('c', strtotime($created));
             }
         }
-        return ($this->owner->Created)
-            ? $this->owner->dbObject('Created')->Rfc3339()
+        return ($this->getOwner()->Created)
+            ? $this->getOwner()->dbObject('Created')->Rfc3339()
             : null;
     }
 
     public function getDefaultSocialMetaModificationTime()
     {
-        return ($this->owner->LastEdited)
-            ? $this->owner->dbObject('LastEdited')->Rfc3339()
+        return ($this->getOwner()->LastEdited)
+            ? $this->getOwner()->dbObject('LastEdited')->Rfc3339()
             : null;
     }
 
@@ -163,45 +163,45 @@ class MetaFieldsDataObjectExtension extends DataExtension
 
         $metaTitleField = TextField::create(
             'MetaTitle',
-            $this->owner->fieldLabel('MetaTitle')
+            _t("MetaFieldsDataObjectExtension.MetaTitle", 'Meta Title')
         )
             ->setRightTitle(_t(
-                SiteTree::class.'.METATITLEHELP',
+                "MetaFieldsDataObjectExtension.MetaTitleHelp",
                 'Shown at the top of the browser window and used as the "linked text" by search engines.'
             ))
             ->addExtraClass('help');
 
-        $metaURLField = ExternalURLField::create('MetaCanonicalURL', 'Canonical URL')
+        $metaURLField = ExternalURLField::create('MetaCanonicalURL', _t("MetaFieldsDataObjectExtension.CanonicalURL", 'Canonical URL'))
             ->setRightTitle(_t(
-                SiteTree::class.'.METACANONICALURLHELP',
+                "MetaFieldsDataObjectExtension.MetaCanonicalURLHelp",
                 'This defaults to the absolute URL of the page. Only set this if search engines should count another URL as the original (e.g. if re-posting a blog post from another source).'
             ));
 
         $metaImageField = UploadField::create(
             'MetaImage',
-            _t(SiteTree::class.'.METAIMAGELABEL', 'Image')
+            _t("MetaFieldsDataObjectExtension.Image", 'Image')
         )
             ->setFolderName('Meta')
             ->setAllowedFileCategories('image');
 
-        $metaDescriptionField = TextareaField::create('MetaDescription', $this->owner->fieldLabel('MetaDescription'))
+        $metaDescriptionField = TextareaField::create('MetaDescription', _t("MetaFieldsDataObjectExtension.MetaDescription", 'Meta Description'))
             ->setRightTitle(_t(
-                SiteTree::class.'.METADESCHELP',
+                "MetaFieldsDataObjectExtension.MetaDescriptionHelp",
                 "Search engines use this content for displaying search results (although it will not influence their ranking)."
             ))
             ->addExtraClass('help');
 
-        $metaExtraField = TextareaField::create('ExtraMeta', $this->owner->fieldLabel('ExtraMeta'))
+        $metaExtraField = TextareaField::create('ExtraMeta', _t("MetaFieldsDataObjectExtension.ExtraMeta", 'Extra Meta Tags'))
             ->setRightTitle(_t(
-                SiteTree::class.'.METAEXTRAHELP',
+                "MetaFieldsDataObjectExtension.ExtraMetaHelp",
                 "HTML tags for additional meta information. For example <meta name=\"customName\" content=\"your custom content here\" />"
             ))
             ->addExtraClass('help');
 
-        $tabEnabled = $this->owner->config()->get('metadata_tab_enabled');
+        $tabEnabled = $this->getOwner()->config()->get('metadata_tab_enabled');
         if ($tabEnabled) {
 
-            $tabName = $this->owner->config()->get('metafields_tab_name');
+            $tabName = $this->getOwner()->config()->get('metafields_tab_name');
 
             $fields->addFieldsToTab(
                 $tabName,
@@ -218,7 +218,7 @@ class MetaFieldsDataObjectExtension extends DataExtension
             $fields->push(
                 ToggleCompositeField::create(
                     'Metadata',
-                    _t('SiteTree.MetadataToggle', 'Metadata'),
+                    _t('MetaFieldsDataObjectExtension.MetadataToggle', 'Metadata'),
                     [
                         $metaTitleField,
                         $metaURLField,

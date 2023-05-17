@@ -16,14 +16,14 @@ class SocialProfilesConfigExtension extends DataExtension
             'SocialMetaSameAsLinks',
             LiteralField::create(
                 'SocialMetaSameAsSocialInfoField',
-                '<p>Social media profiles added on the Social Media Profiles tab are added automatically.</p>'
+                '<p>' . _t('SocialProfilesConfigExtension.ProfilesAddedAutomatically', 'Social media profiles added on the Social Media Profiles tab are added automatically.') . '</p>'
             )
         );
     }
 
     public function updateSchemaData(&$data)
     {
-        $profilePages = $this->owner->getSocialMetaValue('ProfilePages');
+        $profilePages = $this->getOwner()->getSocialMetaValue('ProfilePages');
         if ($profilePages && $profilePages->exists()) {
             if (isset($data['sameAs'])) {
                 $sameAs = $data['sameAs'];
@@ -43,26 +43,26 @@ class SocialProfilesConfigExtension extends DataExtension
     public function getSocialMetaProfilePages()
     {
         $profiles = [];
-        if ($this->owner->ProfilesFacebookPage) {
-            $profiles[] = ArrayData::create(['URL' => $this->owner->ProfilesFacebookPage]);
+        if ($this->getOwner()->ProfilesFacebookPage) {
+            $profiles[] = ArrayData::create(['URL' => $this->getOwner()->ProfilesFacebookPage]);
         }
-        if ($this->owner->ProfilesTwitterPage) {
-            $profiles[] = ArrayData::create(['URL' => $this->owner->ProfilesTwitterPage]);
+        if ($this->getOwner()->ProfilesTwitterPage) {
+            $profiles[] = ArrayData::create(['URL' => $this->getOwner()->ProfilesTwitterPage]);
         }
-        if ($this->owner->ProfilesGooglePage) {
-            $profiles[] = ArrayData::create(['URL' => $this->owner->ProfilesGooglePage]);
+        if ($this->getOwner()->ProfilesGooglePage) {
+            $profiles[] = ArrayData::create(['URL' => $this->getOwner()->ProfilesGooglePage]);
         }
-        if ($this->owner->ProfilesLinkedinPage) {
-            $profiles[] = ArrayData::create(['URL' => $this->owner->ProfilesLinkedinPage]);
+        if ($this->getOwner()->ProfilesLinkedinPage) {
+            $profiles[] = ArrayData::create(['URL' => $this->getOwner()->ProfilesLinkedinPage]);
         }
-        if ($this->owner->ProfilesPinterestPage) {
-            $profiles[] = ArrayData::create(['URL' => $this->owner->ProfilesPinterestPage]);
+        if ($this->getOwner()->ProfilesPinterestPage) {
+            $profiles[] = ArrayData::create(['URL' => $this->getOwner()->ProfilesPinterestPage]);
         }
-        if ($this->owner->ProfilesInstagramPage) {
-            $profiles[] = ArrayData::create(['URL' => $this->owner->ProfilesInstagramPage]);
+        if ($this->getOwner()->ProfilesInstagramPage) {
+            $profiles[] = ArrayData::create(['URL' => $this->getOwner()->ProfilesInstagramPage]);
         }
-        if ($this->owner->ProfilesYoutubePage) {
-            $profiles[] = ArrayData::create(['URL' => $this->owner->ProfilesYoutubePage]);
+        if ($this->getOwner()->ProfilesYoutubePage) {
+            $profiles[] = ArrayData::create(['URL' => $this->getOwner()->ProfilesYoutubePage]);
         }
         return ArrayList::create($profiles);
     }

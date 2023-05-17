@@ -12,10 +12,10 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getSocialMetaTitle()
     {
-        $config = $this->owner->getSocialMetaConfig();
+        $config = $this->getOwner()->getSocialMetaConfig();
         $siteName = $config->getSocialMetaValue('SiteName');
         $divider = Config::inst()->get(SiteTree::class, 'title_divider');
-        
+
         $controller = Controller::curr();
         if (is_a($controller, ContentController::class)) {
             if ($category = $controller->getCurrentCategory()) {
@@ -34,10 +34,10 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 }
             }
         }
-        
+
         return null;
     }
-    
+
     public function getSocialMetaDescription()
     {
         $controller = Controller::curr();
@@ -50,7 +50,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         }
         return null;
     }
-    
+
     public function getSocialMetaCanonicalURL()
     {
         $controller = Controller::curr();
@@ -91,7 +91,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         }
         return null;
     }
-    
+
     public function getSocialMetaImage()
     {
         $controller = Controller::curr();
@@ -108,7 +108,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         }
         return null;
     }
-    
+
     public function getSocialMetaExtraMeta()
     {
         $controller = Controller::curr();
@@ -125,5 +125,5 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         }
         return null;
     }
-    
+
 }

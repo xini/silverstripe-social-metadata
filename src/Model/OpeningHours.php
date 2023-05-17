@@ -66,24 +66,24 @@ class OpeningHours extends DataObject
             [
                 CheckboxSetField::create(
                     'Days',
-                    'Days Open',
+                    _t('OpeningHours.DaysOpen', 'Days Open'),
                     [
-                        'Mo' => 'Monday',
-                        'Tu' => 'Tuesday',
-                        'We' => 'Wednesday',
-                        'Th' => 'Thursday',
-                        'Fr' => 'Friday',
-                        'Sa' => 'Saturday',
-                        'So' => 'Sunday'
+                        'Mo' => _t('OpeningHours.Monday', 'Monday'),
+                        'Tu' => _t('OpeningHours.Tuesday', 'Tuesday'),
+                        'We' => _t('OpeningHours.Wednesday', 'Wednesday'),
+                        'Th' => _t('OpeningHours.Thursday', 'Thursday'),
+                        'Fr' => _t('OpeningHours.Friday', 'Friday'),
+                        'Sa' => _t('OpeningHours.Saturday', 'Saturday'),
+                        'So' => _t('OpeningHours.Sunday', 'Sunday')
                     ]
                 ),
                 TimeField::create(
                     'TimeOpen',
-                    'Opening Time'
+                    _t('OpeningHours.OpeningTime', 'Opening Time')
                 ),
                 TimeField::create(
                     'TimeClose',
-                    'Closing Time'
+                    _t('OpeningHours.ClosingTime', 'Closing Time')
                 )
             ]
         );

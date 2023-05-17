@@ -161,20 +161,20 @@ class BusinessLocation extends DataObject
 
             $typeField = DropdownField::create(
                 'MicroDataType',
-                'Type',
+                _t('BusinessLocation.Type', 'Type'),
                 [
-                    'Organization'  =>  'Organisation',
-                    'LocalBusiness' =>  'Local Business'
+                    'Organization'  =>  _t('BusinessLocation.Organisation', 'Organisation'),
+                    'LocalBusiness' =>  _t('BusinessLocation.LocalBusiness', 'Local Business')
                 ]
             );
 
             $typeSpecificField = DependentDropdownField::create(
                 'MicroDataTypeSpecific',
-                'More specific type',
+                _t('BusinessLocation.MoreSpecificType', 'More specific type'),
                 $typeSpecificSource
             )
                 ->setDepends($typeField)
-                ->setEmptyString('- select -');
+                ->setEmptyString(_t('BusinessLocation.Select', '- select -'));
 
             $fields->insertBefore('MicroDataStreetAddress', $typeField);
             $fields->insertBefore('MicroDataStreetAddress', $typeSpecificField);
@@ -182,9 +182,9 @@ class BusinessLocation extends DataObject
             $fields->addFieldToTab(
                 'Root.MapCoordinates',
                 FieldGroup::create(
-                    CheckboxField::create('IsMicroDataCoordinatesEnabled', 'Enable Location Coordinates')
+                    CheckboxField::create('IsMicroDataCoordinatesEnabled', _t('BusinessLocation.EnableLocationCoordinates', 'Enable Location Coordinates'))
                 )
-                    ->setTitle('Location Coordinates')
+                    ->setTitle(_t('BusinessLocation.LocationCoordinates', 'Location Coordinates'))
                     ->setName('EnableLocationCoordinatesGroup')
             );
 
@@ -198,7 +198,7 @@ class BusinessLocation extends DataObject
                         $mapField = Wrapper::create(
                             GoogleMapField::create(
                                 $this,
-                                'Coordinates',
+                                _t('BusinessLocation.Coordinates', 'Coordinates'),
                                 [
                                     'field_names'   =>  [
                                         'Longitude'     =>  'MicroDataLocationLongitude',
@@ -217,7 +217,7 @@ class BusinessLocation extends DataObject
                         $mapField = Wrapper::create(
                             LiteralField::create(
                                 'CoordinatesInfo',
-                                '<p>'._t('SocialMetaBusinessLocation.AddGoogleMapsAPIKey', 'Please add a Google Maps API key to the main config in order to enable coordinates.').'</p>'
+                                '<p>'._t('BusinessLocation.AddGoogleMapsAPIKey', 'Please add a Google Maps API key to the main config in order to enable coordinates.').'</p>'
                             )
                         )
                     );
@@ -232,14 +232,14 @@ class BusinessLocation extends DataObject
                 $paymentAcceptedField = Wrapper::create(
                     CheckboxSetField::create(
                         'MicroDataPaymentAccepted',
-                        'Payment Accepted',
+                        _t('BusinessLocation.PaymentAccepted', 'Payment Accepted'),
                         [
-                            'cash'          =>  'Cash',
-                            'cheque'        =>  'Cheque',
-                            'credit card'   =>  'Credit Card',
-                            'eftpos'        =>  'EFTPos',
-                            'invoice'       =>  'Invoice',
-                            'paypal'        =>  'PayPal'
+                            'cash'          =>  _t('BusinessLocation.Cash', 'Cash'),
+                            'cheque'        =>  _t('BusinessLocation.Cheque', 'Cheque'),
+                            'credit card'   =>  _t('BusinessLocation.CreditCard', 'Credit Card'),
+                            'eftpos'        =>  _t('BusinessLocation.EFTPos', 'EFTPos'),
+                            'invoice'       =>  _t('BusinessLocation.Invoice', 'Invoice'),
+                            'paypal'        =>  _t('BusinessLocation.PayPal', 'PayPal')
                         ]
                     )
                 )
@@ -253,11 +253,11 @@ class BusinessLocation extends DataObject
                 [
                     LiteralField::create(
                         'OpeningHoursInfoField',
-                        '<p>Opening hours are only applicable to locations of type <em>Local Business</em></p><br><br>'
+                        '<p>'. _t('BusinessLocation.OpeningHoursLocalBusinessOnly', 'Opening hours are only applicable to locations of type <em>Local Business</em>') . '</p><br><br>'
                     ),
                     GridField::create(
                         'MicroDataOpeningHours',
-                        'Opening Hours',
+                        _t('BusinessLocation.OpeningHours', 'Opening Hours'),
                         $this->MicroDataOpeningHours(),
                         GridFieldConfig_RecordEditor::create()
                     )

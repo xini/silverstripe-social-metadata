@@ -6,43 +6,43 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 {
     public function getSocialMetaDescription()
     {
-        if ($this->owner->Summary) {
-            return $this->owner->obj('Summary')->Plain();
-        } else if ($this->owner->Excerpt()) {
-            return $this->owner->Excerpt();
+        if ($this->getOwner()->Summary) {
+            return $this->getOwner()->obj('Summary')->Plain();
+        } else if ($this->getOwner()->Excerpt()) {
+            return $this->getOwner()->Excerpt();
         }
-        return $this->owner->getDefaultSocialMetaDescription();
+        return $this->getOwner()->getDefaultSocialMetaDescription();
     }
 
     public function getSocialMetaAuthors()
     {
-        return $this->owner->getCredits() ?: null;
+        return $this->getOwner()->getCredits() ?: null;
     }
 
     public function getSocialMetaImage()
     {
-        if (($image = $this->owner->MetaImage()) && $image->exists()) {
+        if (($image = $this->getOwner()->MetaImage()) && $image->exists()) {
             return $image;
         }
-        
-        if ($this->owner->FeaturedImageID && $this->owner->FeaturedImage()) {
-            return $this->owner->FeaturedImage();
+
+        if ($this->getOwner()->FeaturedImageID && $this->getOwner()->FeaturedImage()) {
+            return $this->getOwner()->FeaturedImage();
         }
-        return $this->owner->getDefaultSocialMetaImage();
+        return $this->getOwner()->getDefaultSocialMetaImage();
     }
 
     public function getSocialMetaPublicationTime()
     {
-        if ($this->owner->PublishDate) {
-            return $this->owner->obj('PublishDate')->Rfc3339();
+        if ($this->getOwner()->PublishDate) {
+            return $this->getOwner()->obj('PublishDate')->Rfc3339();
         }
-        return $this->owner->getDefaultSocialMetaPublicationTime();
+        return $this->getOwner()->getDefaultSocialMetaPublicationTime();
     }
 
     public function getSocialMetaCategory()
     {
-        if ($this->owner->Categories()) {
-            foreach ($this->owner->Categories() as $category) {
+        if ($this->getOwner()->Categories()) {
+            foreach ($this->getOwner()->Categories() as $category) {
                 return $category->Title;
             }
         }
@@ -51,9 +51,9 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getSocialMetaTags()
     {
-        if ($this->owner->Tags()) {
+        if ($this->getOwner()->Tags()) {
             $tags = [];
-            foreach ($this->owner->Tags() as $tag) {
+            foreach ($this->getOwner()->Tags() as $tag) {
                 $tags[] = $tag->Title;
             }
             return $tags;
@@ -66,19 +66,19 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         $data = array(
             '@context' 	=>	'http://schema.org',
             '@type' 	=>	'Article',
-            'headline'	=>	$this->owner->getSocialMetaValue('Title')
+            'headline'	=>	$this->getOwner()->getSocialMetaValue('Title')
         );
 
-        $config = $this->owner->getSocialMetaConfig();
+        $config = $this->getOwner()->getSocialMetaConfig();
 
-        $data['datePublished'] = $this->owner->getSocialMetaValue('PublicationTime');
-        $data['dateModified'] = $this->owner->getSocialMetaValue('ModificationTime');
-        $data['url'] = $this->owner->getSocialMetaValue('CanonicalURL');
+        $data['datePublished'] = $this->getOwner()->getSocialMetaValue('PublicationTime');
+        $data['dateModified'] = $this->getOwner()->getSocialMetaValue('ModificationTime');
+        $data['url'] = $this->getOwner()->getSocialMetaValue('CanonicalURL');
         $data['publisher'] = $config->getSocialMetaValue('SiteName');
 
-        if ($this->owner->getSocialMetaValue('AuthorsNames')) {
+        if ($this->getOwner()->getSocialMetaValue('AuthorsNames')) {
             $data['author'] = [];
-            foreach ($this->owner->getSocialMetaValue('AuthorsNames') as $name) {
+            foreach ($this->getOwner()->getSocialMetaValue('AuthorsNames') as $name) {
                 $data['author'][] = [
                     '@type' =>  'Person',
                     'name'  =>  $name
@@ -91,12 +91,12 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 'url'   =>  $config->getSocialMetaValue('SiteURL')
             ];
         }
-        
-        if ($this->owner->getSocialMetaValue('Description')) {
-            $data['description'] = $this->owner->getSocialMetaValue('Description');
+
+        if ($this->getOwner()->getSocialMetaValue('Description')) {
+            $data['description'] = $this->getOwner()->getSocialMetaValue('Description');
         }
 
-        $image = $this->owner->getSocialMetaValue('Image');
+        $image = $this->getOwner()->getSocialMetaValue('Image');
         if ($image && $image->exists()) {
             $data['image'] = [
                 '@type'     =>  'ImageObject',
@@ -107,11 +107,11 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         }
 
         $attributes = null;
-        $categories = $this->owner->Categories();
+        $categories = $this->getOwner()->Categories();
         if ($categories && $categories->Count()) {
             $attributes = $categories;
         } else {
-            $tags = $this->owner->Tags();
+            $tags = $this->getOwner()->Tags();
             if ($tags && $tags->Count()) {
                 $attributes = $tags;
             }

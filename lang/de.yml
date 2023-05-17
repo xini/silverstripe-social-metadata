@@ -1,15 +1,119 @@
 de:
   ArticleAuthorRole:
     FACEBOOKPROFILE: 'Facebook Profil (komplette URL)'
-    GOOGLEPROFILE: 'Google+ Profil (komplette URL)'
-    TWITTERHANDLE: 'Twitter Account (@xyz)'
-  Innoweb\SocialMeta\Extensions\ConfigExtension:
-    AddGoogleMapsAPIKey: 'Bitte Google Maps API key hinzufügen und Konfiguration speichern um Koordinaten setzen zu können.'
+    TWITTERHANDLE: 'Twitter Handle (@xyz)'
+  BusinessLocation:
+    AddGoogleMapsAPIKey: 'Bitte fügen Sie den Google Maps-API-Schlüssel in der Hauptkonfiguration um Koordinaten zu aktivieren.'
+    Cash: Bargeld
+    Cheque: Cheque
+    Coordinates: Koordinaten
+    CreditCard: 'Kreditkarten'
+    EFTPos: EFTPos
+    EnableLocationCoordinates: 'Standortkoordinaten aktivieren'
+    Invoice: Rechnung
+    LocalBusiness: 'Lokales Geschäft'
+    LocationCoordinates: 'Standortkoordinaten'
+    MoreSpecificType: 'Spezifischerer Typ'
+    OpeningHours: 'Öffnungszeiten'
+    OpeningHoursLocalBusinessOnly: 'Die Öffnungszeiten gelten nur für Standorte vom Typ <em>Lokales Unternehmen</em>'
+    Organisation: Organisation
+    PayPal: PayPal
+    PaymentAccepted: 'Akzeptierte Zahlungsarten'
+    Select: '- auswählen -'
+    Type: Typ
+  Innoweb\SocialMeta\Model\BusinessLocation:
+    PLURALNAME: 'Unternehmensstandorte'
+    PLURALS:
+      one: 'Ein Unternehmensstandort'
+      other: '{count} Unternehmensstandorte'
+    SINGULARNAME: 'Unternehmensstandort'
+  Innoweb\SocialMeta\Model\OpeningHours:
+    PLURALNAME: 'Öffnungszeiten'
+    PLURALS:
+      one: 'Öffnungszeiten'
+      other: '{count} Öffnungszeiten'
+    SINGULARNAME: 'Öffnungszeiten'
+  MetaFieldsDataObjectExtension:
+    CanonicalURL: 'Kanonische URL'
+    ExtraMeta: 'Zusätzliche Meta-Tags'
+    ExtraMetaHelp: 'HTML-Tags für zusätzliche Metainformationen. Zum Beispiel <meta name="benutzerdefinierterName" content="Ihr benutzerdefinierter Inhalt hier" />'
+    Image: Bild
+    MetaCanonicalURLHelp: 'Standardmäßig wird die absolute URL der Seite verwendet. Legen Sie dies nur fest, wenn Suchmaschinen eine andere URL als Original zählen sollen (z. B. beim erneuten Posten eines Blog-Beitrags aus einer anderen Quelle).'
+    MetaDescription: 'Meta-Beschreibung'
+    MetaDescriptionHelp: 'Suchmaschinen verwenden diesen Inhalt zur Anzeige von Suchergebnissen (obwohl dies keinen Einfluss auf ihr Ranking hat).'
+    MetaTitle: 'Meta-Titel'
+    MetaTitleHelp: 'Wird oben im Browserfenster angezeigt und von Suchmaschinen als „verlinkter Text“ verwendet.'
+    MetadataToggle: Metadata
+  OpeningHours:
+    ClosingTime: 'Geschäftsschluss'
+    DaysOpen: 'Tage geöffnet'
+    Friday: Freitag
+    Monday: Montag
+    OpeningTime: 'Öffnungszeit'
+    Saturday: Samstag
+    Sunday: Sonntag
+    Thursday: Donnerstag
+    Tuesday: Dienstag
+    Wednesday: Mittwoch
+  SiteTreeExtension:
+    ExtraMeta: 'Zusätzliche Meta-Tags'
+    ExtraMetaHelp: 'HTML-Tags für zusätzliche Metainformationen. Zum Beispiel <meta name="benutzerdefinierterName" content="Ihr benutzerdefinierter Inhalt hier" />'
+    Image: Bild
+    MetaCanonicalURL: 'Kanonische URL'
+    MetaCanonicalURLHelp: 'Standardmäßig wird die absolute URL der Seite verwendet. Legen Sie dies nur fest, wenn Suchmaschinen eine andere URL als Original zählen sollen (z. B. beim erneuten Posten eines Blog-Beitrags aus einer anderen Quelle).'
+    MetaDescription: 'Meta-Beschreibung'
+    MetaDescriptionHelp: 'Suchmaschinen verwenden diesen Inhalt zur Anzeige von Suchergebnissen (obwohl dies keinen Einfluss auf ihr Ranking hat).'
+    MetaTitle: 'Meta-Titel'
+    MetaTitleHelp: 'Wird oben im Browserfenster angezeigt und von Suchmaschinen als „verlinkter Text“ verwendet.'
+  SocialMetaBusinessLocation:
+    AddGoogleMapsAPIKey: 'Bitte fügen Sie einen Google Maps-API-Schlüssel hinzu, um Koordinaten zu aktivieren.'
+  SocialMetaConfigExtension:
+    AddLinksSameAs: 'Fügen Sie Links hinzu, die als <em>SameAs</em>-Links in den Schemadaten verwendet werden sollen. Zum Beispiel Ihre Unternehmensprofile in sozialen Medien, Bewertungsseiten oder die Gewerbeanmeldung.'
+    AdditionalLocations: 'Zusätzliche Standorte'
+    BusinessStructure: 'Geschäftsstruktur'
+    Cash: Bargeld
+    Cheque: Cheque
+    City: Ort
+    Coordinates: Koordinaten
+    Country: Land
+    CreaditCard: 'Kreditkarten'
+    EFTPos: EFTPos
+    Email: 'E-Mail'
+    EnableLocationCoordinates: 'Standortkoordinaten aktivieren'
+    Event: Veranstaltung
+    EventEnd: 'Veranstaltungsende'
+    EventLocationName: 'Name des Veranstaltungsortes'
+    EventLocationWebsite: 'Website des Veranstaltungsortes'
+    EventStart: 'Veranstaltungsbeginn'
     FACEBOOK: Facebook
     FACEBOOKADMINIDS: 'Facebook Admin IDs'
     FACEBOOKAPPID: 'Facebook App ID'
-    FACEBOOKPAGE: 'Facebook Seite (komplette URL)'
-    MetadataTab: 'Social Metadaten'
-    MicroData: 'Micro Data'
+    FACEBOOKPAGE: 'Facebook-Seite (komplette URL)'
+    Fax: Fax
+    GoogleMapsAPIKey: 'Google Maps-API-Schlüssel'
+    Invoice: Rechnung
+    LocalBusiness: 'Lokales Geschäft'
+    LocationCoordinates: 'Standortkoordinaten'
+    LocationsAreSeparate: 'Bei den zusätzlichen Standorten handelt es sich um separate Unternehmen/Abteilungen (z. B. haben sie separate Kontaktnummern, Öffnungszeiten usw.).'
+    Logo: Logo
+    MoreSpecificType: 'Spezifischerer Typ'
+    OpeningHours: 'Öffnungszeiten'
+    OpeningHoursOnlyApplicableLocalBusiness: 'Die Öffnungszeiten gelten nur für Standorte vom Typ <em>Lokales Unternehmen</em>'
+    Organisation: Organisation
+    OrganisationHasLocations: 'Diese Organisation/Unternehmen verfügt über weitere Standorte'
+    POBoxNumber: 'Postfach-Nummer'
+    PayPal: PayPal
+    PaymentAccepted: 'Akzeptierte Zahlungsarten'
+    Phone: Telefon
+    PostCode: 'Postletzahl'
+    Select: '- auswählen -'
+    SiteDescription: 'Seitenbeschreibung'
+    SiteImage: 'Standardbild'
+    SiteName: 'Seiten'Name'
+    SocialMetaSameAsLinks: 'SameAs Links'
+    StateRegion: Bundesstaat/Region
+    StreetAddress: 'Adresse'
     TWITTER: Twitter
-    TWITTERHANDLE: 'Twitter Account (@xyz)'
+    TWITTERHANDLE: 'Twitter Handle (@xyz)'
+  SocialProfilesConfigExtension:
+    ProfilesAddedAutomatically: 'Auf der Registerkarte „Social-Media-Profile“ hinzugefügte Social-Media-Profile werden automatisch hinzugefügt.'

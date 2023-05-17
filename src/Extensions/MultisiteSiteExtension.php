@@ -31,14 +31,14 @@ class MultisiteSiteExtension extends DataExtension
         }
         return null;
     }
-    
+
     public function getSocialMetaSchemaData()
     {
-        $link = trim($this->owner->Link(), '/');
-        
+        $link = trim($this->getOwner()->Link(), '/');
+
         if ($link === MultisitesRootController::get_homepage_link()) {
-            return $this->owner->getSocialMetaConfig()->getMicroDataSchemaData();
+            return $this->getOwner()->getSocialMetaConfig()->getMicroDataSchemaData();
         }
     }
-    
+
 }
