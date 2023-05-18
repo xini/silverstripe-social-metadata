@@ -6,16 +6,16 @@
 	"keywords": ["silverstripe", "social", "metadata", "metatitle", "canonical", "json-ld", "OpenGraph"],
 	"authors": [{
 		"name": "Florian Thoma",
-		"homepage": "http://www.innoweb.com.au"
+		"homepage": "https://www.innoweb.com.au"
 	}],
 	"require": {
-        "silverstripe/cms": "^4.1",
-        "sheadawson/silverstripe-dependentdropdownfield": "^2.0.0",
-        "betterbrief/silverstripe-googlemapfield": "^2.1.0",
-        "symbiote/silverstripe-multivaluefield": "^5.0.1",
-        "unclecheese/display-logic": "^2.0.0",
-        "fromholdio/silverstripe-externalurlfield": "^1.0.0",
-        "innoweb/silverstripe-international-phone-number-field": "^4.0.0"
+        "silverstripe/cms": "^5",
+        "fromholdio/silverstripe-externalurlfield": "^1.1",
+        "innoweb/silverstripe-googlemapfield": "^2.3",
+        "innoweb/silverstripe-international-phone-number-field": "^5",
+        "sheadawson/silverstripe-dependentdropdownfield": "^3",
+        "symbiote/silverstripe-multivaluefield": "^6",
+        "unclecheese/display-logic": "^3"
     },
     "autoload": {
         "psr-4": {
@@ -23,7 +23,7 @@
         }
     },
     "suggest": {
-        "innoweb/silverstripe-social-share": "Adds sharing links and buttons for Facebook, Twitter, Instagram, Pinterest and Google+ as well as AddThis to the site.",
+        "innoweb/silverstripe-social-share": "Adds sharing links and buttons for Facebook, LinkedIn, Twitter and Pinterest as well as AddThis to the site.",
         "innoweb/silverstripe-social-profiles": "Adds social profile links to the site."
     }
 }

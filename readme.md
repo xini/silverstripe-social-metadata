@@ -1,4 +1,4 @@
-# SilverStripe Social Metadata
+# Silverstripe Social Metadata
 
 [![Version](http://img.shields.io/packagist/v/innoweb/silverstripe-social-metadata.svg?style=flat-square)](https://packagist.org/packages/innoweb/silverstripe-social-metadata)
 [![License](http://img.shields.io/packagist/l/innoweb/silverstripe-social-metadata.svg?style=flat-square)](license.md)
@@ -18,9 +18,11 @@ The module adds the following functionality to a site:
 
 ## Requirements
 
-* SilverStripe CMS 4.x
+* Silverstripe CMS 5
 
-Note: this version is compatible with SilverStripe 4. For SilverStripe 3, please see the [3.0 release line](https://github.com/xini/silverstripe-social-metadata/tree/3.0).
+Note: this version is compatible with Silverstripe 5.
+For Silverstripe 4, please see the [7.x release line](https://github.com/xini/silverstripe-social-metadata/tree/7)
+For Silverstripe 3, please see the [3.x release line](https://github.com/xini/silverstripe-social-metadata/tree/3.0).
 
 ## Installation
 
