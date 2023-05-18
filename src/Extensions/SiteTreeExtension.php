@@ -589,7 +589,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getDefaultSocialMetaPublicationTime()
     {
-        $version = $this->getOwner()->allVersions()->filter('WasPublished', 1)->last();
+        $version = $this->getOwner()->Versions()->filter('WasPublished', 1)->last();
         if ($version) {
             $created = $version->relField('Created');
             return date('c', strtotime($created));
