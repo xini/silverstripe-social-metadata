@@ -25,6 +25,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\HTML;
+use SilverStripe\View\Parsers\HTMLValue;
 
 class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 {
@@ -567,7 +568,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         if ($link !== '' && $link !== RootURLController::get_homepage_link()) {
 
             // extract first image in page content
-            $htmlValue = Injector::inst()->create('HTMLValue', $this->getOwner()->Content);
+            $htmlValue = Injector::inst()->create(HTMLValue::class, $this->getOwner()->Content);
             if ($images = $htmlValue->getElementsByTagName('img')) {
                 foreach ($images as $img) {
                     $path = urldecode(Director::makeRelative($img->getAttribute('src')));
