@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.1]
+
+* Change removed method allVersions() to replacement Versions()
+* Fix reference to HTMLValue class
+
 ## [8.0.0]
 
 * Silverstripe 5 support
