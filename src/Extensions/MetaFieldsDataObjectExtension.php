@@ -134,8 +134,8 @@ class MetaFieldsDataObjectExtension extends DataExtension
 
     public function getDefaultSocialMetaPublicationTime()
     {
-        if ($this->getOwner()->hasMethod('allVersions')) {
-            $version = $this->getOwner()->allVersions()->filter('WasPublished', 1)->last();
+        if ($this->getOwner()->hasMethod('Versions')) {
+            $version = $this->getOwner()->Versions()->filter('WasPublished', 1)->last();
             if ($version) {
                 $created = $version->relField('Created');
                 return date('c', strtotime($created));
