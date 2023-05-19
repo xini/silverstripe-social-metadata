@@ -33,7 +33,6 @@ use UncleCheese\DisplayLogic\Forms\Wrapper;
 class ConfigExtension extends DataExtension
 {
     private static $socialmeta_images_folder;
-    private static $socialmeta_root_tab_name = 'Root.Metadata';
 
     private static $db = [
         'SocialMetaSiteName'            =>  'Varchar(255)',

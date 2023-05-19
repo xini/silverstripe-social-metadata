@@ -32,12 +32,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     public const INCLUDE_SITE_JSONLD_HOME = 'home';
     public const INCLUDE_SITE_JSONLD_ALL = 'all';
 
-    private static $title_divider = ' - ';
-    private static $metadata_tab_enabled = true;
-    private static $meta_description_fallback_fields = [];
-    private static $meta_description_fallback_to_site = true;
     private static $minify_jsonld = true;
-    private static $include_site_jsonld = self::INCLUDE_SITE_JSONLD_HOME;
 
     private static $db = [
         'MetaTitle'         =>  'Varchar(255)',
@@ -507,7 +502,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getDefaultSocialMetaCanonicalURL()
     {
-        return $this->getOwner()->MetaCanonicalURL ?: preg_replace('/\/home\/$/i', '/', $this->getOwner()->AbsoluteLink());
+        return $this->getOwner()->MetaCanonicalURL ?: $this->getOwner()->AbsoluteLink();
     }
 
     public function getDefaultSocialMetaExtraMeta()
@@ -899,7 +894,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             $fields->removeByName('Metadata');
 
             $fields->addFieldsToTab(
-                'Root.Metadata',
+                $this->getOwner()->config()->metadata_tab_name,
                 [
                     $metaTitleField,
                     $metaURLField,

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.1.0]
+
+* Change how config default values are set
+* Fix canonical URL
+* Fix metadata tab
+
 ## [8.0.1]
 
 * Change removed method allVersions() to replacement Versions()

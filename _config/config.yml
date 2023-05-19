@@ -4,6 +4,13 @@ Name: socialmeta
 SilverStripe\CMS\Model\SiteTree:
   extensions:
     - Innoweb\SocialMeta\Extensions\SiteTreeExtension
+  title_divider: ' - '
+  metadata_tab_enabled: true
+  metadata_tab_name: 'Root.Metadata'
+  meta_description_fallback_fields:
+    - Content
+  meta_description_fallback_to_site: true
+  include_site_jsonld: 'home'
 
 SilverStripe\Security\Member:
   extensions:
@@ -11,7 +18,7 @@ SilverStripe\Security\Member:
 
 Page:
   socialmeta_opengraph_type: 'article'
-  
+
 Innoweb\SocialMeta\Extensions\SiteTreeExtension:
   image_size_twitter:
     width: 1024
@@ -33,6 +40,7 @@ Symbiote\Multisites\Model\Site:
   extensions:
     - Innoweb\SocialMeta\Extensions\ConfigExtension
     - Innoweb\SocialMeta\Extensions\MultisiteSiteExtension
+  socialmeta_root_tab_name: 'Root.Metadata'
 
 ---
 Name: socialmeta-nomultisites
@@ -43,3 +51,4 @@ SilverStripe\SiteConfig\SiteConfig:
   extensions:
     - Innoweb\SocialMeta\Extensions\CurrentConfigSiteConfigExtension
     - Innoweb\SocialMeta\Extensions\ConfigExtension
+  socialmeta_root_tab_name: 'Root.Metadata'
