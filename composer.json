@@ -1,18 +1,19 @@
 {
-	"name": "innoweb/silverstripe-social-metadata",
-	"description": "Adds social metadata like OpenGraph, Twitter and JSON-LD to all pages.",
-	"type": "silverstripe-vendormodule",
+    "name": "innoweb/silverstripe-social-metadata",
+    "description": "Adds social metadata like OpenGraph, Twitter and JSON-LD to all pages.",
+    "type": "silverstripe-vendormodule",
     "license": "BSD-3-Clause",
-	"keywords": ["silverstripe", "social", "metadata", "metatitle", "canonical", "json-ld", "OpenGraph"],
-	"authors": [{
-		"name": "Florian Thoma",
-		"homepage": "https://www.innoweb.com.au"
-	}],
-	"require": {
+    "keywords": ["silverstripe", "social", "metadata", "metatitle", "canonical", "json-ld", "OpenGraph"],
+    "authors": [{
+        "name": "Florian Thoma",
+        "homepage": "https://www.innoweb.com.au"
+    }],
+    "require": {
         "silverstripe/cms": "^5",
         "fromholdio/silverstripe-externalurlfield": "^1.1",
         "innoweb/silverstripe-googlemapfield": "^2.3",
         "innoweb/silverstripe-international-phone-number-field": "^5",
+        "jonom/silverstripe-text-target-length": "^2.1",
         "sheadawson/silverstripe-dependentdropdownfield": "^3",
         "symbiote/silverstripe-multivaluefield": "^6",
         "unclecheese/display-logic": "^3"

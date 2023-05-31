@@ -870,7 +870,8 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 'SiteTreeExtension.MetaTitleHelp',
                 'Shown at the top of the browser window and used as the "linked text" by search engines.'
             ))
-            ->addExtraClass('help');
+            ->setAttribute('placeholder', $this->getOwner()->getDefaultSocialMetaTitle())
+            ->setTargetLength(50, 4, 60);
 
         $metaURLField = ExternalURLField::create('MetaCanonicalURL', _t('SiteTreeExtension.MetaCanonicalURL', 'Canonical URL'))
             ->setRightTitle(_t(
@@ -897,9 +898,9 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 $this->getOwner()->config()->metadata_tab_name,
                 [
                     $metaTitleField,
+                    $metaDescriptionField = TextareaField::create('MetaDescription', _t('SiteTreeExtension.MetaDescription', 'Meta Description')),
                     $metaURLField,
                     $metaImageField,
-                    $metaDescriptionField = TextareaField::create('MetaDescription', _t('SiteTreeExtension.MetaDescription', 'Meta Description')),
                     $metaExtraField = TextareaField::create('ExtraMeta', _t('SiteTreeExtension.ExtraMeta', 'Extra Meta Tags'))
                 ]
             );
@@ -911,7 +912,8 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                         "Search engines use this content for displaying search results (although it will not influence their ranking)."
                     )
                 )
-                ->addExtraClass('help');
+                ->setAttribute('placeholder', $this->getOwner()->getDefaultSocialMetaDescription())
+                ->setTargetLength(120, 50, 160);
 
             $metaExtraField
                 ->setRightTitle(
@@ -919,8 +921,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                         'SiteTreeExtension.ExtraMetaHelp',
                         "HTML tags for additional meta information. For example <meta name=\"customName\" content=\"your custom content here\" />"
                     )
-                )
-                ->addExtraClass('help');
+                );
 
         } else {
             $fields->insertBefore($metaTitleField, 'MetaDescription');
