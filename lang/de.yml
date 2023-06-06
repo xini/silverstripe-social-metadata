@@ -109,8 +109,8 @@ de:
     Select: '- auswählen -'
     SiteDescription: 'Seitenbeschreibung'
     SiteImage: 'Standardbild'
-    SiteName: 'Seiten'Name'
-    SocialMetaSameAsLinks: 'SameAs Links'
+    SiteName: 'Seitenname'
+    SocialMetaSameAsLinks: 'SameAs-Links'
     StateRegion: Bundesstaat/Region
     StreetAddress: 'Adresse'
     TWITTER: Twitter
