@@ -13,7 +13,7 @@
         "fromholdio/silverstripe-externalurlfield": "^1.1",
         "innoweb/silverstripe-googlemapfield": "^2.3",
         "innoweb/silverstripe-international-phone-number-field": "^5",
-        "jonom/silverstripe-text-target-length": "^2.1",
+        "jonom/silverstripe-text-target-length": "^2.0.3",
         "sheadawson/silverstripe-dependentdropdownfield": "^3",
         "symbiote/silverstripe-multivaluefield": "^6",
         "unclecheese/display-logic": "^3"
