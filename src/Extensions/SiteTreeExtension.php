@@ -924,8 +924,8 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 );
 
         } else {
-            $fields->insertBefore($metaTitleField, 'MetaDescription');
-            $fields->insertBefore($metaURLField, 'MetaDescription');
+            $fields->insertBefore('MetaDescription', $metaTitleField);
+            $fields->insertBefore('MetaDescription', $metaURLField);
         }
     }
 }
