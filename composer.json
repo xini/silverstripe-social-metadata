@@ -11,7 +11,7 @@
 	"require": {
         "silverstripe/cms": "^4.1",
         "sheadawson/silverstripe-dependentdropdownfield": "^2.0.0",
-        "betterbrief/silverstripe-googlemapfield": "^2.1.0",
+        "innoweb/silverstripe-googlemapfield": "^2.3.0",
         "symbiote/silverstripe-multivaluefield": "^5.0.1",
         "unclecheese/display-logic": "^2.0.0",
         "fromholdio/silverstripe-externalurlfield": "^1.0.0",
