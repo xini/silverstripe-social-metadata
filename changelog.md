@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.3.1]
+
+* fix config retrieval for GoogleMapsField
+
 ## [7.3.0]
 
 * replace betterbrief/silverstripe-googlemapfield with innoweb/silverstripe-googlemapfield

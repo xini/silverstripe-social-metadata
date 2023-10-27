@@ -513,9 +513,9 @@ class ConfigExtension extends DataExtension
         }
 
         // Google Map Field Module
-        $googleMapsFieldModuleAPIKey = Config::inst()->get(GoogleMapField::class, 'default_options.api_key');
-        if ($googleMapsFieldModuleAPIKey) {
-            return $googleMapsFieldModuleAPIKey;
+        $googleMapsFieldDefaultOptions = Config::inst()->get(GoogleMapField::class, 'default_options');
+        if ($googleMapsFieldDefaultOptions && isset($googleMapsFieldDefaultOptions['api_key'])) {
+            return $googleMapsFieldDefaultOptions['api_key'];
         }
 
         return null;
