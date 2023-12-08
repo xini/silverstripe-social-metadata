@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.3.0]
+
+* replace Twitter icon and labels with X
+
 ## [8.2.2]
 
 * fix config retrieval for GoogleMapsField

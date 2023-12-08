@@ -5,7 +5,7 @@
 
 ## Overview
 
-Adds social metadata like OpenGraph, Twitter and JSON-LD to all pages.
+Adds social metadata like OpenGraph, X (Twitter) and JSON-LD to all pages.
 
 The module adds the following functionality to a site:
 

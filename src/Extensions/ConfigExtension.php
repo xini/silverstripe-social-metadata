@@ -645,12 +645,12 @@ class ConfigExtension extends DataExtension
                 ),
                 HeaderField::create(
                     'SocialMetaTwitterHeader',
-                    _t("SocialMetaConfigExtension.TWITTER", 'Twitter'),
+                    _t("SocialMetaConfigExtension.X", 'X (Twitter)'),
                     2
                 ),
                 TextField::create(
                     'SocialMetaTwitterAccount',
-                    _t("SocialMetaConfigExtension.TWITTERHANDLE", 'Twitter Handle (@xyz)')
+                    _t("SocialMetaConfigExtension.XHANDLE", 'X (Twitter) Handle (@xyz)')
                 )
             ]
         );

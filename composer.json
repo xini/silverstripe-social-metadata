@@ -1,6 +1,6 @@
 {
     "name": "innoweb/silverstripe-social-metadata",
-    "description": "Adds social metadata like OpenGraph, Twitter and JSON-LD to all pages.",
+    "description": "Adds social metadata like OpenGraph, X (Twitter) and JSON-LD to all pages.",
     "type": "silverstripe-vendormodule",
     "license": "BSD-3-Clause",
     "keywords": ["silverstripe", "social", "metadata", "metatitle", "canonical", "json-ld", "OpenGraph"],
@@ -24,7 +24,7 @@
         }
     },
     "suggest": {
-        "innoweb/silverstripe-social-share": "Adds sharing links and buttons for Facebook, LinkedIn, Twitter and Pinterest as well as AddThis to the site.",
+        "innoweb/silverstripe-social-share": "Adds sharing links and buttons for Facebook, LinkedIn, X (Twitter) and Pinterest as well as AddThis to the site.",
         "innoweb/silverstripe-social-profiles": "Adds social profile links to the site."
     }
 }

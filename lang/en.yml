@@ -1,7 +1,7 @@
 en:
   ArticleAuthorRole:
     FACEBOOKPROFILE: 'Facebook Profile (full URL)'
-    TWITTERHANDLE: 'Twitter Handle (@xyz)'
+    XHANDLE: 'X (Twitter) Handle (@xyz)'
   BusinessLocation:
     AddGoogleMapsAPIKey: 'Please add a Google Maps API key to the main config in order to enable coordinates.'
     Cash: Cash
@@ -113,7 +113,7 @@ en:
     SocialMetaSameAsLinks: 'Same As Links'
     StateRegion: State/Region
     StreetAddress: 'Street Address'
-    TWITTER: Twitter
-    TWITTERHANDLE: 'Twitter Handle (@xyz)'
+    X: 'X (Twitter)'
+    XHANDLE: 'X (Twitter) Handle (@xyz)'
   SocialProfilesConfigExtension:
     ProfilesAddedAutomatically: 'Social media profiles added on the Social Media Profiles tab are added automatically.'

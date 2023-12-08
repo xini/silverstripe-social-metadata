@@ -25,7 +25,7 @@ class AuthorExtension extends DataExtension
                 ),
                 TextField::create(
                     'TwitterHandle',
-                    _t("ArticleAuthorRole.TWITTERHANDLE", 'Twitter Handle (@xyz)')
+                    _t("ArticleAuthorRole.XHANDLE", 'X (Twitter) Handle (@xyz)')
                 )
             ],
             'DirectGroups'
