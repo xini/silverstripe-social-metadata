@@ -43,9 +43,25 @@ Symbiote\Multisites\Model\Site:
   socialmeta_root_tab_name: 'Root.Metadata'
 
 ---
+Name: socialmeta-configured-multisites
+Only:
+  moduleexists: 'fromholdio/silverstripe-configured-multisites'
+---
+SilverStripe\SiteConfig\SiteConfig:
+  extensions:
+    - Innoweb\SocialMeta\Extensions\ConfiguredMultisiteCurrentConfigSiteConfigExtension
+Fromholdio\ConfiguredMultisites\Model\Site:
+  extensions:
+    - Innoweb\SocialMeta\Extensions\ConfigExtension
+    - Innoweb\SocialMeta\Extensions\ConfiguredMultisiteSiteExtension
+  socialmeta_root_tab_name: 'Root.Metadata'
+
+---
 Name: socialmeta-nomultisites
 Except:
-  moduleexists: 'symbiote/silverstripe-multisites'
+  moduleexists:
+    - 'symbiote/silverstripe-multisites'
+    - 'fromholdio/silverstripe-configured-multisites'
 ---
 SilverStripe\SiteConfig\SiteConfig:
   extensions:

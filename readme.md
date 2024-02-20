@@ -12,7 +12,7 @@ The module adds the following functionality to a site:
 * adds meta title fields for all pages to override the default 'page title - site title' title structure
 * adds canonical url to the meta data of each page which can be overridden for each page, for example for blog posts re-published from external sources
 * adds type, locations, opening hours, address, location, logo and image for schema.org JSON-LD data of the site
-* supports the [multisites module](https://github.com/silverstripe-australia/silverstripe-multisites) and adds the config options to the Sites instead of SiteConfig
+* supports single site as well as [multisites](https://github.com/symbiote/silverstripe-multisites) and [configured-multisites](https://github.com/fromholdio/silverstripe-configured-multisites) setups and adds the config options to the Sites instead of SiteConfig
 * supports the [blog module](https://github.com/silverstripe/silverstripe-blog) and handles the canonical url as well as custom meta titles and descriptions for tags and categories. It also adds JSON-LD for blog posts
 * pages can extend the functionality and add their own data to the JSON-LD etc
 
