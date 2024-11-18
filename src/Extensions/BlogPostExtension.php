@@ -64,7 +64,7 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     public function getSocialMetaSchemaData()
     {
         $data = array(
-            '@context' 	=>	'http://schema.org',
+            '@context' 	=>	'https://schema.org',
             '@type' 	=>	'Article',
             'headline'	=>	$this->getOwner()->getSocialMetaValue('Title')
         );

@@ -101,7 +101,7 @@ class ConfigExtension extends DataExtension
         $currentPage = Director::get_current_page();
 
         $data = [
-            '@context'          =>  'http://schema.org',
+            '@context'          =>  'https://schema.org',
             '@type'             =>  $this->getOwner()->getMicroDataSchemaType(),
             '@id'               =>  $this->getOwner()->getSocialMetaValue('SchemaSiteID'),
             'mainEntityOfPage'  =>  $this->getOwner()->getSocialMetaValue('SiteURL'),
@@ -300,13 +300,13 @@ class ConfigExtension extends DataExtension
                         foreach ($openingHours as $hour) {
                             if (($days = json_decode($hour->Days)) && count($days)) {
                                 $dayIdentifiers = [
-                                    'Mo' => 'http://schema.org/Monday',
-                                    'Tu' => 'http://schema.org/Tuesday',
-                                    'We' => 'http://schema.org/Wednesday',
-                                    'Th' => 'http://schema.org/Thursday',
-                                    'Fr' => 'http://schema.org/Friday',
-                                    'Sa' => 'http://schema.org/Saturday',
-                                    'So' => 'http://schema.org/Sunday',
+                                    'Mo' => 'https://schema.org/Monday',
+                                    'Tu' => 'https://schema.org/Tuesday',
+                                    'We' => 'https://schema.org/Wednesday',
+                                    'Th' => 'https://schema.org/Thursday',
+                                    'Fr' => 'https://schema.org/Friday',
+                                    'Sa' => 'https://schema.org/Saturday',
+                                    'So' => 'https://schema.org/Sunday',
                                 ];
                                 foreach ($days as $day) {
                                     $row = [];
@@ -425,13 +425,13 @@ class ConfigExtension extends DataExtension
             foreach ($openingHours as $hour) {
                 if (($days = json_decode($hour->Days)) && count($days)) {
                     $dayIdentifiers = [
-                        'Mo' => 'http://schema.org/Monday',
-                        'Tu' => 'http://schema.org/Tuesday',
-                        'We' => 'http://schema.org/Wednesday',
-                        'Th' => 'http://schema.org/Thursday',
-                        'Fr' => 'http://schema.org/Friday',
-                        'Sa' => 'http://schema.org/Saturday',
-                        'So' => 'http://schema.org/Sunday',
+                        'Mo' => 'https://schema.org/Monday',
+                        'Tu' => 'https://schema.org/Tuesday',
+                        'We' => 'https://schema.org/Wednesday',
+                        'Th' => 'https://schema.org/Thursday',
+                        'Fr' => 'https://schema.org/Friday',
+                        'Sa' => 'https://schema.org/Saturday',
+                        'So' => 'https://schema.org/Sunday',
                     ];
                     foreach ($days as $day) {
                         $row = [];

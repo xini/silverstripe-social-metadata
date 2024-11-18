@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.5.0]
+
+* switch to https for schema.org
+
 ## [8.4.1]
 
 * fix social profiles config for configured-multisites
