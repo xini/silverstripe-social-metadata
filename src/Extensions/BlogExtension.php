@@ -2,8 +2,8 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
+use SilverStripe\Blog\Model\BlogController;
 use SilverStripe\Control\Controller;
-use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\CMS\Model\SiteTree;
 
@@ -17,7 +17,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         $divider = Config::inst()->get(SiteTree::class, 'title_divider');
 
         $controller = Controller::curr();
-        if (is_a($controller, ContentController::class)) {
+        if (is_a($controller, BlogController::class)) {
             if ($category = $controller->getCurrentCategory()) {
                 if ($category->MetaTitle) {
                     return $category->MetaTitle;
@@ -41,7 +41,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     public function getSocialMetaDescription()
     {
         $controller = Controller::curr();
-        if (is_a($controller, ContentController::class)) {
+        if (is_a($controller, BlogController::class)) {
             if (($category = $controller->getCurrentCategory()) && $category->MetaDescription) {
                 return $category->MetaDescription;
             } elseif (($tag = $controller->getCurrentTag()) && $tag->MetaDescription) {
@@ -54,7 +54,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     public function getSocialMetaCanonicalURL()
     {
         $controller = Controller::curr();
-        if (is_a($controller, ContentController::class)) {
+        if (is_a($controller, BlogController::class)) {
             // get pagination page
             $page = '';
             $posts = $controller->PaginatedList();
@@ -95,7 +95,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     public function getSocialMetaImage()
     {
         $controller = Controller::curr();
-        if (is_a($controller, ContentController::class)) {
+        if (is_a($controller, BlogController::class)) {
             if ($category = $controller->getCurrentCategory()) {
                 if (($image = $category->MetaImage()) && $image->exists()) {
                     return $image;
@@ -112,7 +112,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     public function getSocialMetaExtraMeta()
     {
         $controller = Controller::curr();
-        if (is_a($controller, ContentController::class)) {
+        if (is_a($controller, BlogController::class)) {
             if ($category = $controller->getCurrentCategory()) {
                 if ($category->ExtraMeta) {
                     return $category->ExtraMeta;

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.5.1]
+
+* only retrieve blog metadata for blog controller 
+
 ## [8.5.0]
 
 * switch to https for schema.org
