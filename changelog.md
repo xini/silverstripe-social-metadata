@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.5.2]
+
+* skip adding site schema data if controller is not a ContentController
+* update list of sameAs links derived from social media profiles module 
+
 ## [8.5.1]
 
 * only retrieve blog metadata for blog controller 
