@@ -6,6 +6,7 @@ use BurnBright\ExternalURLField\ExternalURLField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
+use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\CMS\Controllers\RootURLController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
@@ -854,6 +855,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             return true;
         } else if (
             $this->getOwner()->config()->include_site_jsonld == self::INCLUDE_SITE_JSONLD_ALL
+            && is_a(Controller::curr(), ContentController::class)
         ) {
             return true;
         }
