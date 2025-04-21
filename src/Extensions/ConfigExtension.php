@@ -13,6 +13,7 @@ use SilverStripe\Assets\Image;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Environment;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\DatetimeField;
@@ -515,6 +516,9 @@ class ConfigExtension extends DataExtension
         $googleMapsFieldDefaultOptions = Config::inst()->get(GoogleMapField::class, 'default_options');
         if ($googleMapsFieldDefaultOptions && isset($googleMapsFieldDefaultOptions['api_key'])) {
             return $googleMapsFieldDefaultOptions['api_key'];
+        }
+        if (Environment::hasEnv('APP_GOOGLE_MAPS_KEY')) {
+            return Environment::getEnv('APP_GOOGLE_MAPS_KEY');
         }
 
         return null;
