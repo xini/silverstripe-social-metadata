@@ -2,15 +2,18 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
-class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
+use SilverStripe\Core\Extension;
+
+class BlogPostExtension extends Extension
 {
     public function getSocialMetaDescription()
     {
         if ($this->getOwner()->Summary) {
             return $this->getOwner()->obj('Summary')->Plain();
-        } else if ($this->getOwner()->Excerpt()) {
+        } elseif ($this->getOwner()->Excerpt()) {
             return $this->getOwner()->Excerpt();
         }
+
         return $this->getOwner()->getDefaultSocialMetaDescription();
     }
 
@@ -28,6 +31,7 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         if ($this->getOwner()->FeaturedImageID && $this->getOwner()->FeaturedImage()) {
             return $this->getOwner()->FeaturedImage();
         }
+
         return $this->getOwner()->getDefaultSocialMetaImage();
     }
 
@@ -36,6 +40,7 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         if ($this->getOwner()->PublishDate) {
             return $this->getOwner()->obj('PublishDate')->Rfc3339();
         }
+
         return $this->getOwner()->getDefaultSocialMetaPublicationTime();
     }
 
@@ -46,6 +51,7 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 return $category->Title;
             }
         }
+
         return null;
     }
 
@@ -56,18 +62,20 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             foreach ($this->getOwner()->Tags() as $tag) {
                 $tags[] = $tag->Title;
             }
+
             return $tags;
         }
+
         return null;
     }
 
     public function getSocialMetaSchemaData()
     {
-        $data = array(
-            '@context' 	=>	'https://schema.org',
-            '@type' 	=>	'Article',
-            'headline'	=>	$this->getOwner()->getSocialMetaValue('Title')
-        );
+        $data = [
+            '@context'  =>  'https://schema.org',
+            '@type'     =>  'Article',
+            'headline'  =>  $this->getOwner()->getSocialMetaValue('Title')
+        ];
 
         $config = $this->getOwner()->getSocialMetaConfig();
 
@@ -116,6 +124,7 @@ class BlogPostExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 $attributes = $tags;
             }
         }
+
         if ($attributes) {
             $data["articleSection"] = [];
             foreach ($attributes as $attribute) {

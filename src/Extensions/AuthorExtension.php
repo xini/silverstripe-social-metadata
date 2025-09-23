@@ -2,12 +2,12 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
-use BurnBright\ExternalURLField\ExternalURLField;
+use Fromholdio\ExternalURLField\ExternalURLField;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\DataExtension;
 
-class AuthorExtension extends DataExtension
+class AuthorExtension extends Extension
 {
     private static $db = [
         'FacebookProfileURL'    =>  'ExternalURL',

@@ -2,12 +2,12 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
-use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\ORM\DataExtension;
 use Fromholdio\ConfiguredMultisites\Control\MultisitesRootController;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Core\Extension;
+use SilverStripe\Forms\FieldList;
 
-class ConfiguredMultisiteSiteExtension extends DataExtension
+class ConfiguredMultisiteSiteExtension extends Extension
 {
     public function updateSiteCMSFields(FieldList $fields)
     {
@@ -27,18 +27,20 @@ class ConfiguredMultisiteSiteExtension extends DataExtension
             if ($homePage->hasMethod('getSocialMetaDescription') && $homePage->getSocialMetaDescription()) {
                 return $homePage->getSocialMetaDescription();
             }
+
             return $homePage->MetaDescription;
         }
+
         return null;
     }
 
     public function getSocialMetaSchemaData()
     {
-        $link = trim($this->getOwner()->Link(), '/');
+        $link = trim((string) $this->getOwner()->Link(), '/');
 
         if ($link === MultisitesRootController::get_homepage_link()) {
             return $this->getOwner()->getSocialMetaConfig()->getMicroDataSchemaData();
         }
+        return null;
     }
-
 }

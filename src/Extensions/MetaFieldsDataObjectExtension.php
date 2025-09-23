@@ -2,22 +2,21 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
-use BurnBright\ExternalURLField\ExternalURLField;
+use Fromholdio\ExternalURLField\ExternalURLField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\Image;
-use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\ToggleCompositeField;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBHTMLVarchar;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\SiteConfig\SiteConfig;
 
-class MetaFieldsDataObjectExtension extends DataExtension
+class MetaFieldsDataObjectExtension extends Extension
 {
     private static $metafields_tab_name = 'Root.Metadata';
 
@@ -37,8 +36,11 @@ class MetaFieldsDataObjectExtension extends DataExtension
     ];
 
     private static $title_divider = ' - ';
+
     private static $metadata_tab_enabled = true;
+
     private static $meta_description_fallback_fields = [];
+
     private static $meta_description_fallback_to_site = true;
 
     public function getSocialMetaParent()
@@ -69,6 +71,7 @@ class MetaFieldsDataObjectExtension extends DataExtension
         if ($parent = $this->getOwner()->getSocialMetaParent()) {
             return $parent->getSocialMetaValue('Title', true);
         }
+
         return $siteName;
     }
 
@@ -84,11 +87,11 @@ class MetaFieldsDataObjectExtension extends DataExtension
                     $field = $this->getOwner()->dbObject($fieldName);
                     if (is_a($field, DBHTMLVarchar::class)) {
                         return $field->Plain();
-                    } else if (is_a($field, DBHTMLText::class)) {
+                    } elseif (is_a($field, DBHTMLText::class)) {
                         return $field->Summary();
-                    } else if (is_a($field, DBText::class)) {
+                    } elseif (is_a($field, DBText::class)) {
                         return $field->Summary();
-                    } else if (is_a($field, DBVarchar::class)) {
+                    } elseif (is_a($field, DBVarchar::class)) {
                         return $field->Plain();
                     }
                 }
@@ -113,7 +116,7 @@ class MetaFieldsDataObjectExtension extends DataExtension
             ?: preg_replace(
                 '/\/home\/$/i',
                 '/',
-                $this->getOwner()->AbsoluteLink()
+                (string) $this->getOwner()->AbsoluteLink()
             );
     }
 
@@ -138,9 +141,10 @@ class MetaFieldsDataObjectExtension extends DataExtension
             $version = $this->getOwner()->Versions()->filter('WasPublished', 1)->last();
             if ($version) {
                 $created = $version->relField('Created');
-                return date('c', strtotime($created));
+                return date('c', strtotime((string) $created));
             }
         }
+
         return ($this->getOwner()->Created)
             ? $this->getOwner()->dbObject('Created')->Rfc3339()
             : null;
@@ -194,13 +198,12 @@ class MetaFieldsDataObjectExtension extends DataExtension
         $metaExtraField = TextareaField::create('ExtraMeta', _t("MetaFieldsDataObjectExtension.ExtraMeta", 'Extra Meta Tags'))
             ->setRightTitle(_t(
                 "MetaFieldsDataObjectExtension.ExtraMetaHelp",
-                "HTML tags for additional meta information. For example <meta name=\"customName\" content=\"your custom content here\" />"
+                'HTML tags for additional meta information. For example <meta name="customName" content="your custom content here" />'
             ))
             ->addExtraClass('help');
 
         $tabEnabled = $this->getOwner()->config()->get('metadata_tab_enabled');
         if ($tabEnabled) {
-
             $tabName = $this->getOwner()->config()->get('metafields_tab_name');
 
             $fields->addFieldsToTab(
@@ -213,7 +216,6 @@ class MetaFieldsDataObjectExtension extends DataExtension
                     $metaExtraField
                 ]
             );
-
         } else {
             $fields->push(
                 ToggleCompositeField::create(

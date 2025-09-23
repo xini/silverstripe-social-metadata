@@ -4,6 +4,7 @@ namespace Innoweb\SocialMeta\Model;
 
 use BetterBrief\GoogleMapField;
 use Innoweb\SocialMeta\Extensions\ConfigExtension;
+use Override;
 use Sheadawson\DependentDropdown\Forms\DependentDropdownField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxField;
@@ -20,6 +21,7 @@ use UncleCheese\DisplayLogic\Forms\Wrapper;
 class BusinessLocation extends DataObject
 {
     private static $singular_name = 'Business Location';
+
     private static $plural_name = 'Business Locations';
 
     private static $table_name = 'SocialMetaBusinessLocation';
@@ -89,18 +91,23 @@ class BusinessLocation extends DataObject
         if ($this->MicroDataStreetAddress) {
             $address[] = $this->MicroDataStreetAddress . ',';
         }
+
         if ($this->MicroDataPOBoxNumber) {
             $address[] = $this->MicroDataPOBoxNumber . ',';
         }
+
         if ($this->MicroDataRegion) {
             $address[] = $this->MicroDataRegion;
         }
+
         if ($this->MicroDataPostCode) {
             $address[] = $this->MicroDataPostCode;
         }
+
         if ($this->MicroDataCountry) {
             $address[] = ', ' . $this->MicroDataCountry;
         }
+
         $address = implode(' ', $address);
         return $address;
     }
@@ -113,18 +120,23 @@ class BusinessLocation extends DataObject
             if ($this->MicroDataCity) {
                 $address[] = $this->MicroDataCity;
             }
+
             if ($this->MicroDataRegion) {
                 $address[] = $this->MicroDataRegion;
             }
+
             if ($this->MicroDataPostCode) {
                 $address[] = $this->MicroDataPostCode;
             }
+
             $address = implode(' ', $address);
             return 'https://www.google.com.au/maps/place/' . urlencode($address);
         }
+
         return null;
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -147,15 +159,15 @@ class BusinessLocation extends DataObject
         }
 
         if ($separateEntity) {
-
-            $typeSpecificSource = function($type) {
+            $typeSpecificSource = function ($type) {
                 if ($type === 'Organization') {
                     $key = 'organization_types';
-                } else if ($type === 'LocalBusiness') {
+                } elseif ($type === 'LocalBusiness') {
                     $key = 'localbusiness_types';
                 } else {
                     return [];
                 }
+
                 return Config::inst()->get(ConfigExtension::class, $key);
             };
 
@@ -189,10 +201,8 @@ class BusinessLocation extends DataObject
             );
 
             if ($this->getParentConfig()) {
-
                 $mapsAPIKey = $this->getParentConfig()->getMicroDataMapsAPIKey();
                 if ($mapsAPIKey) {
-
                     $fields->addFieldToTab(
                         'Root.MapCoordinates',
                         $mapField = Wrapper::create(
@@ -209,22 +219,19 @@ class BusinessLocation extends DataObject
                             )
                         )
                     );
-
                 } else {
-
                     $fields->addFieldToTab(
                         'Root.MapCoordinates',
                         $mapField = Wrapper::create(
                             LiteralField::create(
                                 'CoordinatesInfo',
-                                '<p>'._t('BusinessLocation.AddGoogleMapsAPIKey', 'Please add a Google Maps API key to the main config in order to enable coordinates.').'</p>'
+                                '<p>' . _t('BusinessLocation.AddGoogleMapsAPIKey', 'Please add a Google Maps API key to the main config in order to enable coordinates.') . '</p>'
                             )
                         )
                     );
                 }
 
                 $mapField->displayIf('IsMicroDataCoordinatesEnabled')->isChecked();
-
             }
 
             $fields->addFieldToTab(
@@ -253,7 +260,7 @@ class BusinessLocation extends DataObject
                 [
                     LiteralField::create(
                         'OpeningHoursInfoField',
-                        '<p>'. _t('BusinessLocation.OpeningHoursLocalBusinessOnly', 'Opening hours are only applicable to locations of type <em>Local Business</em>') . '</p><br><br>'
+                        '<p>' . _t('BusinessLocation.OpeningHoursLocalBusinessOnly', 'Opening hours are only applicable to locations of type <em>Local Business</em>') . '</p><br><br>'
                     ),
                     GridField::create(
                         'MicroDataOpeningHours',
@@ -268,6 +275,7 @@ class BusinessLocation extends DataObject
         return $fields;
     }
 
+    #[Override]
     protected function onBeforeDelete()
     {
         parent::onBeforeDelete();
@@ -280,6 +288,7 @@ class BusinessLocation extends DataObject
         }
     }
 
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
@@ -289,7 +298,6 @@ class BusinessLocation extends DataObject
             : false;
 
         if (!$separateEntity) {
-
             $this->MicroDataType = '';
             $this->MicroDataTypeSpecific = '';
             $this->MicroDataPhone = '';
@@ -306,11 +314,8 @@ class BusinessLocation extends DataObject
                     $item->delete();
                 }
             }
-
         } else {
-
             if ($this->MicroDataType === 'Organization') {
-
                 $this->MicroDataPaymentAccepted = '';
 
                 $items = $this->MicroDataOpeningHours();

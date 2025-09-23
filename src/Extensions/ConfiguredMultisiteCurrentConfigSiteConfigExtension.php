@@ -2,10 +2,10 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
-use SilverStripe\ORM\DataExtension;
 use Fromholdio\ConfiguredMultisites\Multisites;
+use SilverStripe\Core\Extension;
 
-class ConfiguredMultisiteCurrentConfigSiteConfigExtension extends DataExtension
+class ConfiguredMultisiteCurrentConfigSiteConfigExtension extends Extension
 {
     public function getCurrentSocialMetaConfig()
     {

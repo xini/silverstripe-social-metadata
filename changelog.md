@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [9.0.0]
+
+* upgrade to Silverstripe 6
+
 ## [8.5.3]
 
 * fix retrieving of Goole Maps API key when set via GoogleMapsField's env var

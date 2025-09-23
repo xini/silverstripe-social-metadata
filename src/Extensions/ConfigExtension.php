@@ -3,7 +3,7 @@
 namespace Innoweb\SocialMeta\Extensions;
 
 use BetterBrief\GoogleMapField;
-use BurnBright\ExternalURLField\ExternalURLField;
+use Fromholdio\ExternalURLField\ExternalURLField;
 use Innoweb\InternationalPhoneNumberField\Forms\InternationalPhoneNumberField;
 use Innoweb\SocialMeta\Model\BusinessLocation;
 use Innoweb\SocialMeta\Model\OpeningHours;
@@ -14,6 +14,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\DatetimeField;
@@ -21,17 +22,16 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\HeaderField;
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\TextField;
 use Symbiote\MultiValueField\Fields\MultiValueTextField;
 use UncleCheese\DisplayLogic\Forms\Wrapper;
 
-class ConfigExtension extends DataExtension
+class ConfigExtension extends Extension
 {
     private static $socialmeta_images_folder;
 
@@ -143,8 +143,7 @@ class ConfigExtension extends DataExtension
         }
 
         $addresses = [];
-        if (
-            $this->getOwner()->MicroDataStreetAddress
+        if ($this->getOwner()->MicroDataStreetAddress
             || $this->getOwner()->MicroDataPOBoxNumber
             || $this->getOwner()->MicroDataCity
             || $this->getOwner()->MicroDataPostCode
@@ -156,18 +155,23 @@ class ConfigExtension extends DataExtension
             if ($this->getOwner()->MicroDataCountry) {
                 $address['addressCountry'] = $this->getOwner()->MicroDataCountry;
             }
+
             if ($this->getOwner()->MicroDataCity) {
                 $address['addressLocality'] = $this->getOwner()->MicroDataCity;
             }
+
             if ($this->getOwner()->MicroDataRegion) {
                 $address['addressRegion'] = $this->getOwner()->MicroDataRegion;
             }
+
             if ($this->getOwner()->MicroDataPostCode) {
                 $address['postalCode'] = $this->getOwner()->MicroDataPostCode;
             }
+
             if ($this->getOwner()->MicroDataPOBoxNumber) {
                 $address['postOfficeBoxNumber'] = $this->getOwner()->MicroDataPOBoxNumber;
             }
+
             if ($this->getOwner()->MicroDataStreetAddress) {
                 $address['streetAddress'] = $this->getOwner()->MicroDataStreetAddress;
             }
@@ -175,9 +179,7 @@ class ConfigExtension extends DataExtension
 
         $additionalLocations = $this->getOwner()->MicroDataAdditionalLocations();
         if ($this->getOwner()->HasMicroDataAdditionalLocations && $additionalLocations) {
-
             if (!$this->getOwner()->IsMicroDataAdditionalLocationsSeparateEntities) {
-
                 if (isset($address) && $this->getOwner()->getSocialMetaValue('SiteName')) {
                     $address['name'] = $this->getOwner()->getSocialMetaValue('SiteName');
                 }
@@ -186,9 +188,8 @@ class ConfigExtension extends DataExtension
                     $addresses[] = $address;
                 }
 
-                foreach($additionalLocations as $location) {
-                    if (
-                        $location->MicroDataStreetAddress
+                foreach ($additionalLocations as $location) {
+                    if ($location->MicroDataStreetAddress
                         || $location->MicroDataPOBoxNumber
                         || $location->MicroDataCity
                         || $location->MicroDataPostCode
@@ -200,18 +201,23 @@ class ConfigExtension extends DataExtension
                         if ($location->MicroDataCountry) {
                             $address['addressCountry'] = $location->MicroDataCountry;
                         }
+
                         if ($location->MicroDataCity) {
                             $address['addressLocality'] = $location->MicroDataCity;
                         }
+
                         if ($location->MicroDataRegion) {
                             $address['addressRegion'] = $location->MicroDataRegion;
                         }
+
                         if ($location->MicroDataPostCode) {
                             $address['postalCode'] = $location->MicroDataPostCode;
                         }
+
                         if ($location->MicroDataPOBoxNumber) {
                             $address['postOfficeBoxNumber'] = $location->MicroDataPOBoxNumber;
                         }
+
                         if ($location->MicroDataStreetAddress) {
                             $address['streetAddress'] = $location->MicroDataStreetAddress;
                         }
@@ -220,14 +226,12 @@ class ConfigExtension extends DataExtension
                     }
                 }
             } else {
-
                 if (isset($address)) {
                     $addresses = $address;
                 }
 
                 $subOrganisations = [];
-                foreach($additionalLocations as $location) {
-
+                foreach ($additionalLocations as $location) {
                     $organisation = [
                         '@type'     =>  $location->getMicroDataSchemaType(),
                         'parentOrganization'    =>  [
@@ -240,8 +244,7 @@ class ConfigExtension extends DataExtension
                         $organisation['name'] = $location->MicroDataTitle;
                     }
 
-                    if (
-                        $location->MicroDataStreetAddress
+                    if ($location->MicroDataStreetAddress
                         || $location->MicroDataPOBoxNumber
                         || $location->MicroDataCity
                         || $location->MicroDataPostCode
@@ -253,18 +256,23 @@ class ConfigExtension extends DataExtension
                         if ($location->MicroDataCountry) {
                             $address['addressCountry'] = $location->MicroDataCountry;
                         }
+
                         if ($location->MicroDataCity) {
                             $address['addressLocality'] = $location->MicroDataCity;
                         }
+
                         if ($location->MicroDataRegion) {
                             $address['addressRegion'] = $location->MicroDataRegion;
                         }
+
                         if ($location->MicroDataPostCode) {
                             $address['postalCode'] = $location->MicroDataPostCode;
                         }
+
                         if ($location->MicroDataPOBoxNumber) {
                             $address['postOfficeBoxNumber'] = $location->MicroDataPOBoxNumber;
                         }
+
                         if ($location->MicroDataStreetAddress) {
                             $address['streetAddress'] = $location->MicroDataStreetAddress;
                         }
@@ -275,9 +283,11 @@ class ConfigExtension extends DataExtension
                     if ($location->MicroDataPhone) {
                         $organisation['telephone'] = $location->MicroDataPhone;
                     }
+
                     if ($location->MicroDataFax) {
                         $organisation['faxNumber'] = $location->MicroDataFax;
                     }
+
                     if ($location->MicroDataEmail) {
                         $organisation['email'] = $location->MicroDataEmail;
                     }
@@ -287,11 +297,11 @@ class ConfigExtension extends DataExtension
                     }
 
                     if ($location->IsMicroDataCoordinatesEnabled && $location->MicroDataLocationLatitude && $location->MicroDataLocationLongitude) {
-                        $coordinates = array(
+                        $coordinates = [
                             '@type'     =>  'GeoCoordinates',
                             'latitude'  =>  $location->MicroDataLocationLatitude,
                             'longitude' =>  $location->MicroDataLocationLongitude,
-                        );
+                        ];
                         $organisation['geo'] = $coordinates;
                     }
 
@@ -299,7 +309,7 @@ class ConfigExtension extends DataExtension
                     if ($openingHours && $openingHours->exists()) {
                         $hours = [];
                         foreach ($openingHours as $hour) {
-                            if (($days = json_decode($hour->Days)) && count($days)) {
+                            if (($days = json_decode((string) $hour->Days)) && count($days)) {
                                 $dayIdentifiers = [
                                     'Mo' => 'https://schema.org/Monday',
                                     'Tu' => 'https://schema.org/Tuesday',
@@ -316,58 +326,60 @@ class ConfigExtension extends DataExtension
                                     if ($hour->TimeOpen) {
                                         $row['opens'] = $hour->TimeOpen;
                                     }
+
                                     if ($hour->TimeClose) {
                                         $row['closes'] = $hour->TimeClose;
                                     }
+
                                     $hours[] = $row;
                                 }
                             }
                         }
-                        if (count($hours)) {
+
+                        if ($hours !== []) {
                             $organisation['openingHoursSpecification'] = $hours;
                         }
                     }
+
                     if ($location->MicroDataPaymentAccepted) {
-                        $organisation['paymentAccepted'] = json_decode($location->MicroDataPaymentAccepted);
+                        $organisation['paymentAccepted'] = json_decode((string) $location->MicroDataPaymentAccepted);
                     }
 
                     $subOrganisations[] = $organisation;
                 }
 
-                if (count($subOrganisations)) {
+                if ($subOrganisations !== []) {
                     $data['subOrganization'] = $subOrganisations;
                 }
             }
-
-        } else {
-            if (isset($address)) {
-                $addresses[] = $address;
-            }
+        } elseif (isset($address)) {
+            $addresses[] = $address;
         }
 
         if ($this->getOwner()->IsMicroDataCoordinatesEnabled && $this->getOwner()->MicroDataLocationLongitude && $this->getOwner()->MicroDataLocationLatitude) {
-            $coordinates = array(
+            $coordinates = [
                 '@type'     =>  'GeoCoordinates',
                 'latitude'  =>  $this->getOwner()->MicroDataLocationLatitude,
                 'longitude' =>  $this->getOwner()->MicroDataLocationLongitude,
-            );
+            ];
         }
 
         if ($this->getOwner()->getMicroDataSchemaType(true) === 'Event') {
-
             if ($this->getOwner()->MicroDataEventStart) {
                 $data['startDate'] = $this->getOwner()->dbObject('MicroDataEventStart')->Rfc3339();
             }
+
             if ($this->getOwner()->MicroDataEventEnd) {
                 $data['endDate'] = $this->getOwner()->dbObject('MicroDataEventEnd')->Rfc3339();
             }
 
-            $location = array(
+            $location = [
                 '@type' =>  'Place'
-            );
+            ];
             if ($this->getOwner()->MicroDataEventLocationName) {
                 $location['name'] = $this->getOwner()->MicroDataEventLocationName;
             }
+
             if ($this->getOwner()->MicroDataEventLocationWebsite) {
                 $location['sameAs'] = $this->getOwner()->MicroDataEventLocationWebsite;
             }
@@ -379,9 +391,11 @@ class ConfigExtension extends DataExtension
             if ($this->getOwner()->MicroDataPhone) {
                 $location['telephone'] = $this->getOwner()->MicroDataPhone;
             }
+
             if ($this->getOwner()->MicroDataFax) {
                 $location['faxNumber'] = $this->getOwner()->MicroDataFax;
             }
+
             if ($this->getOwner()->MicroDataEmail) {
                 $location['email'] = $this->getOwner()->MicroDataEmail;
             }
@@ -391,9 +405,7 @@ class ConfigExtension extends DataExtension
             }
 
             $data['location'] = $location;
-
         } else {
-
             if (isset($addresses) && count($addresses)) {
                 $data['address'] = $addresses;
             }
@@ -401,9 +413,11 @@ class ConfigExtension extends DataExtension
             if ($this->getOwner()->MicroDataPhone) {
                 $data['telephone'] = $this->getOwner()->MicroDataPhone;
             }
+
             if ($this->getOwner()->MicroDataFax) {
                 $data['faxNumber'] = $this->getOwner()->MicroDataFax;
             }
+
             if ($this->getOwner()->MicroDataEmail) {
                 $data['email'] = $this->getOwner()->MicroDataEmail;
             }
@@ -413,18 +427,15 @@ class ConfigExtension extends DataExtension
             }
         }
 
-        if ($this->getOwner()->getMicroDataSchemaType(true) === 'LocalBusiness') {
-
-            if ($this->getOwner()->getMicroDataMapLink()) {
-                $data['hasMap'] = $this->getOwner()->getMicroDataMapLink();
-            }
+        if ($this->getOwner()->getMicroDataSchemaType(true) === 'LocalBusiness' && $this->getOwner()->getMicroDataMapLink()) {
+            $data['hasMap'] = $this->getOwner()->getMicroDataMapLink();
         }
 
         $openingHours = $this->getOwner()->MicroDataOpeningHours();
         if ($openingHours && $openingHours->exists()) {
             $hours = [];
             foreach ($openingHours as $hour) {
-                if (($days = json_decode($hour->Days)) && count($days)) {
+                if (($days = json_decode((string) $hour->Days)) && count($days)) {
                     $dayIdentifiers = [
                         'Mo' => 'https://schema.org/Monday',
                         'Tu' => 'https://schema.org/Tuesday',
@@ -441,19 +452,23 @@ class ConfigExtension extends DataExtension
                         if ($hour->TimeOpen) {
                             $row['opens'] = $hour->TimeOpen;
                         }
+
                         if ($hour->TimeClose) {
                             $row['closes'] = $hour->TimeClose;
                         }
+
                         $hours[] = $row;
                     }
                 }
             }
-            if (count($hours)) {
+
+            if ($hours !== []) {
                 $data['openingHoursSpecification'] = $hours;
             }
         }
+
         if ($this->getOwner()->MicroDataPaymentAccepted) {
-            $data['paymentAccepted'] = json_decode($this->getOwner()->MicroDataPaymentAccepted);
+            $data['paymentAccepted'] = json_decode((string) $this->getOwner()->MicroDataPaymentAccepted);
         }
 
         $sameAsLinksField = $this->getOwner()->obj('SocialMetaSameAsLinks');
@@ -463,6 +478,7 @@ class ConfigExtension extends DataExtension
             foreach ($sameAsLinks as $sameAsLink) {
                 $sameAs[] = $sameAsLink;
             }
+
             $data['sameAs'] = $sameAs;
         }
 
@@ -486,15 +502,19 @@ class ConfigExtension extends DataExtension
             if ($this->getOwner()->MicroDataCity) {
                 $address[] = $this->getOwner()->MicroDataCity;
             }
+
             if ($this->getOwner()->MicroDataRegion) {
                 $address[] = $this->getOwner()->MicroDataRegion;
             }
+
             if ($this->getOwner()->MicroDataPostCode) {
                 $address[] = $this->getOwner()->MicroDataPostCode;
             }
+
             $address = implode(' ', $address);
             return 'https://www.google.com.au/maps/place/' . urlencode($address);
         }
+
         return null;
     }
 
@@ -517,6 +537,7 @@ class ConfigExtension extends DataExtension
         if ($googleMapsFieldDefaultOptions && isset($googleMapsFieldDefaultOptions['api_key'])) {
             return $googleMapsFieldDefaultOptions['api_key'];
         }
+
         if (Environment::hasEnv('APP_GOOGLE_MAPS_KEY')) {
             return Environment::getEnv('APP_GOOGLE_MAPS_KEY');
         }
@@ -641,7 +662,7 @@ class ConfigExtension extends DataExtension
                 ),
                 MultiValueTextField::create(
                     'SocialMetaFacebookAdminIDs',
-                    _t('SocialMetaConfigExtension.FACEBOOKADMINIDS','Facebook Admin IDs')
+                    _t('SocialMetaConfigExtension.FACEBOOKADMINIDS', 'Facebook Admin IDs')
                 ),
                 ExternalURLField::create(
                     'SocialMetaFacebookPage',
@@ -659,16 +680,17 @@ class ConfigExtension extends DataExtension
             ]
         );
 
-        $typeSpecificSource = function($type) {
+        $typeSpecificSource = function ($type) {
             if ($type === 'Organization') {
                 $key = 'organization_types';
-            } else if ($type === 'LocalBusiness') {
+            } elseif ($type === 'LocalBusiness') {
                 $key = 'localbusiness_types';
-            } else if ($type === 'Event') {
+            } elseif ($type === 'Event') {
                 $key = 'event_types';
             } else {
                 return [];
             }
+
             return Config::inst()->get(ConfigExtension::class, $key);
         };
 
@@ -776,7 +798,6 @@ class ConfigExtension extends DataExtension
         $mapsAPIKey = $this->getOwner()->getMicroDataMapsAPIKey();
 
         if ($mapsAPIKey) {
-
             $fields->addFieldToTab(
                 $this->getOwner()->getSocialMetaTabName('MicroData.MapCoordinates'),
                 $mapField = Wrapper::create(
@@ -793,15 +814,13 @@ class ConfigExtension extends DataExtension
                     )
                 )
             );
-
         } else {
-
             $fields->addFieldToTab(
                 $this->getOwner()->getSocialMetaTabName('MicroData.MapCoordinates'),
                 $mapField = Wrapper::create(
                     LiteralField::create(
                         'CoordinatesInfo',
-                        '<p>'._t('SocialMetaBusinessLocation.AddGoogleMapsAPIKey', 'Please add a Google Maps API key in order to enable coordinates.').'</p>'
+                        '<p>' . _t('SocialMetaBusinessLocation.AddGoogleMapsAPIKey', 'Please add a Google Maps API key in order to enable coordinates.') . '</p>'
                     )
                 )
             );
@@ -865,7 +884,7 @@ class ConfigExtension extends DataExtension
                 ),
                 MultiValueTextField::create(
                     'SocialMetaSameAsLinks',
-                    _t('SocialMetaConfigExtension.SocialMetaSameAsLinks','Same As Links')
+                    _t('SocialMetaConfigExtension.SocialMetaSameAsLinks', 'Same As Links')
                 ),
             ]
         );
@@ -882,40 +901,32 @@ class ConfigExtension extends DataExtension
         if ($tabPath) {
             $tabName .= '.' . $tabPath;
         }
+
         return $tabName;
     }
 
     public function onBeforeWrite()
     {
-        parent::onBeforeWrite();
-
         if ($this->getOwner()->MicroDataType === 'Organization') {
-
             $this->getOwner()->MicroDataPaymentAccepted = '';
             $this->getOwner()->MicroDataEventLocationName = '';
             $this->getOwner()->MicroDataEventLocationWebsite = '';
             $this->getOwner()->MicroDataEventStart = '';
             $this->getOwner()->MicroDataEventEnd = '';
-
             $items = $this->getOwner()->MicroDataOpeningHours();
             if ($items && $items->Count() > 0) {
                 foreach ($items as $item) {
                     $item->delete();
                 }
             }
-
-        } else if ($this->getOwner()->MicroDataType === 'LocalBusiness') {
-
+        } elseif ($this->getOwner()->MicroDataType === 'LocalBusiness') {
             $this->getOwner()->MicroDataEventLocationName = '';
             $this->getOwner()->MicroDataEventLocationWebsite = '';
             $this->getOwner()->MicroDataEventStart = '';
             $this->getOwner()->MicroDataEventEnd = '';
-
-        } else if ($this->getOwner()->MicroDataType === 'Event') {
-
+        } elseif ($this->getOwner()->MicroDataType === 'Event') {
             $this->getOwner()->MicroDataEmail = '';
             $this->getOwner()->MicroDataPaymentAccepted = '';
-
             $items = $this->getOwner()->MicroDataOpeningHours();
             if ($items && $items->Count() > 0) {
                 foreach ($items as $item) {

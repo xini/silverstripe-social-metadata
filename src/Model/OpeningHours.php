@@ -2,15 +2,16 @@
 
 namespace Innoweb\SocialMeta\Model;
 
+use Override;
 use SilverStripe\Forms\CheckboxSetField;
-use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\TimeField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Versioned\Versioned;
-use SilverStripe\Forms\TimeField;
 
 class OpeningHours extends DataObject
 {
     private static $singular_name = 'Opening Hours';
+
     private static $plural_name = 'Opening Hours';
 
     private static $table_name = 'SocialMetaOpeningHours';
@@ -52,9 +53,11 @@ class OpeningHours extends DataObject
         if ($this->TimeOpen && $this->TimeClose) {
             return $this->TimeOpen . '-' . $this->TimeClose;
         }
+
         return null;
     }
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();

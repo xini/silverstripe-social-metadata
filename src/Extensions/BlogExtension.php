@@ -3,11 +3,12 @@
 namespace Innoweb\SocialMeta\Extensions;
 
 use SilverStripe\Blog\Model\BlogController;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Core\Extension;
 
-class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
+class BlogExtension extends Extension
 {
 
     public function getSocialMetaTitle()
@@ -22,6 +23,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 if ($category->MetaTitle) {
                     return $category->MetaTitle;
                 }
+
                 if ($category->Title) {
                     return $category->Title . $divider . $siteName;
                 }
@@ -29,6 +31,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 if ($tag->MetaTitle) {
                     return $tag->MetaTitle;
                 }
+
                 if ($tag->Title) {
                     return $tag->Title . $divider . $siteName;
                 }
@@ -48,6 +51,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 return $tag->MetaDescription;
             }
         }
+
         return null;
     }
 
@@ -61,6 +65,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             if (($pageNum = (int)$posts->getPageStart()) > 0) {
                 $page = '?' . $posts->getPaginationGetVar() . '=' . $pageNum;
             }
+
             // get specific URL for archive, categories and tags
             if ($controller->getArchiveYear() || $controller->getArchiveMonth() || $controller->getArchiveDay()) {
                 $year = $controller->getArchiveYear();
@@ -89,6 +94,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 return $controller->join_links($controller->AbsoluteLink(), $page);
             }
         }
+
         return null;
     }
 
@@ -106,6 +112,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 }
             }
         }
+
         return null;
     }
 
@@ -123,7 +130,7 @@ class BlogExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 }
             }
         }
+
         return null;
     }
-
 }

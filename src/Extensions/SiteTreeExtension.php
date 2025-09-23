@@ -2,35 +2,35 @@
 
 namespace Innoweb\SocialMeta\Extensions;
 
-use BurnBright\ExternalURLField\ExternalURLField;
+use Fromholdio\ExternalURLField\ExternalURLField;
 use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\CMS\Controllers\RootURLController;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\i18n\i18n;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBHTMLVarchar;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\Security\Member;
 use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\View\ArrayData;
-use SilverStripe\View\HTML;
 use SilverStripe\View\Parsers\HTMLValue;
 
-class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
+class SiteTreeExtension extends Extension
 {
     public const INCLUDE_SITE_JSONLD_HOME = 'home';
+
     public const INCLUDE_SITE_JSONLD_ALL = 'all';
 
     private static $minify_jsonld = true;
@@ -57,7 +57,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     /**
      * @param array $tags
      */
-    public function MetaComponents(array &$tags)
+    public function updateMetaComponents(array &$tags)
     {
         // update title tag
         if ($title = $this->getOwner()->getSocialMetaValue('Title')) {
@@ -305,7 +305,6 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
         // Articles
         if ($openGraphType === 'article') {
-
             $facebookPublisher = $this->getOwner()->getSocialMetaValue('FacebookPublisher');
             $openGraphAuthors = $this->getOwner()->getSocialMetaValue('OpenGraphAuthors');
             $openGraphPublicationTime = $this->getOwner()->getSocialMetaValue('OpenGraphPublicationTime');
@@ -383,24 +382,25 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 $schemaData = [];
                 $schemaData[] = $config->getMicroDataSchemaData();
                 $schemaData[] = $pageSchemaData;
-            } else if (count($pageSchemaData) > 1) {
+            } elseif (count($pageSchemaData) > 1) {
                 // page data define more than one type. add site data to top of page array
                 array_unshift($pageSchemaData, $config->getMicroDataSchemaData());
                 $schemaData = $pageSchemaData;
-            } else if (count($pageSchemaData) == 1) {
+            } elseif (count($pageSchemaData) == 1) {
                 // page data defines on type, wrapped in an array.
                 $schemaData = array_merge($config->getMicroDataSchemaData(), $pageSchemaData[0]);
             }
-        } else if ($pageSchemaData) {
+        } elseif ($pageSchemaData) {
             $schemaData = $pageSchemaData;
-        } else if ($includeSiteSchemaData) {
+        } elseif ($includeSiteSchemaData) {
             $config = $this->getOwner()->getSocialMetaConfig();
             $schemaData = $config->getMicroDataSchemaData();
         }
+
         if ($schemaData) {
             $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
             if (Config::inst()->get(self::class, 'minify_jsonld') === false) {
-                $options = $options | JSON_PRETTY_PRINT;
+                $options |= JSON_PRETTY_PRINT;
             }
 
             $tags['ld+json'] = [
@@ -411,10 +411,9 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 'content' => json_encode($schemaData, $options)
             ];
         }
-
     }
 
-    public function MetaTags(&$tagString)
+    public function updateMetaTags(&$tagString)
     {
         $extraMeta = $this->getOwner()->getSocialMetaValue('ExtraMeta');
         if ($extraMeta) {
@@ -425,19 +424,16 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     public function getSocialMetaValue($key, $skipController = false)
     {
         if (!$skipController && $controller = Controller::curr()) {
+            if ($controller->hasMethod('getSocialMetaObject') && $object = $controller->getSocialMetaObject()) {
+                if ($object->hasMethod('getSocialMeta' . $key) && ($value = $object->{'getSocialMeta' . $key}()) && $value !== false) {
+                    return $value;
+                }
 
-            if ($controller->hasMethod('getSocialMetaObject')) {
-
-                if ($object = $controller->getSocialMetaObject()) {
-
-                    if ($object->hasMethod('getSocialMeta' . $key) && ($value = $object->{'getSocialMeta' . $key}()) && $value !== false) {
-                        return $value;
-                    }
-                    if ($object->hasMethod('getDefaultSocialMeta' . $key) && ($value = $object->{'getDefaultSocialMeta' . $key}()) && $value !== false) {
-                        return $value;
-                    }
+                if ($object->hasMethod('getDefaultSocialMeta' . $key) && ($value = $object->{'getDefaultSocialMeta' . $key}()) && $value !== false) {
+                    return $value;
                 }
             }
+
             if ($controller->hasMethod('getSocialMeta' . $key) && ($value = $controller->{'getSocialMeta' . $key}()) && $value !== false) {
                 return $value;
             }
@@ -467,6 +463,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         if ($this->getOwner()->Title) {
             return $this->getOwner()->Title . $divider . $siteName;
         }
+
         return $siteName;
     }
 
@@ -482,11 +479,11 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                     $field = $this->getOwner()->dbObject($fieldName);
                     if (is_a($field, DBHTMLVarchar::class)) {
                         return $field->Plain();
-                    } else if (is_a($field, DBHTMLText::class)) {
+                    } elseif (is_a($field, DBHTMLText::class)) {
                         return $field->Summary();
-                    } else if (is_a($field, DBText::class)) {
+                    } elseif (is_a($field, DBText::class)) {
                         return $field->Summary();
-                    } else if (is_a($field, DBVarchar::class)) {
+                    } elseif (is_a($field, DBVarchar::class)) {
                         return $field->Plain();
                     }
                 }
@@ -522,6 +519,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         if ($names && count($names) > 0) {
             return implode(',', $names);
         }
+
         return null;
     }
 
@@ -538,18 +536,20 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             foreach ($authors as $author) {
                 if (is_a($author, Member::class) && $author->Name) {
                     $names[] = $author->Name;
-                } else if (is_a($author, ArrayData::class) && $author->Name) {
+                } elseif (is_a($author, ArrayData::class) && $author->Name) {
                     $names[] = $author->Name;
-                } else if (is_object($author) && $author->Name) {
+                } elseif (is_object($author) && $author->Name) {
                     $names[] = $author->Name;
-                } else if (is_array($author) && isset($author['Name'])) {
+                } elseif (is_array($author) && isset($author['Name'])) {
                     $names[] = $author['Name'];
-                } else if (is_string($author)) {
+                } elseif (is_string($author)) {
                     $names[] = $author;
                 }
             }
+
             return $names;
         }
+
         return null;
     }
 
@@ -560,15 +560,14 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             return $image;
         }
 
-        $link = trim($this->getOwner()->Link(), '/');
+        $link = trim((string) $this->getOwner()->Link(), '/');
         if ($link !== '' && $link !== RootURLController::get_homepage_link()) {
-
             // extract first image in page content
             $htmlValue = Injector::inst()->create(HTMLValue::class, $this->getOwner()->Content);
             if ($images = $htmlValue->getElementsByTagName('img')) {
                 foreach ($images as $img) {
                     $path = urldecode(Director::makeRelative($img->getAttribute('src')));
-                    $path = preg_replace('/_resampled\/[a-z0-9]*\//i', '', $path);
+                    $path = preg_replace('/__[^\.]*/i', '', $path);
                     if ($tmp = File::find($path)) {
                         return $tmp;
                     }
@@ -580,7 +579,8 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         return $config->getSocialMetaValue('SiteImage');
     }
 
-    public function getDefaultSocialMetaLocale() {
+    public function getDefaultSocialMetaLocale()
+    {
         return i18n::get_locale();
     }
 
@@ -589,8 +589,9 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         $version = $this->getOwner()->Versions()->filter('WasPublished', 1)->last();
         if ($version) {
             $created = $version->relField('Created');
-            return date('c', strtotime($created));
+            return date('c', strtotime((string) $created));
         }
+        return null;
     }
 
     public function getDefaultSocialMetaModificationTime()
@@ -621,10 +622,8 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
     {
         $image = $this->getOwner()->getSocialMetaValue('TwitterImage');
 
-        if ($image) {
-            if ($image->getWidth() >= 300 && $image->getHeight() >= 157) {
-                return 'summary_large_image';
-            }
+        if ($image && ($image->getWidth() >= 300 && $image->getHeight() >= 157)) {
+            return 'summary_large_image';
         }
 
         return 'summary';
@@ -639,9 +638,11 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 if ($image->hasMethod('FocusFill')) {
                     return $image->FocusFill($config['width'], $config['height']);
                 }
+
                 return $image->Fill($config['width'], $config['height']);
             }
         }
+
         return null;
     }
 
@@ -676,14 +677,15 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             foreach ($authors as $author) {
                 if (is_a($author, Member::class) && $author->TwitterHandle) {
                     $creators[] = $author->TwitterHandle;
-                } else if (is_a($author, ArrayData::class) && $author->TwitterHandle) {
+                } elseif (is_a($author, ArrayData::class) && $author->TwitterHandle) {
                     $creators[] = $author->TwitterHandle;
-                } else if (is_object($author) && $author->TwitterHandle) {
+                } elseif (is_object($author) && $author->TwitterHandle) {
                     $creators[] = $author->TwitterHandle;
-                } else if (is_array($author) && isset($author['TwitterHandle'])) {
+                } elseif (is_array($author) && isset($author['TwitterHandle'])) {
                     $creators[] = $author['TwitterHandle'];
                 }
             }
+
             return $creators;
         }
 
@@ -710,13 +712,13 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getDefaultSocialMetaOpenGraphType()
     {
-        $configType = Config::inst()->get(get_class($this->getOwner()), 'socialmeta_opengraph_type');
+        $configType = Config::inst()->get($this->getOwner()::class, 'socialmeta_opengraph_type');
         return $configType ?: 'website';
     }
 
     public function getDefaultSocialMetaOpenGraphURL()
     {
-        return preg_replace('/home\/$/i', '', $this->getOwner()->AbsoluteLink());
+        return preg_replace('/home\/$/i', '', (string) $this->getOwner()->AbsoluteLink());
     }
 
     public function getDefaultSocialMetaOpenGraphTitle()
@@ -749,9 +751,11 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 if ($image->hasMethod('FocusFill')) {
                     return $image->FocusFill($config['width'], $config['height']);
                 }
+
                 return $image->Fill($config['width'], $config['height']);
             }
         }
+
         return null;
     }
 
@@ -770,16 +774,17 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
             foreach ($authors as $author) {
                 if (is_a($author, Member::class) && $author->FacebookProfileURL) {
                     $urls[] = $author->FacebookProfileURL;
-                } else if (is_object($author) && $author->FacebookProfileURL) {
+                } elseif (is_object($author) && $author->FacebookProfileURL) {
                     $urls[] = $author->FacebookProfileURL;
-                } else if (is_a($author, ArrayData::class) && $author->URL) {
+                } elseif (is_a($author, ArrayData::class) && $author->URL) {
                     $urls[] = $author->URL;
-                } else if (is_array($author) && isset($author['FacebookProfileURL'])) {
+                } elseif (is_array($author) && isset($author['FacebookProfileURL'])) {
                     $urls[] = $author['FacebookProfileURL'];
-                } else if (is_array($author) && isset($author['URL'])) {
+                } elseif (is_array($author) && isset($author['URL'])) {
                     $urls[] = $author['URL'];
                 }
             }
+
             return $urls;
         }
 
@@ -843,22 +848,17 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getIncludeSiteSchemaData()
     {
-        $currentLink = trim($this->getOwner()->Link(), '/');
-        if (
-            isset($this->getOwner()->include_site_jsonld_override)
-        ) {
+        $currentLink = trim((string) $this->getOwner()->Link(), '/');
+        if (isset($this->getOwner()->include_site_jsonld_override)) {
             return $this->getOwner()->include_site_jsonld_override;
-        } else if (
-            $this->getOwner()->config()->include_site_jsonld == self::INCLUDE_SITE_JSONLD_HOME
-            && ($currentLink == '' || $currentLink === RootURLController::get_homepage_link())
-        ) {
+        } elseif ($this->getOwner()->config()->include_site_jsonld == self::INCLUDE_SITE_JSONLD_HOME
+        && ($currentLink === '' || $currentLink === RootURLController::get_homepage_link())) {
             return true;
-        } else if (
-            $this->getOwner()->config()->include_site_jsonld == self::INCLUDE_SITE_JSONLD_ALL
-            && is_a(Controller::curr(), ContentController::class)
-        ) {
+        } elseif ($this->getOwner()->config()->include_site_jsonld == self::INCLUDE_SITE_JSONLD_ALL
+        && is_a(Controller::curr(), ContentController::class)) {
             return true;
         }
+
         return false;
     }
 
@@ -891,7 +891,6 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
         $tabEnabled = $this->getOwner()->config()->get('metadata_tab_enabled');
         if ($tabEnabled) {
-
             $fields->removeByName('MetaDescription');
             $fields->removeByName('ExtraMeta');
             $fields->removeByName('Metadata');
@@ -921,10 +920,9 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                 ->setRightTitle(
                     _t(
                         'SiteTreeExtension.ExtraMetaHelp',
-                        "HTML tags for additional meta information. For example <meta name=\"customName\" content=\"your custom content here\" />"
+                        'HTML tags for additional meta information. For example <meta name="customName" content="your custom content here" />'
                     )
                 );
-
         } else {
             $fields->insertBefore('MetaDescription', $metaTitleField);
             $fields->insertBefore('MetaDescription', $metaURLField);

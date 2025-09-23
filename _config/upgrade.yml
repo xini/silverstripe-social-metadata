@@ -1,7 +1,0 @@
----
-Name: socialmetadata-upgrade
----
-SilverStripe\ORM\DatabaseAdmin:
-  classname_value_remapping:
-    SocialMetaBusinessLocation: 'Innoweb\SocialMeta\Model\BusinessLocation'
-    SocialMetaOpeningHours: 'Innoweb\SocialMeta\Model\OpeningHours'
