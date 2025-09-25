@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [9.0.1]
+
+* use @graph notation for multiple ld+json objects to fix Safari's array bug (https://bugs.webkit.org/show_bug.cgi?id=255764) 
+
 ## [9.0.0]
 
 * upgrade to Silverstripe 6
