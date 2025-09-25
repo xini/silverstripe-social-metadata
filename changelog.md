@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.5.5]
+
+* fix conditions for @graph notation for multiple ld+json objects
+
 ## [8.5.4]
 
 * use @graph notation for multiple ld+json objects to fix Safari's array bug (https://bugs.webkit.org/show_bug.cgi?id=255764) 

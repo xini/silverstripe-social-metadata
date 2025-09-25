@@ -379,7 +379,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         if ($pageSchemaData && $includeSiteSchemaData) {
             $config = $this->getOwner()->getSocialMetaConfig();
             $configSchemaData = $config->getMicroDataSchemaData();
-            if (isset($pageSchemaData['@type']) || isset($pageSchemaData['@context'])) { // page array directly defines one type
+            if (isset($pageSchemaData['@type']) && isset($pageSchemaData['@context'])) { // page array directly defines one type
                 // remove the @context from both data sets
                 unset($pageSchemaData['@context']);
                 unset($configSchemaData['@context']);
@@ -391,7 +391,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
                         $pageSchemaData,
                     ],
                 ];
-            } else if (isset($pageSchemaData['@graph']) || isset($pageSchemaData['@context'])) { // page array defines graph of one or multiple types
+            } else if (isset($pageSchemaData['@graph']) && isset($pageSchemaData['@context'])) { // page array defines graph of one or multiple types
                 // remove the @context from site data
                 unset($configSchemaData['@context']);
                 // extract array from page graph
