@@ -378,18 +378,58 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
         $includeSiteSchemaData = $this->getOwner()->getIncludeSiteSchemaData();
         if ($pageSchemaData && $includeSiteSchemaData) {
             $config = $this->getOwner()->getSocialMetaConfig();
-            if (isset($pageSchemaData['@type']) || isset($pageSchemaData['@context'])) {
-                // page array directly defines a type. create an array and place both blocks in it
-                $schemaData = [];
-                $schemaData[] = $config->getMicroDataSchemaData();
-                $schemaData[] = $pageSchemaData;
-            } else if (count($pageSchemaData) > 1) {
-                // page data define more than one type. add site data to top of page array
-                array_unshift($pageSchemaData, $config->getMicroDataSchemaData());
-                $schemaData = $pageSchemaData;
-            } else if (count($pageSchemaData) == 1) {
-                // page data defines on type, wrapped in an array.
-                $schemaData = array_merge($config->getMicroDataSchemaData(), $pageSchemaData[0]);
+            $configSchemaData = $config->getMicroDataSchemaData();
+            if (isset($pageSchemaData['@type']) || isset($pageSchemaData['@context'])) { // page array directly defines one type
+                // remove the @context from both data sets
+                unset($pageSchemaData['@context']);
+                unset($configSchemaData['@context']);
+                // create a graph array and place both blocks in it
+                $schemaData = [
+                    '@context' => 'https://schema.org',
+                    '@graph' => [
+                        $configSchemaData,
+                        $pageSchemaData,
+                    ],
+                ];
+            } else if (isset($pageSchemaData['@graph']) || isset($pageSchemaData['@context'])) { // page array defines graph of one or multiple types
+                // remove the @context from site data
+                unset($configSchemaData['@context']);
+                // extract array from page graph
+                $typeArray = $pageSchemaData['@graph'];
+                // add site data to top of page array
+                array_unshift($typeArray, $configSchemaData);
+                // create a graph array and place both blocks in it
+                $schemaData = [
+                    '@context' => 'https://schema.org',
+                    '@graph' => $typeArray,
+                ];
+            } else if (count($pageSchemaData) > 1) { // page data define more than one type as an array
+                // remove the @context from site data
+                unset($configSchemaData['@context']);
+                // remove @context from page types
+                foreach ($pageSchemaData as $data) {
+                    unset($data['@context']);
+                }
+                // add site data to top of page array
+                array_unshift($pageSchemaData, $configSchemaData);
+                // create a graph array and place both blocks in it
+                $schemaData = [
+                    '@context' => 'https://schema.org',
+                    '@graph' => $pageSchemaData,
+                ];
+            } else if (count($pageSchemaData) == 1) { // page data defines one type, wrapped in an array.
+                // remove the @context from site data
+                unset($configSchemaData['@context']);
+                // remove @context from page types
+                $pageSchemaData = $pageSchemaData[0];
+                unset($pageSchemaData['@context']);
+                // add site data to top of page array
+                array_unshift($pageSchemaData, $configSchemaData);
+                // create a graph array and place both blocks in it
+                $schemaData = [
+                    '@context' => 'https://schema.org',
+                    '@graph' => $pageSchemaData,
+                ];
             }
         } else if ($pageSchemaData) {
             $schemaData = $pageSchemaData;
