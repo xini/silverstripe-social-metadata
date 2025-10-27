@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.5.6]
+
+* update og and twitter/x image sizes
+* add gihub action for creating release from tag
+
 ## [8.5.5]
 
 * fix conditions for @graph notation for multiple ld+json objects
