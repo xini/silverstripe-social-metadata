@@ -21,11 +21,11 @@ Page:
 
 Innoweb\SocialMeta\Extensions\SiteTreeExtension:
   image_size_twitter:
-    width: 1024
-    height: 512
+    width: 1200
+    height: 675
   image_size_opengraph:
     width: 1200
-    height: 628
+    height: 630
   minify_jsonld: true
 
 ---

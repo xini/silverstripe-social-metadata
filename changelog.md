@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [9.0.2]
+
+* update og and twitter/x image sizes
+* add gihub action for creating release from tag
+
 ## [9.0.1]
 
 * use @graph notation for multiple ld+json objects to fix Safari's array bug (https://bugs.webkit.org/show_bug.cgi?id=255764) 
