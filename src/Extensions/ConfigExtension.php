@@ -233,10 +233,9 @@ class ConfigExtension extends Extension
                 $subOrganisations = [];
                 foreach ($additionalLocations as $location) {
                     $organisation = [
-                        '@type'     =>  $location->getMicroDataSchemaType(),
-                        'parentOrganization'    =>  [
-                            '@type' =>  $this->getOwner()->getMicroDataSchemaType(),
-                            'name'  =>  $this->getOwner()->getSocialMetaValue('SiteName')
+                        '@type' => $location->getMicroDataSchemaType(),
+                        'parentOrganization' => [
+                            '@id' => $this->getOwner()->getSocialMetaValue('SchemaSiteID'),
                         ]
                     ];
 
