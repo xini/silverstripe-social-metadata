@@ -464,7 +464,7 @@ class SiteTreeExtension extends \SilverStripe\CMS\Model\SiteTreeExtension
 
     public function getSocialMetaValue($key, $skipController = false)
     {
-        if (!$skipController && $controller = Controller::curr()) {
+        if (!$skipController && Controller::has_curr() && ($controller = Controller::curr())) {
 
             if ($controller->hasMethod('getSocialMetaObject')) {
 

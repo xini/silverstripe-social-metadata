@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.5.8]
+
+* fix check for existing controller
+
 ## [8.5.7]
 
 * fix parent organisation reference for additional locations
