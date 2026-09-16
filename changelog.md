@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.6.0]
+
+* add AlternateNames for organisation schema
+
 ## [8.5.8]
 
 * fix check for existing controller
