@@ -73,6 +73,8 @@ class ConfigExtension extends Extension
         'MicroDataEventEnd'             =>  'Datetime',
 
         'SocialMetaSameAsLinks'         =>  'MultiValueField',
+		
+		'SocialMetaAlternateNames'      =>  'MultiValueField',
     ];
 
     private static $has_one = [
@@ -480,6 +482,16 @@ class ConfigExtension extends Extension
 
             $data['sameAs'] = $sameAs;
         }
+		
+        $alternateNamesField = $this->getOwner()->obj('SocialMetaAlternateNames');
+        $alternateNames = $alternateNamesField->getValues();
+        if ($alternateNames && count($alternateNames) > 0) {
+            $alternate = [];
+            foreach ($alternateNames as $alternateName) {
+                $alternate[] = $alternateName;
+            }
+            $data['alternateName'] = $alternate;
+        }
 
         $this->getOwner()->invokeWithExtensions('updateSchemaData', $data);
 
@@ -884,6 +896,20 @@ class ConfigExtension extends Extension
                 MultiValueTextField::create(
                     'SocialMetaSameAsLinks',
                     _t('SocialMetaConfigExtension.SocialMetaSameAsLinks', 'Same As Links')
+                ),
+            ]
+        );
+		
+        $fields->addFieldsToTab(
+            $this->getOwner()->getSocialMetaTabName('MicroData.AlternateNames'),
+            [
+                LiteralField::create(
+                    'SocialMetaAlternateNamesInfoField',
+                    '<p>' . _t("SocialMetaConfigExtension.AddAlternateNames", 'Add alternate names of your organisation, for example misspellings.') . '</p>'
+                ),
+                MultiValueTextField::create(
+                    'SocialMetaAlternateNames',
+                    _t('SocialMetaConfigExtension.SocialMetaAlternateNames','Alternate Names')
                 ),
             ]
         );
