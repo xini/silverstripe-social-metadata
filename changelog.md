@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [9.1.1]
+
+* remove obsolete updateSiteCMSFields methods from multisites extensions
+
 ## [9.1.0]
 
 * add AlternateNames for organisation schema

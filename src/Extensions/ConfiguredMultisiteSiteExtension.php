@@ -9,11 +9,6 @@ use SilverStripe\Forms\FieldList;
 
 class ConfiguredMultisiteSiteExtension extends Extension
 {
-    public function updateSiteCMSFields(FieldList $fields)
-    {
-        $this->updateCMSFields($fields);
-    }
-
     public function getSocialMetaSiteDescription()
     {
         if (!empty($this->getOwner()->SocialMetaSiteDescription)) {

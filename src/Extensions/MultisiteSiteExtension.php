@@ -9,11 +9,6 @@ use Symbiote\Multisites\Control\MultisitesRootController;
 
 class MultisiteSiteExtension extends Extension
 {
-    public function updateSiteCMSFields(FieldList $fields)
-    {
-        $this->updateCMSFields($fields);
-    }
-
     public function getSocialMetaSiteDescription()
     {
         if (!empty($this->getOwner()->SocialMetaSiteDescription)) {
